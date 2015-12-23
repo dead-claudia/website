@@ -1,0 +1,73 @@
+include ./page.mixin.jade
+include ./cc-licenses.mixin.jade
+
+link(rel="stylesheet" href="music.css")
+
+mixin song(href)
+    li: a(href=href)
+        block
+
++page("Music")
+    p.
+        I've been into creating music as far back as middle school, and I still
+        enjoy it now. I haven't finished as much recently mostly due to time
+        being taken up by other things, but in the meantime, I still enjoy
+        improvising on the piano and other various smaller instruments (I really
+        enjoy my #[a(href="https://en.wikipedia.org/wiki/Tin_whistle") tin whistle],
+        even though I don't play it nearly as much). In some of the pieces, I
+        explained some of my inspiration and/or background when I wrote the
+        piece itself.
+
+    p.
+        Most of what I create now are a mixture of piano solos and electronic
+        music, but most of my earlier pieces are closer to modern classical with
+        film influences. And admittedly, they're probably not nearly as good as
+        my newer songs.
+
+    p.
+        Also, as an item of note, some programs erroneously associate artwork
+        with my pieces. This is likely a bug in those programs, since I never
+        associated any artwork with any of my songs.
+
+    hr
+
+    h3 Newer Pieces
+
+    .license: +cc-by-4.inline.noauthor
+
+    div
+        label Instrumental
+
+        ul
+            +song("/music/funeral-of-stress.html") Funeral of Stress
+
+        label Electronic
+
+        p Note: these are links only.
+
+        ul
+            +song("https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
+                | Under Pressure
+
+    hr
+
+    h3 Older pieces
+
+    .license: +cc-by-nc-3.inline.noauthor
+
+    ul
+        +song("/music/a-day-at-the-theme-park.html") A Day at the Theme Park
+        +song("/music/a-normal-day.html") A Normal Day
+        +song("/music/a-tribute-to-hymns.html") A Tribute to Hymns
+        +song("/music/aurora.html") Aurora
+        +song("/music/hunger-games-symphony.html") Hunger Games Symphony
+        +song("/music/journey.html") Journey
+        +song("/music/rebellion.html") Rebellion
+        +song("/music/servants-lament.html") Servant's Lament
+        +song("/music/sweet-dreams.html") Sweet Dreams
+        +song("/music/the-lost.html") The Lost
+        +song("/music/the-time-is-coming.html") The Time is Coming
+        +song("/music/untitled-piece-for-vibes.html") Untitled Piece for Vibes
+        +song("/music/wants-of-life.html") Wants of Life
+        +song("/music/water.html") Water
+        +song("/music/wizard-battle.html") Wizard Battle

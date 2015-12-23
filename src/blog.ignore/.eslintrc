@@ -1,0 +1,11 @@
+---
+# This uses browserify.
+extends: ../../.eslintrc
+
+env:
+    browser: true
+    node: true
+
+globals:
+    # Mithril is loaded globally. It's simpler.
+    m: false

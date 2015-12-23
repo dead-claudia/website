@@ -1,0 +1,55 @@
+include ../page.mixin.jade
+include ../cc-licenses.mixin.jade
+link(rel="stylesheet" href="/music/song.css")
+
+mixin song--link(href)
+    if Array.isArray(href)
+        a(href=href[0])
+            block
+            | #{""} (zip)
+    else
+        a(href=href)
+            block
+
+//- Arguments:
+//- name = "name of song"
+//-
+//- Attributes:
+//- download="https://drive.google.com/uc?id=<download-url>&export=download"
+//- audio="https://drive.google.com/uc?id=<audio-url>&export=download"
+//- preview="https://drive.google.com/uc?id=<preview-url>"
+//- license="license type, see below"
+mixin song(name)
+    +page("Music", "/music.html", "Music - " + name): .wrapper
+        h3= name
+        hr
+
+        case attributes.license
+            when "by-4.0": +cc-by-4.inline.single.noauthor
+            when "by-nc-3.0": +cc-by-nc-3.inline.single.noauthor
+            default
+                p(style={
+                    "display": "block",
+                    "background-color": "red",
+                    "padding": "0.5em",
+                    "text-align": "center",
+                    "font-weight": "900",
+                }).cc-license
+                    | FIXME: Invalid license: #{attributes.license}
+
+        if block
+            .description
+                block
+
+        .link
+            +song--link(attributes.download) Download
+            if attributes.audio
+                | #{""} - #{""}
+                +song--link(attributes.audio)
+                    | Audio
+                    //- Future-proofing
+                    unless attributes.recording
+                        | #{""} (computer generated)
+
+        div Preview (first page)
+        img(alt="preview" src=attributes.preview)

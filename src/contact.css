@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+@import "./page.mixin.css";
+@import "./contact-email.mixin.css";
+
+#body hr {
+    margin-top: 1em;
+}
+
+#body .wrapper {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#body .wrapper.form {
+    width: 50%;
+}
+
+#contact {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+#contact div {
+    margin: 0.5em auto;
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#contact .warning {
+    background-color: #f88;
+    color: #a00; /* Darker red */
+    border: 2px solid #c00;
+    padding: 1em;
+    border-radius: 1em;
+    margin: 1em auto;
+    white-space: normal;
+}
+
+#contact div label {
+    display: inline-block;
+    width: 20%;
+    max-width: 100px;
+    padding-top: 0.75em;
+    vertical-align: middle;
+}
+
+#contact label.msg {
+    vertical-align: top;
+}
+
+#contact div input, #contact div textarea {
+    display: inline-block;
+    width: 80%;
+    border: 2px inset #aaa;
+    padding: 0.5em;
+    border-radius: 1.5em;
+}
+
+#contact div input {
+    display: inline-block;
+    vertical-align: text-top;
+}
+
+#contact textarea {
+    margin: 0.1em auto;
+    resize: vertical;
+    min-height: 10em;
+    font-size: small;
+}
+
+#contact div input:invalid, #contact textarea:invalid {
+    background-color: #faa;
+}
+
+#contact div input:valid, #contact textarea:valid {
+    background-color: #afa;
+}
+
+/* Need two IDs to get enough specificity here */
+#contact #submit {
+    margin-top: 1em;
+    text-align: center;
+    height: auto;
+    max-width: 5em;
+    background-color: #ccc;
+    background-image: linear-gradient(-45deg, #888, #bbb 40%, #eee);
+}

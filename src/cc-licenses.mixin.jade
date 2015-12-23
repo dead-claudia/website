@@ -1,0 +1,42 @@
+//- Classes:
+//- noauthor: don't put author name
+//- small: use small logo
+//- maybe: add "unless otherwise stated"
+//- inline: don't insert horizontal rule
+//- single: use singular context
+//-
+//- No attributes or parameters are used.
+
+mixin cc-licenses--base(url)
+    - var author = /\bnoauthor\b/.test(attributes.class) ? "" : "by Isiah Meadows "
+    - var small = /\bsmall\b/.test(attributes.class)
+    unless /\binline\b/.test(attributes.class)
+        hr.cc-license
+    .cc-license
+        a(rel="license" href="http://creativecommons.org/licenses/" + url + "/")
+            img(
+                alt="Creative Commons License"
+                src=("https://i.creativecommons.org/l/" + url + "/" + (small ? "80x15" : "88x31") + ".png")
+            )
+        //- Jade needs the trailing space here to separate the line from the
+        //- element
+        small
+            if /\bsingle\b/.test(attributes.class)
+                | This work #{author}is licensed under a #{""}
+            else
+                | These works #{author}are licensed under a #{""}
+            a(rel="license" href="http://creativecommons.org/licenses/by/4.0/")
+                | Creative Commons #{""}
+                block
+                | #{""} License
+            if /\bmaybe\b/.test(attributes.class)
+                | #{""} unless otherwise stated
+            | .
+
+mixin cc-by-4
+    +cc-licenses--base("by/4.0")&attributes(attributes)
+        | Attribution 4.0 International
+
+mixin cc-by-nc-3
+    +cc-licenses--base("by-nc/3.0/us")&attributes(attributes)
+        | Attribution-NonCommercial 3.0 United States

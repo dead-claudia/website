@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+@import "./page.mixin.css";
+
+#body li > a {
+    font-size: 1.5em;
+    display: block;
+    margin: 0.5em;
+    /* These need to *not* be overridden by the :hover and :visited selectors */
+    color: #00e !important;
+    text-decoration: none !important;
+}
+
+#body li > div {
+    margin: 0 1.5em 1em 0.5em;
+}

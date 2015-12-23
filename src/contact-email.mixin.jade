@@ -1,0 +1,12 @@
+mixin email
+    #email--base: div
+        noscript You need JavaScript enabled to see my email. Sorry.
+        p.
+            (Trying to limit spammers. Type or copy code to see my email:
+            #[code Generating...])
+
+        input
+        button Submit
+        .hidden Wrong code. Please try again. Do note that it's case-sensitive.
+
+    script(src="contact-email.js")
