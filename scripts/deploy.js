@@ -8,14 +8,15 @@ const spawn = require("child_process").spawnSync
 
 function exec(cmd, use) {
     cmd = cmd.split(/\s+/g)
-    // Make the current working directory the parent root.
-    const opts = {cwd: path.dirname(__dirname)}
-    if (use) opts.stdio = ["inherit", "pipe", "inherit"]
-    return spawn(cmd[0], cmd.slice(1), opts)
+    return spawn(cmd[0], cmd.slice(1), {
+        // Make the current working directory the parent root.
+        cwd: path.dirname(__dirname),
+        stdio: use ? ["inherit", "pipe", "inherit"] : "inherit",
+    })
 }
 
 function bail(message) {
-    if (message) console.error(message)
+    console.error(message || new Error().stack)
     process.exit(1)
 }
 
@@ -30,11 +31,11 @@ try {
 
 const ret = exec("git symbolic-ref HEAD", true)
 if (ret.status > 0) bail()
-if (ret.stdout.toString("utf-8") !== "refs/heads/master") {
+if (ret.stdout.toString("utf-8").trim() !== "refs/heads/master") {
     bail("Current branch must be `master` to deploy!")
 }
 
-if (exec("git show-ref -q --verify ref/heads/gh-pages").status > 0) {
+if (exec("git show-ref -q --verify refs/heads/gh-pages").status > 0) {
     bail("`gh-pages` branch must exist!")
 }
 
