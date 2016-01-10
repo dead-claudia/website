@@ -3,7 +3,7 @@ meta(charset="utf-8")
 link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css")
 
 mixin page--link(file, href)
-    div: a(href=(FILE !== href && href), class=(file === href && "selected"))
+    div: a(href=(FILE !== href && "." + href), class=(file === href && "selected"))
         block
 
 //- page(title, file = FILE, name = title)
@@ -15,7 +15,7 @@ mixin page(name, file, title)
     #content
         #header
             nav
-                a(href="/index.html") Isiah Meadows
+                a(href="./index.html") Isiah Meadows
 
                 div
                     +page--link(file, "/index.html") Home

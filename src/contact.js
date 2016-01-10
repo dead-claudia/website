@@ -45,14 +45,14 @@
 
         xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
-                location.href = "/contact-finish.html"
+                location.href = "./contact-finish.html"
             }
         }
 
         if (skip) {
             console.log(out)
             setTimeout(function () {
-                location.href = "/contact-finish.html"
+                location.href = "./contact-finish.html"
             }, 5000)
         } else {
             xhr.send(out)

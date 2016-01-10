@@ -8,11 +8,10 @@ const spawn = require("child_process").spawnSync
 
 function exec(cmd, use) {
     cmd = cmd.split(/\s+/g)
-    return spawn(cmd[0], cmd.slice(1), {
-        stdio: ["inherit", use ? "pipe" : "inherit", "inherit"],
-        // Make the current working directory the parent root.
-        cwd: path.dirname(__dirname),
-    })
+    // Make the current working directory the parent root.
+    const opts = {cwd: path.dirname(__dirname)}
+    if (use) opts.stdio = ["inherit", "pipe", "inherit"]
+    return spawn(cmd[0], cmd.slice(1), opts)
 }
 
 function bail(message) {
@@ -21,7 +20,7 @@ function bail(message) {
 }
 
 try {
-    if (fs.statSync(path.resolve(__dirname, "../dist")).isDirectory()) {
+    if (!fs.statSync(path.resolve(__dirname, "../dist")).isDirectory()) {
         bail("`dist` must be a directory!")
     }
 } catch (e) {
@@ -29,18 +28,15 @@ try {
     else bail(e.message)
 }
 
-let ret = exec("git symbolic-ref HEAD", true)
-if (!ret.status || ret.stdout.toString("utf-8") !== "refs/heads/master") {
+const ret = exec("git symbolic-ref HEAD", true)
+if (ret.status > 0) bail()
+if (ret.stdout.toString("utf-8") !== "refs/heads/master") {
     bail("Current branch must be `master` to deploy!")
 }
 
-ret = exec("git show-ref -q --verify ref/heads/gh-pages")
-if (!ret.status) bail("`gh-pages` branch must exist!")
+if (exec("git show-ref -q --verify ref/heads/gh-pages").status > 0) {
+    bail("`gh-pages` branch must exist!")
+}
 
-ret = exec("git branch -D gh-pages")
-if (!ret.status) bail("`gh-pages` branch must exist!")
-
-ret = exec("git subtree split --prefix dist -b gh-pages")
-if (!ret.status) bail()
-ret = exec("git push -f origin gh-pages:gh-pages")
-if (!ret.status) bail()
+if (exec("git subtree split --prefix dist -b gh-pages").status > 0) bail()
+if (exec("git push -f origin gh-pages:gh-pages").status > 0) bail()

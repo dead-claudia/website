@@ -93,7 +93,7 @@ require("./run.js")({
         }).on("error", reject)
     }),
 
-    deploy: () => exec(["node", r("deploy.sh")]),
+    deploy: () => exec(["node", r("deploy.js")]),
 
     default: t => t.lint().then(() => t.compile()),
 })
