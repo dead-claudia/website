@@ -2,33 +2,28 @@ doctype html
 meta(charset="utf-8")
 link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css")
 
-mixin page--link(file, href)
-    div: a(href=(FILE !== href && "." + href), class=(file === href && "selected"))
-        block
-
 //- page(title, file = FILE, name = title)
 mixin page(name, file, title)
-    - if (!name) throw new Error("(mixin page) Page `name` required!")
-    - file = file || FILE
+    - assert(name, "(mixin page) Page `name` required!")
     - title = title || name
     title Isiah Meadows - #{title}
     #content
         #header
             nav
-                a(href="./index.html") Isiah Meadows
+                a(href=resolve("index.html")) Isiah Meadows
 
                 div
-                    +page--link(file, "/index.html") Home
+                    div: a&attributes(navAttrs("index.html", file)) Home
                     .separator
-                    +page--link(file, "/projects.html") Projects
+                    div: a&attributes(navAttrs("projects.html", file)) Projects
                     .separator
-                    +page--link(file, "/blog.html") Blog
+                    div: a&attributes(navAttrs("blog.html", file)) Blog
                     .separator
-                    +page--link(file, "/music.html") Music
+                    div: a&attributes(navAttrs("music.html", file)) Music
                     .separator
                     a(href="https://github.com/isiahmeadows") Github
                     .separator
-                    +page--link(file, "/contact.html") Contact
+                    div: a&attributes(navAttrs("contact.html", file)) Contact
             hr
 
         h2= name

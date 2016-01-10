@@ -4,6 +4,8 @@ const path = require("path")
 const express = require("express")
 const app = express()
 
+const JadeLocals = require("./jade-locals.js")
+
 function nocache(res) {
     res.setHeader("Cache-Control", [
         "no-cache", "private", "no-store", "must-revalidate", "max-stale=0",
@@ -30,8 +32,9 @@ const fail = (req, res) => res.sendStatus(404)
 app.get(/\.(mixin\.(jade|css)|jade|ignore(\.[^\.]+))$/, fail)
 
 app.get("*.html", (req, res) => {
-    const file = req.path.slice(1).replace(/\.html$/, ".jade")
-    return res.render(file, {FILE: req.path, minified: false})
+    const FILE = req.path.slice(1)
+    const file = FILE.replace(/\.html$/, ".jade")
+    return res.render(file, new JadeLocals(FILE, false))
 })
 
 app.get("*.css", require("postcss-middleware")({
@@ -64,7 +67,7 @@ app.get("*.*", express.static(path.resolve(__dirname, "../src"), {
 
 app.get("*", (req, res) => {
     if (req.path !== "/") return fail(req, res)
-    return res.render("index.jade", {FILE: "/index.html", minified: false})
+    return res.render("index.jade", new JadeLocals("index.html", false))
 })
 
 app.listen(8080, () => console.log("Server ready at http://localhost:8080"))

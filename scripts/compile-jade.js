@@ -9,17 +9,17 @@ const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.jade$/, ".html")
 const name = process.argv[4]
 
+const JadeLocals = require("./jade-locals.js")
+
 const FILE = name
     .replace(/\.jade$/, ".html")
-    .replace(/[\\\/]|/g, "/")
+    .replace(/[\\\/]/g, "/")
     .replace(/^src(?:\/)/g, "")
 
 try {
-    const src = require("jade").compileFile(infile, {filename: infile})({
-        // Convert backslashes on Windows to Web-style, losing the `src/`
-        FILE: `/${FILE}`,
-        minified: true,
-    })
+    const src = require("jade").compileFile(infile, {filename: infile})(
+        new JadeLocals(FILE, true)
+    )
 
     const minified = require("html-minifier").minify(src, {
         removeComments: true,
