@@ -1,3 +1,1 @@
-{
-    "posts": [],
-}
+{"posts":[{"date":"2016-01-01T00:00:00.000Z","title":"Test post title","preview":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut - labore - et dolore magna aliqua. > Ut enim ad minim veniam, quis nostrud","url":"test1.md","tags":["lorem","ipsum","dolor-sit-amet"]},{"date":"2016-02-01T00:00:00.000Z","title":"Test post 2 title","preview":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 0. hi 1. Bye > Ut enim ad minim veniam, quis","url":"test2.md","tags":["lorem","ipsum"]}]}
