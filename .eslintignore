@@ -1,6 +1,7 @@
 node_modules
 
-# These are simple entry scripts
+# These are simple entry scripts, and ESLint isn't shebang-friendly.
+# https://github.com/eslint/espree/issues/136
 ./make.js
 ./server.js
 

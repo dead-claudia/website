@@ -8,9 +8,17 @@ script(src=(
         (minified ? ".min" : "") + ".js"
 ))
 
+//- And, best to pull in Marked this way.
+script(src=(
+    "https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked" +
+        (minified ? ".min" : "") + ".js"
+))
+
 script(src="blog.js")
 
 +page("Blog")
+    //- So the blog wrapper is separate from the page wrapper.
+    #blog
     p.warning.
         This page is under construction. For now, you'll find my blog
         #[a(href="http://impinball.blogspot.com") here].

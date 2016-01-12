@@ -22,7 +22,7 @@ capped to 200 words, rounded down to the nearest word.
             "date": "2016-01-01T05:00:00.000Z",
             "title": "Some pretty blog post title",
             "preview": "My beautiful blog post body...",
-            "url": "blog/posts/blog-post.md",
+            "url": "blog-post.md",
             "tags": ["post", "pretty", "etc"]
         }
     ]

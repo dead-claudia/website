@@ -23,7 +23,7 @@ fs.readFileAsync(infile, "utf-8")
         path: path.resolve(__dirname, "../src"),
         async: true,
     }))
-    .use(autoprefixer)
+    .use(autoprefixer({browsers: ["last 2 versions, > 5%"]}))
     .use(reporter({
         clearMessages: true,
         throwError: true,
