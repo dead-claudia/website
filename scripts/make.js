@@ -31,7 +31,7 @@ function makeCompiler(verb, script) {
         runScript(verb, ["node", script, src, dist, name], name)
 }
 
-const compressCss = makeCompiler("Compressing", r("minify-css.js"))
+const compileStylus = makeCompiler("Compiling", r("compile-stylus.js"))
 const compileJade = makeCompiler("Compiling", r("compile-jade.js"))
 const copyFile = makeCompiler("Copying", r("copy.js"))
 
@@ -54,8 +54,9 @@ require("./run.js")({
     }))),
 
     "compile:blog": () =>
-        runScript("Browserifying", ["node", r("browserify-blog.js")],
-            join("blog.ignore", "index.js")),
+        exec(["node", r("compile-blog-posts.js")], () => {
+            console.log("Compiling blog posts...")
+        }),
 
     "compile:rest": () => walk(r("../src"), ignore)
     .then(srcs => Promise.all(srcs.map(src => {
@@ -63,9 +64,9 @@ require("./run.js")({
         const dist = join(r("../dist"), name)
 
         return mkdirp(path.dirname(dist)).then(() => {
+            if (/\.mixin\.[^\\\/\.]+$/.test(src)) return
             if (/\.js$/.test(src)) return minifyJs(src, dist, name)
-            if (/\.css$/.test(src)) return compressCss(src, dist, name)
-            if (/\.mixin\.(jade|css)$/.test(src)) return
+            if (/\.styl$/.test(src)) return compileStylus(src, dist, name)
             if (/\.jade$/.test(src)) return compileJade(src, dist, name)
             return copyFile(src, dist, name)
         })

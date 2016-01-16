@@ -15,11 +15,9 @@ mixin control(id)
 
     .wrapper: +email
 
-    hr
-
     noscript: p You need JavaScript enabled for this form to work.
 
-    .wrapper.form: form#contact(novalidate)
+    .form: form#contact(novalidate)
         div
             +control("name")(autocomplete="name" required) Name:
             +control("email")(autocomplete="email" type="email") E-mail:
@@ -40,11 +38,7 @@ mixin control(id)
             #gotcha-message.warning.hidden
                 | Hidden field modified. Form locked. (If you are a human,
                 | you might want to be careful messing with the source code
-                img(
-                    src="https://upload.wikimedia.org/wikipedia/commons/5/57/Face-wink.svg"
-                    alt="winking face"
-                    style="display:inline;height:1em;width:1em"
-                )
+                img(src="wink.png" alt="winking face")
                 | . And while you are at it, you can always reload the page.)
 
         small.

@@ -1,0 +1,43 @@
+@charset "UTF-8"
+
+@require "./common.mixin.styl"
+@import "./cc-licenses.mixin.styl"
+
+#body
+    .intro, .license + div
+        +desktop()
+            rule bottom 0.5em
+
+    h3
+        +desktop()
+            color header-color
+            font-weight 500
+            font-size 1.25em
+            margin-top 0.75em
+
+    label
+        +desktop()
+            display block
+            font-weight 700
+
+    .cc-license
+        +desktop()
+            display table
+            margin 0
+
+        > *
+            +desktop()
+                display table-cell
+                vertical-align middle
+
+        img
+            +desktop()
+                padding-right 0.5em
+
+        small
+            +desktop()
+                font-size 80%
+
+    .license
+        +desktop()
+            margin-bottom 0.5em

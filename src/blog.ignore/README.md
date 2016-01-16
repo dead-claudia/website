@@ -1,4 +1,4 @@
-The files for the blog.
+The files for my blog.
 
 Note that the posts should be under posts/ and have the following header above
 each one:

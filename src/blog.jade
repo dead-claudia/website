@@ -2,6 +2,8 @@ include ./page.mixin.jade
 
 link(rel="stylesheet" href="blog.css")
 
+script(src="https://cdn.jsdelivr.net/highlight.js/9.1.0/highlight.min.js")
+
 //- Yep, this is a Mithril app.
 script(src=(
     "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.2-rc.1/mithril" +
@@ -19,6 +21,6 @@ script(src="blog.js")
 +page("Blog")
     //- So the blog wrapper is separate from the page wrapper.
     #blog
-    p.warning.
-        This page is under construction. For now, you'll find my blog
-        #[a(href="http://impinball.blogspot.com") here].
+        .info
+            #info: noscript You need JavaScript enabled for this to work.
+            .license-divider

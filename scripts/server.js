@@ -7,6 +7,8 @@ const app = express()
 
 const JadeLocals = require("./jade-locals.js")
 const generateBlog = require("./generate-blog-posts.js")
+const stylus = require("stylus")
+const autoprefixer = require("autoprefixer-stylus")
 
 function nocache(res) {
     res.setHeader("Pragma", "no-cache")
@@ -46,14 +48,16 @@ website.get("*.html", (req, res) => {
     return res.render(file, new JadeLocals(FILE, false))
 })
 
-website.get("*.css", require("postcss-middleware")({
-    src: req => path.resolve(__dirname, "../src", req.path.slice(1)),
-    plugins: [
-        require("postcss-import")({path: path.resolve(__dirname, "../src")}),
-        require("autoprefixer")({browsers: "last 2 versions, > 5%"}),
-        require("postcss-reporter")({clearMessages: true, throwError: true}),
-    ],
-    inlineSourcemaps: true,
+website.get("*.css", stylus.middleware({
+    src: path.resolve(__dirname, "../src"),
+    // This'll be cleared when doing a full compilation, anyways.
+    dest: path.resolve(__dirname, "../dist"),
+    force: true,
+    compile(str, path) {
+        return stylus(str)
+        .set("filename", path)
+        .use(autoprefixer())
+    },
 }))
 
 website.get("/blog.json", (req, res, next) => generateBlog().then(data => {
@@ -69,38 +73,43 @@ website.get("/blog/*.md", (req, res, next) => {
 
 const base = path.resolve(__dirname, "../src")
 
-function get(methods) {
+function get(root, methods) {
     return (req, res, next) => {
-        const file = path.resolve(base, req.path.slice(1))
-        const maybe = methods.pre(file, req, res, next)
-        if (maybe !== undefined) return maybe
+        const file = path.resolve(root, req.path.slice(1))
+        if (!methods.pre({file, req, res, next})) return
         return fs.stat(file, (err, stat) => {
             if (err != null) return next(err)
             if (stat.isDirectory()) {
-                return methods.dir(file, req, res, next)
+                return methods.dir({file, req, res, next})
             } else {
-                return methods.file(file, req, res, next)
+                return methods.file({file, req, res, next})
             }
         })
     }
 }
 
-website.get("*.*", get({
-    pre(file, req, res) { res.type(path.basename(file)) },
-    dir(file, req, res) { return res.redirect(`${req.baseUrl}${req.path}/`) },
-    file(file, req, res, next) {
-        return fs.createReadStream(file)
-        .on("error", next)
-        .pipe(res.status(200))
-    },
+website.get("*.css", get(path.resolve(__dirname, "../dist"), {
+    pre: o => (o.res.type(path.basename(o.file)), true),
+    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
+    file: o =>
+        fs.createReadStream(o.file)
+        .on("error", o.next)
+        .pipe(o.res.status(200)),
+}))
+
+website.get("*.*", get(base, {
+    pre: o => (o.res.type(path.basename(o.file)), true),
+    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
+    file: o =>
+        fs.createReadStream(o.file)
+        .on("error", o.next)
+        .pipe(o.res.status(200)),
 }))
 
 website.get("*", get({
-    pre(file, req, res) { return res.redirect(`${req.baseUrl}/index.html`) },
-    dir(file, req, res) {
-        return res.redirect(`${req.baseUrl}${req.path}/index.html`)
-    },
-    file(file, req, res, next) { return next(missing) },
+    pre: o => o.res.redirect(`${o.req.baseUrl}/index.html`),
+    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/index.html`),
+    file: o => o.next(missing),
 }))
 
 app.use("/website", website)

@@ -43,10 +43,13 @@ try {
 
     fs.writeFileSync(outfile, minified, "utf-8")
 } catch (e) {
-    // TODO: try to figure out why this runs twice when Jade throws, but only
-    // when run through the build process. I can't repro it by simply running
-    // the same command from a shell. It's clearly a bug in V8, triggered by
-    // something in Node's internals.
+    // TODO: Report this somehow to the Node.js devs. And try to reduce the test
+    // case somehow. I hate engine bugs... :(
+    //
+    // For whatever reason, this runs twice when Jade throws, but only when run
+    // through the build process. I can't repro it by even running this script
+    // with the same arguments through the shell. It's clearly a bug in V8,
+    // triggered by something in Node's internals.
     console.error(e.stack)
     process.exit(1)
 }

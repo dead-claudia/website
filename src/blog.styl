@@ -1,0 +1,106 @@
+@charset "UTF-8"
+
+@import "./highlight-style.mixin.styl"
+@require "./common.mixin.styl"
+
+secondary-text-color = #666
+
+// Get rid of the existing rule above the license. It's duplicating the bottom
+// border of the last post.
+#license div
+    +desktop()
+        border-top none
+
+#body
+    .warning
+        +desktop()
+            padding 0.5em
+            border-round 1px solid border-color 1em
+            background-color #ff0
+
+#blog
+    +desktop()
+        .info
+            display block
+
+        // Replace the divider while loading
+        .license-divider
+            rule bottom 0.5em
+
+        .blog-summary p:first-child
+            padding-bottom 1em
+            rule bottom
+
+        .summary-header
+            clearfix()
+            display block
+            margin-bottom 1em
+
+        .summary-title
+            display inline-block
+            float left
+            padding-bottom 1em
+
+        .tag-search
+            display inline-block
+            float right
+
+            &::before
+                content ""
+                clear both
+
+            label
+                padding-right 0.5em
+
+            input
+                input-base()
+
+        .blog-list
+            border 2px solid border-color
+
+        .blog-summary-item
+            display block
+            padding 1em
+            // Since CSS doesn't have a ::last-line pseudo-element. Keep this as
+            // the difference between this normal padding and the bottom padding
+            // of .post-tag. If only it could be less brittle.
+            padding-bottom 0.7em
+            rule bottom
+
+            &:last-child
+                border-bottom none
+
+        .post-date
+            font-style italic
+            color secondary-text-color
+
+        .post-stub
+            text-decoration none
+
+        .post-title
+            color header-color
+            vert padding 0.5em
+            font-size 1.2em
+
+        .post-preview
+            color secondary-text-color
+            font-size 0.8em
+            font-style italic
+            padding-bottom 0.5em
+
+        .post-tags > span
+            padding-right 0.25em
+
+        .post-tag
+            border-round 1px solid border-color 0.25em
+            display inline-block
+            color secondary-text-color
+            font-size 0.7em
+            margin 0.2em
+            margin-bottom 0.3em
+            padding 0.2em 0.25em
+            text-decoration none
+
+            &.post-tag-active
+                background-color #eee
+                font-weight 700

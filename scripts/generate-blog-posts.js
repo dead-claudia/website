@@ -89,6 +89,9 @@ module.exports = write => new Promise((resolve, reject) => {
                         url,
                         tags: split.meta.tags || [],
                     })
+                    cache[file].tags.forEach(tag => {
+                        /^[\w ,\-]+$/.test(tag)
+                    })
                     compiled[url] = split.raw
                     if (write) {
                         return Promise.resolve(write(file, split.raw, url))

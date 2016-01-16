@@ -1,9 +1,0 @@
-@charset "UTF-8";
-
-@import "./page.mixin.css";
-@import "./contact-email.mixin.css";
-
-#body .wrapper {
-    margin: 0 auto;
-    text-align: center;
-}

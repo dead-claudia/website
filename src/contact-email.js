@@ -51,8 +51,7 @@
         var elements = getElements()
         generate(elements.random)
 
-        elements.submit.onclick = function (e) {
-            e = e || event
+        function submit(e) {
             e.preventDefault()
             e.stopPropagation()
 
@@ -75,6 +74,21 @@
                 var wrong = elements.wrong
                 wrong.className = wrong.className.replace(/\bhidden\b/, "")
             }
+        }
+
+        elements.input.onkeydown = function (e) {
+            e = e || event
+            if (e.defaultPrevented) return
+            // Just in case the browser has already dropped the legacy versions
+            // or doesn't support the newer version.
+            if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
+                submit(e)
+            }
+        }
+
+        elements.submit.onclick = function (e) {
+            e = e || event
+            if (!e.defaultPrevented) submit(e)
         }
     })
 })()

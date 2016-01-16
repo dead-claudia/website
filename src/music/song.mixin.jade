@@ -22,7 +22,6 @@ mixin song--link(href)
 mixin song(name)
     +page("Music", "music.html", "Music - " + name): .wrapper
         h3= name
-        hr
 
         case attributes.license
             when "by-4.0": +cc-by-4.inline.single.noauthor

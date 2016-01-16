@@ -1,6 +1,8 @@
 doctype html
 meta(charset="utf-8")
+meta(name="viewport" content="width=device-width,initial-scale=1")
 link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css")
+link(rel="stylesheet" href=resolve("page.css"))
 
 //- page(title, file = FILE, name = title)
 mixin page(name, file, title)
@@ -24,15 +26,13 @@ mixin page(name, file, title)
                     a(href="https://github.com/isiahmeadows") Github
                     .separator
                     div: a&attributes(navAttrs("contact.html", file)) Contact
-            hr
 
         h2= name
 
         #body: block
 
-        #license
-            hr
-            div
+        #license: div
+            footer
                 a(rel="license" href="http://creativecommons.org/licenses/by/4.0/")
                     img(
                         alt="Creative Commons License"

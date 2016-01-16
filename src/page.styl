@@ -1,0 +1,128 @@
+@charset "UTF-8"
+
+@require "./common.mixin.styl"
+
+/* TODO: implement mobile support. */
+
+/* Local mixins */
+
+/* Common utilities */
+
+.hidden
+    /*
+     * !important required so that these are actually hidden regardless of other
+     * settings (so my JS actually works).
+     */
+    display none !important
+    visibility hidden !important
+
+textarea
+    font-family inherit
+    font-size inherit
+
+/* Global base styles */
+
+body
+    font-family "Arial", sans-serif
+    background-color white
+    color black
+
+a
+    text-decoration none
+    color link-color
+
+    &:hover
+        text-decoration underline
+
+    &:visited
+        color link-visited
+
+ul
+    list-style-type square
+
+h2
+    color header-color
+
+    +desktop()
+        font-weight 500
+        font-size 1.5em
+
+#content
+    +desktop()
+        max-width 1000px
+        width 90%
+        margin 0 auto
+        margin-top 0.5em
+        padding 0.5em 1.5em 0 1.5em
+        side border 1px solid page-border-color
+
+#header
+    +desktop()
+        .separator
+            margin-top -0.25em
+
+            &::after
+                content "|"
+                font-size 1.25em
+                color border-color
+
+    a
+        color header-color
+
+        +desktop()
+            font-weight 500
+
+    nav
+        +desktop()
+            rule bottom 0.5em
+            padding-bottom 1.8em
+            font-size 1.5em
+
+        > a
+            +desktop()
+                vertical-align middle
+                float left
+                display block
+
+                &:hover
+                    text-decoration none
+
+        > div
+            +desktop()
+                float right
+
+            div, a
+                +desktop()
+                    display inline-block
+                    vertical-align middle
+
+            a
+                +desktop()
+                    /* This needs to *not* be overridden */
+                    text-decoration none
+                    side margin 0.5em
+                    padding-bottom 0.1em
+                    border-bottom 2px solid transparent
+
+                    &.selected
+                    &:hover
+                        border-bottom-color header-color
+
+#license
+    div
+        +desktop()
+            rule top 0.5em
+
+    footer
+        +desktop()
+            margin 1em auto
+            text-align center
+            width-scale 50% 200px 600px
+
+    a
+        +desktop()
+            display block
+
+    img
+        +desktop()
+            border-width 0

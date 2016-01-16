@@ -1,0 +1,82 @@
+@charset "UTF-8"
+
+@import "./contact-email.mixin.styl"
+@require "./common.mixin.styl"
+
+#body
+    .wrapper
+        text-align center
+        rule bottom 0.5em
+        rule-reset 0 1em
+
+
+    .form
+        margin 0 auto
+        text-align center
+        width 50%
+
+#gotcha-message img
+    display inline
+    height 1em
+    width 1em
+
+#contact
+    display inline-block
+    text-align center
+    width 100%
+
+    .warning
+        background-color #f88
+        color #a00 // Darker red
+        border-round 2px solid #c00 1em
+        padding 1em
+        margin 1em auto
+        white-space normal
+
+    label.msg
+        vertical-align top
+
+    // Need to nest this to get enough specificity
+    #submit
+        margin-top 1em
+        text-align center
+        height auto
+        max-width 5em
+        background-color #e2e2e2
+
+    small
+        display block
+        vert margin 1em
+
+    textarea
+        margin 0.1em auto
+        resize vertical
+        min-height 10em
+        font-size small
+
+    div
+        margin 0.5em auto
+        display block
+        text-align center
+        white-space nowrap
+
+        label
+            display inline-block
+            // constrain to keep the labels from getting squished
+            width-scale 20% 80px 100px
+            padding-top 0.75em
+            vertical-align middle
+
+        input
+            vertical-align text-top
+
+        input, ^[-1] textarea
+            display inline-block
+            width 80%
+            input-like()
+
+            &:invalid
+                background-color #faa
+
+            &:valid
+                background-color #afa
