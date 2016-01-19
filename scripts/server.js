@@ -106,7 +106,7 @@ website.get("*.*", get(base, {
         .pipe(o.res.status(200)),
 }))
 
-website.get("*", get({
+website.get("*", get(base, {
     pre: o => o.res.redirect(`${o.req.baseUrl}/index.html`),
     dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/index.html`),
     file: o => o.next(missing),
