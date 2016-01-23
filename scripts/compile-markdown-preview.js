@@ -124,7 +124,7 @@ class FragmentCompiler {
     }
 
     ordered() {
-        for (let i = 0; this.waitingFor("list_end"); i++) {
+        for (let i = 1; this.waitingFor("list_end"); i++) {
             if (this.push(`${i}.`) || this.single()) return true
         }
         return false
