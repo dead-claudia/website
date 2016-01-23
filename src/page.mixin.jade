@@ -9,6 +9,7 @@ mixin page(name, file, title)
     - assert(name, "(mixin page) Page `name` required!")
     - title = title || name
     title Isiah Meadows - #{title}
+    
     #content
         #header
             nav
@@ -27,9 +28,9 @@ mixin page(name, file, title)
                     .separator
                     div: a&attributes(navAttrs("contact.html", file)) Contact
 
-        h2= name
-
-        #body: block
+        #body-wrapper: div
+            h2= name
+            #body: block
 
         #license: div
             footer

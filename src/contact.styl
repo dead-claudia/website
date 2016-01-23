@@ -25,13 +25,24 @@
     text-align center
     width 100%
 
+    .required::after
+        display inline-block
+        content "*"
+        font-size 1em
+        margin-left 0.25em
+        color red
+
     .warning
         background-color #f88
-        color #a00 // Darker red
+        color black
         border-round 2px solid #c00 1em
         padding 1em
         margin 1em auto
         white-space normal
+
+        li
+            color black
+            text-align left
 
     label.msg
         vertical-align top
@@ -73,10 +84,5 @@
         input, ^[-1] textarea
             display inline-block
             width 80%
+            font-size 1em
             input-like()
-
-            &:invalid
-                background-color #faa
-
-            &:valid
-                background-color #afa

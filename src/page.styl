@@ -4,8 +4,6 @@
 
 /* TODO: implement mobile support. */
 
-/* Local mixins */
-
 /* Common utilities */
 
 .hidden
@@ -22,9 +20,13 @@ textarea
 
 /* Global base styles */
 
+html, body
+    +desktop()
+        height 100%
+
 body
     font-family "Arial", sans-serif
-    background-color white
+    background-color page-border-color
     color black
 
 a
@@ -49,16 +51,23 @@ h2
 
 #content
     +desktop()
-        max-width 1000px
+        display table
+        box-sizing border-box
+        background-color white
+        max-width 1200px
         width 90%
+        height 100%
         margin 0 auto
-        margin-top 0.5em
-        padding 0.5em 1.5em 0 1.5em
-        side border 1px solid page-border-color
+        padding 1em 1.5em 0 1.5em
+        side border 1px solid #888
 
 #header
     +desktop()
-        .separator
+        position relative
+        display table-row
+
+    .separator
+        +desktop()
             margin-top -0.25em
 
             &::after
@@ -108,10 +117,23 @@ h2
                     &:hover
                         border-bottom-color header-color
 
+#body-wrapper
+    +desktop()
+        height 100%
+        display table-row
+        position relative
+
+        > div
+            height 100%
+
 #license
+    +desktop()
+        position relative
+        display table-row
+
     div
         +desktop()
-            rule top 0.5em
+            rule top 0.75em
 
     footer
         +desktop()

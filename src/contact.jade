@@ -5,7 +5,7 @@ script(src="./contact-email.js")
 
 mixin control(id)
     div
-        label(for=id): block
+        label(for=id, class={required: !!attributes.required}): block
         input(id=id)&attributes(attributes)
 
 +page("Contact")
@@ -19,19 +19,19 @@ mixin control(id)
 
     .form: form#contact(novalidate)
         div
+            p #[span.required] = Required
+                
             +control("name")(autocomplete="name" required) Name:
             +control("email")(autocomplete="email" type="email") E-mail:
             +control("subject")(autocomplete="off" required) Subject:
 
             div
-                label.msg(for="message") Message:
+                label.msg(for="message").required Message:
                 textarea(autocomplete="off" required)#message
 
             input(type="hidden")#gotcha
 
-            #validate.warning.hidden.
-                Please ensure the form is completely and correctly filled out
-                before submitting.
+            #errors.warning.hidden
 
             input(type="submit" value="Send")#submit
 

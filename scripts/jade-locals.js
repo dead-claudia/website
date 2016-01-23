@@ -38,7 +38,10 @@ module.exports = class JadeLocals {
     navAttrs(href, file) {
         file = file || this.FILE
         if (file === href) {
-            return {class: "selected"}
+            return {
+                class: "selected",
+                href: file !== this.FILE && this.resolve(href),
+            }
         } else {
             return {href: this.resolve(href)}
         }
