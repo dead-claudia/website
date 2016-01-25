@@ -5,11 +5,12 @@ if (require.main === module) {
 }
 
 const spawn = require("child_process").spawn
+const os = require("os")
 
 // Limit the number of running processes to not kill the computer.
 let processes = 0
 const queue = []
-exec.limit = require("os").cpus().length + 1
+exec.limit = os.cpus().length + 1
 
 setInterval(() => {
     if (processes >= exec.limit || queue.length === 0) return

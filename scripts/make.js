@@ -6,11 +6,12 @@ const path = require("path")
 const join = path.join
 const mkdirp = p.promisify(require("mkdirp"))
 const spawn = require("child_process").spawn
+const os = require("os")
 
 const exec = require("./exec-limit.js")
 const walk = require("./walk.js")
 
-exec.limit = (require("os").cpus().length * 1.5 | 0) + 1
+exec.limit = (os.cpus().length * 1.5 | 0) + 1
 
 const rcache = Object.create(null)
 function r(file) {
@@ -36,7 +37,9 @@ const compileJade = makeCompiler("Compiling", r("compile-jade.js"))
 const copyFile = makeCompiler("Copying", r("copy.js"))
 
 // The directory separator never appears in fs.readdir listings
-const ignore = file => /^\.|^README\.md$|\.ignore(\.[^\.]+)?$/.test(file)
+function ignore(file) {
+    return /^\.|^README\.md$|\.ignore(\.[^\.]+)?$/.test(file)
+}
 
 require("./run.js")({
     clean: () => exec(["node", r("rm-dist.js")]),

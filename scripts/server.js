@@ -37,7 +37,10 @@ app.use((req, res, next) => {
 const website = new express.Router()
 
 const missing = {code: "ENOENT"}
-const fail = (req, res, next) => next(missing)
+
+function fail(req, res, next) {
+    return next(missing)
+}
 
 // .mixin.{html,css}, .jade, .ignore, .ignore.*
 website.get(/\.(mixin\.(html|css)|jade|ignore(\.[^\.]+))$/, fail)

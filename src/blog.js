@@ -193,12 +193,12 @@
             return m(".summary-header", [
                 m(".summary-title", [
                     m(".tag-title", [
-                        validateTag(this.tag) ?
-                            [
+                        validateTag(this.tag)
+                            ? [
                                 "Posts tagged ", this.list, " (", len,
                                 " ", pluralize("post", len), "):",
-                            ] :
-                            ["Invalid tag: '", this.tag, "'"],
+                            ]
+                            : ["Invalid tag: '", this.tag, "'"],
                     ]),
                     m("a.back", route("/"), [
                         // "Back to posts ►" or "Back to posts \u25ba"
@@ -308,9 +308,9 @@
             return m(".blog-post", [
                 m("h3.post-title", post.title),
                 m(".post-body", [
-                    this.content() != null ?
-                        m.trust(this.content()) :
-                        m(".post-loading", "Loading..."),
+                    this.content() != null
+                        ? m.trust(this.content())
+                        : m(".post-loading", "Loading..."),
                 ]),
                 //                           "Home ►" or "Home \u25ba"
                 m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
