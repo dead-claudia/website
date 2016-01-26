@@ -20,7 +20,7 @@
     "clean-css": "^3.4.8",
     "del": "^2.2.0",
     "eslint": "^1.10.3",
-    "eslint-config-isiahmeadows": "github:isiahmeadows/eslint-config-isiahmeadows",
+    "eslint-config-isiahmeadows": "0.0.2",
     "express": "^4.13.3",
     "html-minifier": "^1.1.1",
     "jade": "^1.11.0",
