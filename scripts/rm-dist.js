@@ -10,12 +10,13 @@ try {
     list = fs.readdirSync(path.resolve(__dirname, "../dist"))
 } catch (e) {
     if (e.code !== "ENOENT") throw e
-    process.exit()
+    process.exit() // eslint-disable-line no-process-exit
 }
 
 for (const file of list) {
     if (/^\.git/i.test(file)) continue
     const resolved = path.posix.resolve(__dirname, "../dist", file)
+
     if (fs.statSync(resolved).isDirectory()) {
         del.sync(resolved)
     } else {

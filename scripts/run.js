@@ -6,6 +6,7 @@ if (require.main === module) {
 
 function wrapTask(target, task) {
     const old = target[task]
+
     return () => {
         console.log(`*** Running task ${task} ***`)
         return old.call(target, target).then(() => {
@@ -33,15 +34,17 @@ class Runner {
     nextTask() {
         while (this.index < this.args.length) {
             const arg = this.args[this.index++]
+
             if (!{}.hasOwnProperty.call(this.target, arg)) {
                 console.error(`*** Target '${arg}' does not exist! ***`)
-                process.exit(1)
+                return process.exit(1) // eslint-disable-line no-process-exit
             }
+
             if (arg[0] !== "-") return arg
         }
 
         console.log("*** All tasks completed successfully! ***")
-        process.exit()
+        return process.exit() // eslint-disable-line no-process-exit
     }
 
     next() {
@@ -49,7 +52,7 @@ class Runner {
         .then(() => this.next())
         .catch(err => {
             console.error(err.stack)
-            process.exit(1)
+            return process.exit(1) // eslint-disable-line no-process-exit
         })
     }
 }

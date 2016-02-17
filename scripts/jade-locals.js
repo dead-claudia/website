@@ -31,6 +31,7 @@ module.exports = class JadeLocals {
 
     resolve(url) {
         const ret = path.relative(path.dirname(this.FILE), url)
+
         // Minor size optimization
         return ret.slice(0, 2) === "./" ? ret.slice(2) : ret
     }

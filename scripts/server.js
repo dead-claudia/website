@@ -48,6 +48,7 @@ website.get(/\.(mixin\.(html|css)|jade|ignore(\.[^\.]+))$/, fail)
 website.get("*.html", (req, res) => {
     const FILE = req.path.slice(1)
     const file = FILE.replace(/\.html$/, ".jade")
+
     return res.render(file, new JadeLocals(FILE, false))
 })
 
@@ -79,7 +80,11 @@ const base = path.resolve(__dirname, "../src")
 function get(root, methods) {
     return (req, res, next) => {
         const file = path.resolve(root, req.path.slice(1))
-        if (!methods.pre({file, req, res, next})) return
+
+        if (!methods.pre({file, req, res, next})) {
+            return undefined
+        }
+
         return fs.stat(file, (err, stat) => {
             if (err != null) return next(err)
             if (stat.isDirectory()) {
@@ -122,4 +127,5 @@ app.use("*", (err, req, res, next) => {
     return next(err)
 })
 
-app.listen(8080, () => console.log("Server ready at http://localhost:8080"))
+app.listen(8080, () =>
+    console.log("Server ready at http://localhost:8080/website"))

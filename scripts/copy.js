@@ -7,7 +7,7 @@ const fs = require("fs")
 function error(err) {
     console.error(err.message)
     console.error(err.stack)
-    process.exit(1)
+    process.exit(1) // eslint-disable-line no-process-exit
 }
 
 fs.createReadStream(process.argv[2]).on("error", error)

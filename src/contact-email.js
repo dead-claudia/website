@@ -2,7 +2,9 @@
     "use strict"
 
     var table = ""
-    for (var i = 0; i < 10; i++) table += i
+    var i
+
+    for (i = 0; i < 10; i++) table += i
     while (i < 36) table += String.fromCharCode(55 + i++) // 65-10=55, A-Z
     while (i < 62) table += String.fromCharCode(61 + i++) // 97-36=55, A-Z
 
@@ -14,7 +16,6 @@
     // Unobfuscated, it's `me@isiahmeadows.com`, but this comment will disappear
     // before it makes its way to the public site.
     var emailText = "@mbef@gi23#jfski^\\l2anhp\0m2r%etaud??voxwys&.*c<ozm"
-
     var code
 
     function generate(el) {
@@ -25,6 +26,7 @@
 
     function getElements() {
         var email = document.getElementById("email--base")
+
         return {
             input: email.getElementsByTagName("input")[0],
             text: email.getElementsByTagName("p")[0],
@@ -42,6 +44,7 @@
         // My email shouldn't require escaping here to display.
         var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
         var link = document.createElement("a")
+
         link.innerHTML = fixed
         link.href = "mailto:" + fixed
         return link
@@ -49,6 +52,7 @@
 
     window.addEventListener("load", function () {
         var elements = getElements()
+
         generate(elements.random)
 
         function submit(e) {
@@ -58,6 +62,7 @@
             if (elements.input.value === code) {
                 var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
                 var link = document.createElement("a")
+
                 link.innerHTML = fixed
                 link.href = "mailto:" + fixed
 
@@ -72,6 +77,7 @@
             } else {
                 generate(elements.random)
                 var wrong = elements.wrong
+
                 wrong.className = wrong.className.replace(/\bhidden\b/, "")
             }
         }

@@ -30,6 +30,7 @@ function splitInput(file, reject, resolve) {
             if (metaEnd != null) {
                 const raw = str.slice(matcher.lastIndex)
                 let meta
+
                 try {
                     meta = yaml.safeLoad(str.slice(0, metaEnd.index), {
                         filename: file,
@@ -37,6 +38,7 @@ function splitInput(file, reject, resolve) {
                 } catch (e) {
                     return reject(e)
                 }
+
                 return resolve({file, meta, raw, preview: compilePreview(raw)})
             }
         }
@@ -59,16 +61,23 @@ module.exports = write => new Promise((resolve, reject) => {
     return fs.readdir(postDir, (err, files) => {
         if (err != null) return reject(err)
         if (files.length === 0) return resolve([])
+
         const posts = []
         let counter = files.length
 
         function done(err) {
-            if (!counter) return
+            if (!counter) return undefined
+
             if (err != null) {
                 counter = 0
                 return reject(err)
             }
-            if (!--counter) return resolve({posts, compiled})
+
+            if (!--counter) {
+                return resolve({posts, compiled})
+            }
+
+            return undefined
         }
 
         function handleStat(file) {
@@ -81,6 +90,7 @@ module.exports = write => new Promise((resolve, reject) => {
                 }
                 return splitInput(file, reject, split => {
                     const url = path.posix.relative(postDir, file)
+
                     mtimes[file] = stat.mtime
                     posts.push(cache[file] = {
                         date: split.meta.date,
@@ -89,13 +99,18 @@ module.exports = write => new Promise((resolve, reject) => {
                         url,
                         tags: split.meta.tags || [],
                     })
+
                     cache[file].tags.forEach(tag => {
                         /^[\w ,\-]+$/.test(tag)
                     })
+
                     compiled[url] = split.raw
+
                     if (write) {
                         return Promise.resolve(write(file, split.raw, url))
                         .then(() => done(), done)
+                    } else {
+                        return undefined
                     }
                 })
             }
@@ -104,11 +119,14 @@ module.exports = write => new Promise((resolve, reject) => {
         for (const file of files) {
             if (file !== "README.md" && file.slice(-3) === ".md") {
                 const resolved = path.join(postDir, file)
+
                 fs.stat(resolved, handleStat(resolved))
             } else {
                 // If it's not a markdown file, skip it.
-                done()
+                done() // eslint-disable-line callback-return
             }
         }
+
+        return undefined
     })
 })

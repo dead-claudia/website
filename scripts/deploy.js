@@ -17,7 +17,7 @@ function exec(cmd, use) {
 
 function bail(message) {
     console.error(message || new Error().stack)
-    process.exit(1)
+    process.exit(1) // eslint-disable-line no-process-exit
 }
 
 try {
@@ -30,6 +30,7 @@ try {
 }
 
 const ret = exec("git symbolic-ref HEAD", true)
+
 if (ret.status > 0) bail()
 if (ret.stdout.toString("utf-8").trim() !== "refs/heads/master") {
     bail("Current branch must be `master` to deploy!")

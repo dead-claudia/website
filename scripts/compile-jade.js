@@ -53,5 +53,5 @@ try {
     // with the same arguments through the shell. It's clearly a bug in V8,
     // triggered by something in Node's internals.
     console.error(e.stack)
-    process.exit(1)
+    process.exit(1) // eslint-disable-line no-process-exit
 }

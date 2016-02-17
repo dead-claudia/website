@@ -17,7 +17,9 @@ const PREVIEW_LENGTH = 175
 
 function cap(str) {
     str = str.replace(/\s+/, " ")
+
     const part = str.substr(0, PREVIEW_LENGTH)
+
     if (/^\S/.test(str.substr(PREVIEW_LENGTH))) {
         return part.replace(/\s+\S*$/, "")
     } else {
@@ -100,9 +102,11 @@ class FragmentCompiler {
 
     text(token) {
         let body = token.text
+
         while (this.hasNext() && this.peek().type === "text") {
             body += ` ${this.next().text}`
         }
+
         return this.textItem(body)
     }
 
@@ -142,6 +146,8 @@ class FragmentCompiler {
                 return true
             }
         }
+
+        return false
     }
 
     looseItem() {
@@ -172,6 +178,7 @@ class FragmentCompiler {
         case "loose_item_start": return this.looseItem()
         case "paragraph": return this.textItem(token.text)
         case "text": return this.text(token)
+        default: return false
         }
     }
 }

@@ -14,6 +14,7 @@ const walk = require("./walk.js")
 exec.limit = (os.cpus().length * 1.5 | 0) + 1
 
 const rcache = Object.create(null)
+
 function r(file) {
     if (file in rcache) return rcache[file]
     return rcache[file] = path.resolve(__dirname, file)
@@ -42,7 +43,7 @@ function ignore(file) {
 }
 
 require("./run.js")({
-    clean: () => exec(["node", r("rm-dist.js")]),
+    "clean": () => exec(["node", r("rm-dist.js")]),
 
     "compile:copy": () => walk(r("../dist-tmpl"))
     .then(srcs => Promise.all(srcs.map(src => {
@@ -67,7 +68,7 @@ require("./run.js")({
         const dist = join(r("../dist"), name)
 
         return mkdirp(path.dirname(dist)).then(() => {
-            if (/\.mixin\.[^\\\/\.]+$/.test(src)) return
+            if (/\.mixin\.[^\\\/\.]+$/.test(src)) return undefined
             if (/\.js$/.test(src)) return minifyJs(src, dist, name)
             if (/\.styl$/.test(src)) return compileStylus(src, dist, name)
             if (/\.jade$/.test(src)) return compileJade(src, dist, name)
@@ -75,13 +76,13 @@ require("./run.js")({
         })
     }))),
 
-    compile: t => t.clean().then(() => Promise.all([
+    "compile": t => t.clean().then(() => Promise.all([
         t["compile:copy"](),
         t["compile:blog"](),
         t["compile:rest"](),
     ])),
 
-    lint: () => new Promise((resolve, reject) => {
+    "lint": () => new Promise((resolve, reject) => {
         // This will never run concurrently with anything else spawned in this
         // script.
         return spawn("eslint", ["."], {
@@ -90,14 +91,19 @@ require("./run.js")({
         }).on("close", (code, signal) => {
             if (code == null || code) {
                 if (signal) console.error(`Child killed with signal ${signal}`)
+
+                /* eslint-disable no-process-exit */
+
                 return process.exit(code || 1)
+
+                /* eslint-enable no-process-exit */
             } else {
                 return resolve()
             }
         }).on("error", reject)
     }),
 
-    deploy: () => exec(["node", r("deploy.js")]),
+    "deploy": () => exec(["node", r("deploy.js")]),
 
-    default: t => t.lint().then(() => t.compile()),
+    "default": t => t.lint().then(() => t.compile()),
 })

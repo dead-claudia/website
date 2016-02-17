@@ -4,17 +4,29 @@ link(rel="stylesheet" href="projects.css")
 
 mixin project(name, href)
     li
-        a(href=href)= name
+        a(target="_blank" href=href)= name
         div: block
 
 +page("Projects")
     ul
+        +project("This Website", "https://github.com/isiahmeadows/website").
+            This website itself has its source open, ready to explore. I've got
+            nothing at all to hide here. No secret codes or anything that isn't
+            anything obvious like a special key or password. I love open source!
+
         +project("Mithril", "https://mithril.js.org").
             A lightweight, simple, and unopinionated MVC framework originally
-            created by #[a(href="http://lhorie.blogspot.com") Leo Horie]. I am
-            an active contributor to this framework, but my main focus is in the
-            performance aspect, where this also really shines (it's lightweight
-            enough to work very well in mobile).
+            created by #[a(target="_blank" href="http://lhorie.blogspot.com") Leo Horie].
+            I am an active contributor to this framework, but my main focus is
+            in performance, where this also really shines (it's light enough and
+            fast enough to work very well in mobile). My blog also uses this.
+        
+        +project("Techtonic", "https://github.com/isiahmeadows/techtonic").
+            An experimental test framework that eschews several existing
+            conventions, such as traditional assertion messages and decoupled
+            assertions, in favor for simplicity and very easy, modular
+            extensibility. It's still a work in progress, but it does use itself
+            for its own testing.
 
         +project("m-iso", "https://github.com/isiahmeadows/m-iso").
             A now-deprecated attempt to bring Mithril server-side, which unlike
@@ -29,20 +41,16 @@ mixin project(name, href)
         +project("babel-plugin-proto-to-create", "https://github.com/isiahmeadows/babel-plugin-proto-to-create").
             A plugin for Babel 5 to convert simple object literals that contain
             a literal #[code __proto__] property to use
-            #[a(href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create") Object.create]
+            #[a(target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create") Object.create]
             and simple property assignment for regular properties and
-            #[a(href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty") Object.defineProperty]
-            to assign getters and setters. It is planned to update this to Babel
-            6 soon.
+            #[a(target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty") Object.defineProperty]
+            to assign getters and setters. I plan to update this to support
+            Babel 6 eventually.
 
         +project("ttyped", "https://github.com/isiahmeadows/ttyped").
             A simple runtime type-checking framework designed for LiveScript,
             JavaScript, and CoffeeScript, made to act like a function or method
             decorator. It is currently powered by
-            #[a(href="http://npmjs.com/packages/type-check") type-check], but
-            that may likely change in the future. It's still not yet 1.0
-
-        +project("This Website", "https://github.com/isiahmeadows/website").
-            This website itself has its source open, ready to explore. I've got
-            nothing at all to hide here. No secret codes or anything that isn't
-            anything obvious like a special key or password. I love open source!
+            #[a(target="_blank" href="http://npmjs.com/packages/type-check") type-check], but
+            that may likely change in the future. It's still highly unstable,
+            and I have a significant change in progress.

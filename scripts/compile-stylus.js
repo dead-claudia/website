@@ -34,12 +34,18 @@ fs.readFileAsync(infile, "utf-8")
         console.error(`WARNING: ${message}`)
     })
 
-    if (output.errors.length) process.exit(1)
-    return output.styles
+    if (output.errors.length) {
+        return process.exit(1) // eslint-disable-line no-process-exit
+    } else {
+        return output.styles
+    }
 })
 .then(styles => fs.writeFileAsync(outfile, styles, "utf-8"))
 .catch(err => {
     console.error(err.message)
-    if (err.stack) console.error(err.stack)
-    process.exit(1)
+    if (err.stack) {
+        console.error(err.stack)
+    }
+
+    return process.exit(1) // eslint-disable-line no-process-exit
 })

@@ -2,15 +2,12 @@
     "use strict"
 
     var got = false
-    var skip = true
 
     // See https://www.w3.org/TR/html5/forms.html#valid-e-mail-address
-    /* eslint-disable max-len */
-    var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-    /* eslint-enable max-len */
+    var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/ // eslint-disable-line max-len
 
-    // Fool a few spam bots by making my email not appear directly in the
-    // source, either. Note that this is purposefully *not* a valid email
+    // Fool a few spam bots (hopefully) by making my email not appear directly
+    // in the source, either. Note that this is purposefully *not* a valid email
     // address, if a spam bot finds this. And hey, it might crash a few poorly
     // written ones that try to parse this. :)
     //
@@ -21,6 +18,7 @@
     function failed() {
         document.getElementById("submit").className += " hidden"
         var div = document.getElementById("gotcha-message")
+
         div.className = div.className.replace(/\bhidden\b/g, "")
     }
 
@@ -43,6 +41,7 @@
 
         // TODO: create Heroku dyno to POST email json to.
         var xhr = new XMLHttpRequest()
+
         xhr.open("POST", "//formspree.io/" + fixed)
         xhr.setRequestHeader("Accept", "application/json")
         xhr.setRequestHeader("Content-Type",
@@ -54,14 +53,7 @@
             }
         }
 
-        if (skip) {
-            console.log(out)
-            setTimeout(function () {
-                location.href = "./contact-finish.html"
-            }, 5000)
-        } else {
-            xhr.send(out)
-        }
+        xhr.send(out)
     }
 
     function verifyExists(lines, id, message) {
@@ -115,6 +107,7 @@
     }
 
     var contact = document.getElementById("contact")
+
     contact.reset()
     contact.onsubmit = function (e) {
         e = e || event

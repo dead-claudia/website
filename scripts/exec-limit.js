@@ -10,14 +10,17 @@ const os = require("os")
 // Limit the number of running processes to not kill the computer.
 let processes = 0
 const queue = []
+
 exec.limit = os.cpus().length + 1
 
 setInterval(() => {
-    if (processes >= exec.limit || queue.length === 0) return
+    if (processes >= exec.limit || queue.length === 0) return undefined
     processes++
     const job = queue.shift()
+
     job.child = spawn(job.cmd, job.args, job.opts)
     job.child.on("exit", () => processes--)
+
     return job.run()
 }, 0)
 
@@ -30,26 +33,29 @@ function format(cmd, args, code, signal) {
         }
     }
     let res = `'${cmd}' exited with code ${code}.`
+
     if (signal) res = `Child killed with signal ${signal}.\n\n${res}`
     return {stack: res}
 }
 
 class ExecJob {
-    constructor(cmd, args, onopen, resolve, reject, opts) {
-        this.cmd = cmd
-        this.args = args
-        this.onopen = onopen
-        this.resolve = resolve
-        this.reject = reject
-        this.opts = opts
+    constructor(opts) {
+        this.cmd = opts.cmd
+        this.args = opts.args
+        this.onopen = opts.onopen
+        this.resolve = opts.resolve
+        this.reject = opts.reject
+        this.opts = opts.opts
         this.child = null
     }
 
     call(prop) {
         return value => {
-            if (this[prop] == null) return
+            if (this[prop] == null) return undefined
             const callback = this[prop]
+
             this[prop] = null
+
             return callback(value)
         }
     }
@@ -76,7 +82,8 @@ function exec(str, onopen, opts) {
     if (!opts.stdio) opts.stdio = "inherit"
     const args = Array.isArray(str) ? str : str.split(/\s+/g)
     const cmd = args.shift()
+
     return new Promise((resolve, reject) => {
-        queue.push(new ExecJob(cmd, args, onopen, resolve, reject, opts))
+        queue.push(new ExecJob({cmd, args, onopen, resolve, reject, opts}))
     })
 }

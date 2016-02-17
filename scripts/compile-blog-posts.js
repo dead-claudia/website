@@ -19,14 +19,16 @@ const json = path.resolve(distDir, "blog.json")
 
 generate((file, contents, url) => {
     const dest = path.resolve(distDir, "blog", url)
+
     return p.call(mkdirp, path.dirname(dest))
     .then(() => p.call(fs.writeFile, dest, contents, "utf-8"))
 })
 .then(data => {
     const serialized = JSON.stringify({posts: data.posts})
+
     return p.call(fs.writeFile, json, serialized, "utf-8")
 })
 .catch(err => {
     console.error(err.stack)
-    process.exit(1)
+    process.exit(1) // eslint-disable-line no-process-exit
 })

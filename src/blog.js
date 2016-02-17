@@ -7,6 +7,7 @@
     // patched this, it doesn't seem to have carried over in the 80% revert).
     m.deferred.onerror = (function () {
         var old = m.deferred.onerror
+
         return function (e) {
             if (typeof console !== "undefined" && console.error) {
                 console.error(e)
@@ -32,6 +33,7 @@
             controller: C,
             view: function (ctrl) {
                 var args = []
+
                 for (var i = 1; i < arguments.length; i++) {
                     args.push(arguments[i])
                 }
@@ -48,6 +50,7 @@
         return {
             view: function () {
                 var args = []
+
                 for (var i = 1; i < arguments.length; i++) {
                     args.push(arguments[i])
                 }
@@ -176,12 +179,14 @@
 
             if (validateTag(tag)) {
                 var tags = splitTag(tag)
+
                 if (tags.length === 1) {
                     this.list = "'" + tags[0] + "'"
                 } else if (tags.length === 2) {
                     this.list = "'" + tags[0] + "' or '" + tags[1] + "'"
                 } else {
                     var last = tags.pop()
+
                     this.list = tags.map(function (tag) {
                         return "'" + tag + "'"
                     }).join(", ") + ", or '" + last + "'"
@@ -272,8 +277,10 @@
      */
     renderer.image = function (href, title, alt) {
         var exec = /\s=\s*(\d*)\s*x\s*(\d*)\s*$/.exec(href)
+
         if (exec) href = href.slice(0, -exec[0].length)
         var res = '<img src="' + sanitize(href) + '" alt="' + sanitize(alt)
+
         if (exec && exec[1]) res += '" height="' + exec[1]
         if (exec && exec[2]) res += '" width="' + exec[2]
         return res + '">'
@@ -294,6 +301,7 @@
     var postView = component({
         init: function (post) {
             var content = this.content = m.prop()
+
             m.request({
                 method: "GET",
                 url: "./blog/" + post.url,
@@ -350,6 +358,7 @@
             post.tags.forEach(function (tag) {
                 tag = tag.toLowerCase()
                 var result = tags[tag] = tags[tag] || []
+
                 if (result.indexOf(post) < 0) result.push(post)
             })
         })
@@ -388,6 +397,7 @@
         // correctly. This calculates the correct relative offset in
         // milliseconds, which should be 0 if in EST (i.e. offset of -5 hours).
         var offset = 60 * 1000 * (new Date().getTimezoneOffset() - 5 * 60)
+
         posts(data.posts).forEach(function (post) {
             // Parse each date an actual Date instance.
             post.date = new Date(Date.parse(post.date) + offset)
