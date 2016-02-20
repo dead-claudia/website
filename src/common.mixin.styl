@@ -2,12 +2,37 @@
  * The global constants.
  */
 
-link-color = #800
-link-visited = #a66
+desktop()
+    @media screen and (min-width 1000px)
+        {block}
+
+tablet()
+    @media screen and (min-width 500px) and (max-width 1000px)
+        {block}
+
+phone()
+    @media screen and (max-width 500px)
+        {block}
+
+nonphone()
+    @media screen and (min-width 500px)
+        {block}
+
+main-color = #942a39
+body-background = #faf4ec
+text-color = #2a2329
+
+button-color = header-color
+button-border-color = darken(main-color, 30%)
+
+header-color = darken(main-color, 30%)
+header-text = #efefea
+
+link-color = mix(#ffc, main-color, 5%)
+link-visited = lighten(link-color, 30%)
+
+random-colors = #4b6234 #385083 #4e3975 #8b5e48 #755061 #5e7983
 border-color = #666
-header-color = #b22
-page-border-color = #b22
-input-border-color = #aaa
 
 /**
  * The global mixins.
@@ -15,10 +40,6 @@ input-border-color = #aaa
 
 clearfix()
     overflow auto
-
-side(prop, args...)
-    {prop}-left args
-    {prop}-right args
 
 vert(prop, args...)
     {prop}-top args
@@ -29,50 +50,16 @@ width-scale(percent, min, max)
     width percent
     max-width max
 
-border-round(width, type, color, radius)
-    border width type color
-    border-radius radius
+// For smaller screens. This is how I can support screens as small as 240 pixels
+// across, provided they support HTML5 and CSS3 (and run JS if they want to read
+// the blog).
+break-word()
+    word-wrap break-word
+    -ms-word-break break-all
+    word-break break-all
+    word-break break-word
 
-common--rule-apply(location, clear)
-    value = clear ? none : (2px solid border-color)
-    border-{location} value
-
-rule(location, size = ignore)
-    if size != ignore
-        // See https://github.com/stylus/stylus/issues/980
-        side margin (- size)
-        side padding size
-    if location == both
-        border-top 2px solid border-color
-        border-bottom 2px solid border-color
-    else
-        border-{location} 2px solid border-color
-
-// Because some rules need the width different.
-rule-reset(top, bottom)
-    for prop in margin padding
-        {prop}-top top
-        {prop}-bottom bottom
-
-desktop()
-    @media all, screen and (min-device-width 900px)
-        {block}
-
-tablet()
-    if false
-        @media screen and (min-device-width 450px) and (max-device-width 900px)
-            {block}
-
-phone()
-    if false
-        @media screen and (max-device-width 450px)
-            {block}
-
-input-like()
-    padding 0.5em
-    border-round 2px solid border-color 0.8em
-
-input-base()
-    margin 0.25em
-    margin-top 0
-    input-like()
+// Prevent inputs from growing the screen size.
+input-fix()
+    width 100%
+    box-sizing border-box

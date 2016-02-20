@@ -1,65 +1,90 @@
 The files for my blog.
 
-Note that the posts should be under posts/ and have the following header above
-each one:
+## Notes:
 
-```yaml
-# Obviously, each of these depend on the post
-title: Some pretty blog post title
-date: 2016-1-1
-tags: [tag, tag, tag]
----
-My beautiful blog post body...
-```
+1. In my blog, I added a syntactic extension to it for resizing images:
 
-In the JSON, it'll have this kind of structure. And note that the preview is
-capped to 200 words, rounded down to the nearest word.
+    ```md
+    <!-- Markdown -->
+    ![alt](href = x 200 "title")
+    ![alt](href = 300 x "title")
+    ![alt](href = 300 x 200 "title")
+    ```
 
-```json
-{
-    "posts": [
-        {
-            "date": "2016-01-01T05:00:00.000Z",
-            "title": "Some pretty blog post title",
-            "preview": "My beautiful blog post body...",
-            "url": "blog-post.md",
-            "tags": ["post", "pretty", "etc"]
-        }
-    ]
-}
-```
+    This Markdown compiles to the following HTML:
 
-Here's a schema for that JSON:
+    ```html
+    <!-- HTML -->
+    <img href="href" alt="alt" title="title" width="200">
+    <img href="href" alt="alt" title="title" height="300">
+    <img href="href" alt="alt" title="title" height="300" width="200">
+    ```
 
-```json
-{
-    "$schema": "http://json-schema.org/schema#",
-    "id": "blog.json",
-    "type": "object",
-    "required": true,
+    This may accept a percentage or a pixel value. Both must be numeric. Also,
+    the whitespace is purely optional after the equals sign. The above Markdown
+    is equivalent to the following more minimal Markdown below:
 
-    "definitions": {
-        "post": {
-            "description": "Represents a single post.",
-            "type": "object",
-            "properties": {
-                "date": {"type": "string"},
-                "title": {"type": "string"},
-                "preview": {"type": "string"},
-                "url": {"type": "string"},
-                "tags": {
-                    "type": "array",
-                    "additionalItems": {"type": "string"}
-                }
+    ```md
+    <!-- Markdown -->
+    ![alt](href =x200 "title")
+    ![alt](href =300x "title")
+    ![alt](href =300x200 "title")
+    ```
+
+2. The posts should be under posts/ and have the following header above
+    each one:
+
+    ```yaml
+    ---
+    # Obviously, each of these depend on the post
+    title: Some pretty blog post title
+    date: 2016-1-1
+    tags: [tag, tag, tag]
+    ---
+    My beautiful blog post body...
+    ```
+
+    Assuming this is the only post, "blog.json" will look like this:
+
+    ```json
+    {
+        "posts": [
+            {
+                "date": "2016-01-01T05:00:00.000Z",
+                "title": "Some pretty blog post title",
+                "preview": "My beautiful blog post body...",
+                "url": "blog-post.md",
+                "tags": ["post", "pretty", "etc"]
             }
-        }
-    },
-
-    "properties": {
-        "posts": {
-            "type": "array",
-            "additionalItems": {"$ref": "#/definitions/post"}
-        }
+        ]
     }
-}
-```
+    ```
+
+    Note that the preview is capped to 200 words, rounded down to the nearest
+    word.
+
+    Here's a TypeScript interface for blog.json, if that helps explain it:
+
+    ```ts
+    // The wrapper object of blog.json, to prevent remote execution.
+    interface Listing {
+        posts: Array<Post>;
+    }
+
+    interface Post {
+        // The date, in simplified extended ISO 8601 format
+        date: string;
+
+        // The title of the post
+        title: string;
+
+        // A 200-character preview, rounded down to the nearest word
+        preview: string;
+
+        // The URL of the post
+        url: string;
+
+        // The tags for this post
+        tags: Array<string>;
+    }
+    ```

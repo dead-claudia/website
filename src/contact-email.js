@@ -1,12 +1,8 @@
-(function () {
+(function (document, wrapper) {
     "use strict"
 
-    var table = ""
-    var i
-
-    for (i = 0; i < 10; i++) table += i
-    while (i < 36) table += String.fromCharCode(55 + i++) // 65-10=55, A-Z
-    while (i < 62) table += String.fromCharCode(61 + i++) // 97-36=55, A-Z
+    // Set of the 62 alpha-numeric characters, as a string
+    var table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
     // Fool a few spam bots by making my email not appear directly in the
     // source, either. Note that this is purposefully *not* a valid email
@@ -16,85 +12,86 @@
     // Unobfuscated, it's `me@isiahmeadows.com`, but this comment will disappear
     // before it makes its way to the public site.
     var emailText = "@mbef@gi23#jfski^\\l2anhp\0m2r%etaud??voxwys&.*c<ozm"
-    var code
 
-    function generate(el) {
-        code = ""
-        for (var j = 0; j < 8; j++) code += table[Math.random() * 62 | 0]
-        el.innerHTML = code
-    }
+    function generate() {
+        var code = ""
 
-    function getElements() {
-        var email = document.getElementById("email--base")
-
-        return {
-            input: email.getElementsByTagName("input")[0],
-            text: email.getElementsByTagName("p")[0],
-            random: email.getElementsByTagName("code")[0],
-            submit: email.getElementsByTagName("button")[0],
-            wrong: email.getElementsByTagName("div")[1],
+        for (var j = 0; j < 8; j++) {
+            code += table.charAt(Math.random() * 62 | 0)
         }
+
+        return code
     }
 
-    function clear(el) {
-        while (el.firstChild) el.removeChild(el.firstChild)
-    }
+    function n(type, attrs, children) {
+        var elem = document.createElement(type)
 
-    function makeFixed() {
-        // My email shouldn't require escaping here to display.
-        var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
-        var link = document.createElement("a")
-
-        link.innerHTML = fixed
-        link.href = "mailto:" + fixed
-        return link
-    }
-
-    window.addEventListener("load", function () {
-        var elements = getElements()
-
-        generate(elements.random)
-
-        function submit(e) {
-            e.preventDefault()
-            e.stopPropagation()
-
-            if (elements.input.value === code) {
-                var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
-                var link = document.createElement("a")
-
-                link.innerHTML = fixed
-                link.href = "mailto:" + fixed
-
-                clear(elements.text)
-                elements.text.appendChild(makeFixed())
-
-                elements.input.parentNode.removeChild(elements.input)
-                elements.wrong.parentNode.removeChild(elements.wrong)
-                elements.submit.parentNode.removeChild(elements.submit)
-                elements.submit.onclick = undefined
-                elements = null
-            } else {
-                generate(elements.random)
-                var wrong = elements.wrong
-
-                wrong.className = wrong.className.replace(/\bhidden\b/, "")
+        for (var attr in attrs) {
+            if ({}.hasOwnProperty.call(attrs, attr)) {
+                elem[attr] = attrs[attr]
             }
         }
 
-        elements.input.onkeydown = function (e) {
-            e = e || event
-            if (e.defaultPrevented) return
-            // Just in case the browser has already dropped the legacy versions
-            // or doesn't support the newer version.
-            if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
-                submit(e)
+        (function append(e) {
+            if (Array.isArray(e)) {
+                e.forEach(append)
+            } else if (e != null) {
+                elem.appendChild(
+                    typeof e === "string" ? document.createTextNode(e) : e)
             }
-        }
+        })(children)
 
-        elements.submit.onclick = function (e) {
-            e = e || event
-            if (!e.defaultPrevented) submit(e)
+        return elem
+    }
+
+    var input, wrong, random
+
+    while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild)
+
+    // The content is generated via JavaScript, for progressive enhancement.
+    wrapper.appendChild(n("div", null, [
+        n("p", {className: "text"}, [
+            "(Trying to limit spammers. Type or copy code to see my email: ",
+            random = n("span", {textContent: generate()}), ")",
+        ]),
+        input = n("input", {
+            className: "input",
+            onkeydown: function (e) {
+                e = e || event
+                if (e.defaultPrevented) return
+                // Just in case the browser has already dropped the legacy
+                // versions or doesn't support the newer version.
+                if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
+                    check(e)
+                }
+            },
+        }),
+        n("button", {
+            className: "submit",
+            onclick: function (e) {
+                e = e || event
+                if (!e.defaultPrevented) check(e)
+            },
+        }, "Submit"),
+        wrong = n("div", {className: "wrong hidden"}, [
+            "Wrong code. Please try again. Do note that it's case-sensitive.",
+        ]),
+    ]))
+
+    function check(e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (input.value === random.textContent) {
+            var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
+
+            while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild)
+            wrapper.appendChild(n("div", null, [
+                n("p", null, n("a", {href: "mailto:" + fixed}, fixed)),
+            ]))
+        } else {
+            random.textContent = generate()
+            wrong.className = wrong.className.replace(/\bhidden\b/, "")
         }
-    })
-})()
+    }
+})(document, document.getElementById("email--base"))

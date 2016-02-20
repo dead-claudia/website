@@ -114,6 +114,8 @@ website.get("*.*", get(base, {
         .pipe(o.res.status(200)),
 }))
 
+website.get(/^\/license[\/\.]/i, fail)
+
 website.get("*", get(base, {
     pre: o => o.res.redirect(`${o.req.baseUrl}/index.html`),
     dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/index.html`),

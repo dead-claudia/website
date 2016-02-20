@@ -1,8 +1,7 @@
 @charset "UTF-8"
 
 @require "./common.mixin.styl"
-
-/* TODO: implement mobile support. */
+@require "./fonts.mixin.styl"
 
 /* Common utilities */
 
@@ -14,129 +13,168 @@
     display none !important
     visibility hidden !important
 
+html, body, #content
+    height 100%
+
 textarea
     font-family inherit
     font-size inherit
 
 /* Global base styles */
 
-html, body
-    +desktop()
-        height 100%
-
 body
-    font-family "Arial", sans-serif
-    background-color page-border-color
-    color black
+    font-family Verdana, Arial, Helvetica, sans-serif
+    color text-color
+
+ul
+    list-style-type square
 
 a
     text-decoration none
     color link-color
 
-    &:hover
-        text-decoration underline
+a:hover
+    text-decoration underline
 
-    &:visited
-        color link-visited
-
-ul
-    list-style-type square
-
-h2
-    color header-color
-
-    +desktop()
-        font-weight 500
-        font-size 1.5em
-
-#content
-    +desktop()
-        display table
-        box-sizing border-box
-        background-color white
-        max-width 1200px
-        width 90%
-        height 100%
-        margin 0 auto
-        padding 1em 1.5em 0 1.5em
-        side border 1px solid #888
+a:visited
+    color link-visited
 
 #header
-    +desktop()
-        position relative
-        display table-row
-
-    .separator
-        +desktop()
-            margin-top -0.25em
-
-            &::after
-                content "|"
-                font-size 1.25em
-                color border-color
+    nav
+        background-color header-color
 
     a
-        color header-color
+        color header-text
+        text-decoration none
+        font-family "Antonio Light"
+        text-transform uppercase
+        display block
+        margin 0 auto
+        vert padding 0.5em
+        text-align center
+        width 100%
+        height 100%
 
-        +desktop()
-            font-weight 500
+    for x, i in random-colors
+        .l{i} a
+            background-color x
 
-    nav
-        +desktop()
-            rule bottom 0.5em
-            padding-bottom 1.8em
-            font-size 1.5em
-
-        > a
-            +desktop()
-                vertical-align middle
-                float left
-                display block
-
-                &:hover
-                    text-decoration none
-
-        > div
-            +desktop()
-                float right
-
-            div, a
-                +desktop()
-                    display inline-block
-                    vertical-align middle
-
-            a
-                +desktop()
-                    /* This needs to *not* be overridden */
-                    text-decoration none
-                    side margin 0.5em
-                    padding-bottom 0.1em
-                    border-bottom 2px solid transparent
-
-                    &.selected
-                    &:hover
-                        border-bottom-color header-color
+            &.selected, &:hover
+                background-color mix(#ccc, x, 45%)
 
 #body-wrapper
-    +desktop()
-        height 100%
-        display table-row
-        position relative
+    display table-row
+    position relative
+    background-color body-background
 
-        > div
-            height 100%
+    > div > h2
+        font-family "Antonio Light"
+        margin 0
+        padding 0.5em
+        background-color header-color
+        text-transform uppercase
+        color header-text
+        width auto
+        overflow hidden
+        font-weight normal
+
+#body
+    padding 0.5em
 
 #license
-    +desktop()
+    position relative
+    display table-row
+    background-color header-color
+
+    a
+        color header-text
+        // Since fonts, not CSS, control underline placement
+        padding-bottom 0.05em
+        border-bottom 1px solid white
+
+        // In case the viewport is sufficiently small, don't let the custom
+        // underline run into the text. This can only realistically happen on
+        // mobile unless a user stylesheet increases the size of an em. But it's
+        // here just in case.
+        line-height 1.5
+
+    a:hover
+        text-decoration none
+
+    div
+        color header-text
+
+    footer
+        margin 1em auto
+        text-align center
+
+header-size(size)
+    #header a
+        font-size size
+
+    #body-wrapper > div > h2
+        font-size size
+
++phone()
+    body
+        font-size 1.2em
+
+    header-size 1.75em
+
+    #content
+        display table
+
+    #header
         position relative
         display table-row
 
-    div
-        +desktop()
-            rule top 0.75em
+        .link
+            display inline-block
+            width 50%
 
-    footer
-        +desktop()
-            margin 1em auto
-            text-align center
-            width-scale 50% 200px 600px
++nonphone()
+    body
+        font-size 1em
+
+    #header
+        position fixed
+        left 0
+        top 0
+        height 100%
+        background-color header-color
+        color header-text
+
+        a
+            letter-spacing 0.025em
+
+        .link
+            display block
+
+    #content-body
+        position absolute
+        display table
+        right 0
+        top 0
+        height 100%
+
+    #body-wrapper
+        height 100%
+
+nav-width(size)
+    #header
+        width size
+
+    #content-body
+        width (100% - size)
+
++tablet()
+    header-size 1.5em
+    nav-width 30%
+
++desktop()
+    header-size 1.75em
+    nav-width 15%
+
+// My name should never wrap.
+@media screen and (min-width 1000px) and (max-width 1200px)
+    nav-width 20%

@@ -43,7 +43,6 @@ mixin song(name)
         .link
             +song--link(attributes.download) Download
             if attributes.audio
-                | #{""} - #{""}
                 +song--link(attributes.audio)
                     | Audio
                     //- Future-proofing

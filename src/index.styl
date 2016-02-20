@@ -3,11 +3,27 @@
 @require "./common.mixin.styl"
 
 #body
-    div
-        width 60%
-        margin 0.5em auto
-        text-align center
-
     img
-        width-scale auto 150px 450px
-        border-round 2px solid border-color 1em
+        width-scale 100% 150px 250px
+        border 2px solid border-color
+
++phone()
+    #body
+        div
+            margin 0.5em auto
+            text-align center
+
++nonphone()
+    #body
+        // Work around default stylesheets
+        p
+            margin-top 0
+            margin-bottom 1em
+
+        p ~ p
+            margin-top 1em
+
+        div
+            margin 0.5em
+            margin-right 0
+            float right

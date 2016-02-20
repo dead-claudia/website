@@ -5,45 +5,144 @@
 
 secondary-text-color = #666
 
-// Get rid of the existing rule above the license. It's duplicating the bottom
-// border of the last post.
-#license div
-    +desktop()
-        border-top none
-
-#body
-    .warning
-        +desktop()
-            padding 0.5em
-            border-round 1px solid border-color 1em
-            background-color #ff0
+#info
+    display block
 
 #blog
-    +desktop()
-        .info
-            display block
+    .warning
+        padding 0.5em
+        border 1px solid border-color
+        background-color #ff0
 
-        // Replace the divider while loading
-        .license-divider
-            rule bottom 0.5em
+    .blog-summary p:first-child
+        padding-bottom 1em
+        border-bottom 2px solid border-color
 
-        .blog-summary p:first-child
-            padding-bottom 1em
-            rule bottom
+    .summary-header
+        margin-bottom 1em
 
+    .summary-title
+        padding-bottom 1em
+
+    .tag-search input
+        padding 0.5em
+        border 2px solid border-color
+
+    .blog-list
+        border 2px solid border-color
+
+    .blog-summary-item
+        display block
+        padding 1em
+        // Since CSS doesn't have a ::last-line pseudo-element. Keep this as the
+        // difference between this normal padding and the bottom padding of
+        // .post-tag. If only it could be less brittle.
+        padding-bottom 0.7em
+        border-bottom 2px solid border-color
+
+        &:last-child
+            border-bottom none
+
+    .post-date
+        font-style italic
+        color secondary-text-color
+
+    .post-stub
+        text-decoration none
+
+    .post-title
+        color header-color
+        vert padding 0.5em
+        font-size 1.2em
+
+    .post-preview
+        color secondary-text-color
+        font-size 0.8em
+        font-style italic
+        padding-bottom 0.5em
+
+    .post-tags > span
+        padding-right 0.25em
+
+    .post-tag
+        border 1px solid border-color
+        display inline-block
+        color secondary-text-color
+        font-size 0.7em
+        margin 0.2em
+        margin-bottom 0.3em
+        padding 0.2em 0.25em
+        text-decoration none
+
+        &.post-tag-active
+            background-color #eee
+            font-weight 700
+
+    .blog-post .post-title
+        margin-top 0.5em
+
+    .post-body
+        width 100%
+
+        pre
+            break-word()
+            white-space pre-wrap
+
++phone()
+    #blog
+        .tag-search
+            label
+                padding-bottom 0.25em
+
+            input
+                display block
+                vert margin 0.25em
+                input-fix()
+
+        .post-title, .post-preview
+            break-word()
+
+        .blog-post
+            padding-top 0.5em
+
++tablet()
+    #blog
+        .tag-search
+            display table
+            width 100%
+            height 100%
+
+            label
+                display table-cell
+                height 100%
+                vertical-align middle
+                overflow hidden
+
+                // Note: this is a very brittle hack. Any time the label text
+                // needs updated, this will also have to change.
+                width 8em
+
+            input
+                display table-cell
+                vert margin 0.25em
+                input-fix()
+
++desktop()
+    #blog
         .summary-header
             clearfix()
             display block
-            margin-bottom 1em
 
         .summary-title
             display inline-block
             float left
-            padding-bottom 1em
 
         .tag-search
             display inline-block
             float right
+
+            // Because scroll bars suck (Chrome adds them)
+            vert margin 2px
 
             &::before
                 content ""
@@ -53,54 +152,8 @@ secondary-text-color = #666
                 padding-right 0.5em
 
             input
-                input-base()
-
-        .blog-list
-            border 2px solid border-color
-
-        .blog-summary-item
-            display block
-            padding 1em
-            // Since CSS doesn't have a ::last-line pseudo-element. Keep this as
-            // the difference between this normal padding and the bottom padding
-            // of .post-tag. If only it could be less brittle.
-            padding-bottom 0.7em
-            rule bottom
-
-            &:last-child
-                border-bottom none
-
-        .post-date
-            font-style italic
-            color secondary-text-color
-
-        .post-stub
-            text-decoration none
-
-        .post-title
-            color header-color
-            vert padding 0.5em
-            font-size 1.2em
-
-        .post-preview
-            color secondary-text-color
-            font-size 0.8em
-            font-style italic
-            padding-bottom 0.5em
-
-        .post-tags > span
-            padding-right 0.25em
-
-        .post-tag
-            border-round 1px solid border-color 0.25em
-            display inline-block
-            color secondary-text-color
-            font-size 0.7em
-            margin 0.2em
-            margin-bottom 0.3em
-            padding 0.2em 0.25em
-            text-decoration none
-
-            &.post-tag-active
-                background-color #eee
-                font-weight 700
+                display inline-block
+                margin 0.25em
+                margin-top 0
+                padding 0.5em
+                border 2px solid border-color

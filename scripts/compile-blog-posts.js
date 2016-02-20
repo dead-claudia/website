@@ -20,6 +20,8 @@ const json = path.resolve(distDir, "blog.json")
 generate((file, contents, url) => {
     const dest = path.resolve(distDir, "blog", url)
 
+    // TODO: compile single blog post to Jade and then to HTML
+
     return p.call(mkdirp, path.dirname(dest))
     .then(() => p.call(fs.writeFile, dest, contents, "utf-8"))
 })

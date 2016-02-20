@@ -1,8 +1,6 @@
 include ./page.mixin.jade
-include ./contact-email.mixin.jade
 
 link(rel="stylesheet" href="contact-finish.css")
-script(src="./contact-email.js")
 
 +page("Contact", "contact.html", "Contact - Thank you")
     p.
@@ -12,4 +10,4 @@ script(src="./contact-email.js")
         many emails I get from here as possible, so if you don't get an email,
         do feel free to send me an email directly.
 
-    .wrapper: +email
+    .wrapper: include ./contact-email.mixin.jade

@@ -4,40 +4,27 @@
 @import "./cc-licenses.mixin.styl"
 
 #body
-    .intro, .license + div
-        +desktop()
-            rule bottom 0.5em
-
     h3
-        +desktop()
-            color header-color
-            font-weight 500
-            font-size 1.25em
-            margin-top 0.75em
+        color header-color
+        font-weight 500
+        font-size 1.25em
+        margin-top 0.75em
 
     label
-        +desktop()
-            display block
-            font-weight 700
+        display block
+        font-weight 700
 
-    .cc-license
-        +desktop()
-            display table
-            margin 0
+    .cc-license img
+        padding-right 0.5em
+        margin-bottom 0.25em
 
-        > *
-            +desktop()
-                display table-cell
-                vertical-align middle
-
-        img
-            +desktop()
-                padding-right 0.5em
-
-        small
-            +desktop()
-                font-size 80%
+    .cc-license small
+        font-size 80%
 
     .license
-        +desktop()
-            margin-bottom 0.5em
+        margin-bottom 0.5em
+
++nonphone()
+    #body h3
+        border-top 2px solid border-color
+        padding-top 0.5em

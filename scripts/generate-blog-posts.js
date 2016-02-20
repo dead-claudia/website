@@ -110,7 +110,7 @@ module.exports = write => new Promise((resolve, reject) => {
                         return Promise.resolve(write(file, split.raw, url))
                         .then(() => done(), done)
                     } else {
-                        return undefined
+                        return done()
                     }
                 })
             }

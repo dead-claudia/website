@@ -41,7 +41,7 @@ module.exports = class JadeLocals {
         if (file === href) {
             return {
                 class: "selected",
-                href: file !== this.FILE && this.resolve(href),
+                href: this.resolve(href),
             }
         } else {
             return {href: this.resolve(href)}

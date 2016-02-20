@@ -6,19 +6,44 @@
     div
         display block
 
-        div
-            color red
-
-    input, button
-        input-base()
-        display inline-block
-
-    button
-        padding 0.5em 0.8em
-        margin-left 0.5em
-        text-align center
-        height auto
-        background-color #e2e2e2
-
-    p:last-child
+    p
         margin-bottom 0
+
+    .text
+        margin-bottom 1em
+
+    .wrong
+        color red
+
+    .input
+        display inline-block
+        padding 0.5em
+        border 2px solid border-color
+
+    .submit
+        margin 0.25em
+        padding 0.5em 0.8em
+        border 2px solid button-border-color
+        color header-text
+        height auto
+        background-color button-color
+        text-align center
+
++phone()
+    #email--base
+        div
+            margin 0 auto
+            width 80%
+
+        .input
+            margin-bottom 0.75em
+            input-fix()
+
++nonphone()
+    #email--base
+        .input
+            margin 0.25em
+            margin-top 0
+
+        .submit
+            margin-left 0.5em

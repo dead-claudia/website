@@ -1,7 +1,5 @@
 include ./page.mixin.jade
-include ./contact-email.mixin.jade
 link(rel="stylesheet" href="contact.css")
-script(src="./contact-email.js")
 
 mixin control(id)
     div
@@ -13,7 +11,7 @@ mixin control(id)
         You can always email me directly. My email is below. Otherwise, you can
         use the contact form provided below for convenience.
 
-    .wrapper: +email
+    .wrapper: include ./contact-email.mixin.jade
 
     noscript: p You need JavaScript enabled for this form to work.
 
@@ -33,7 +31,7 @@ mixin control(id)
 
             #errors.warning.hidden
 
-            input(type="submit" value="Send")#submit
+            #submit-wrapper: input(type="submit" value="Send")#submit
 
             #gotcha-message.warning.hidden
                 | Hidden field modified. Form locked. (If you are a human,

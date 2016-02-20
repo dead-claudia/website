@@ -16,11 +16,9 @@ script(src=(
         (minified ? ".min" : "") + ".js"
 ))
 
-script(src="blog.js")
+script(src=resolve("blog.js"))
 
 +page("Blog")
     //- So the blog wrapper is separate from the page wrapper.
     #blog
-        .info
-            #info: noscript You need JavaScript enabled for this to work.
-            .license-divider
+        #info: You need to be able to run JavaScript for this to work.

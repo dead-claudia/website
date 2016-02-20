@@ -64,11 +64,14 @@ require("./run.js")({
 
     "compile:rest": () => walk(r("../src"), ignore)
     .then(srcs => Promise.all(srcs.map(src => {
+        // Don't create the parent directory for these files.
+        if (/^license(\.[^\.]*)$/.test(src)) return Promise.resolve()
+        if (/\.mixin\.[^\\\/\.]+$/.test(src)) return Promise.resolve()
+
         const name = path.relative(r("../src"), src)
         const dist = join(r("../dist"), name)
 
         return mkdirp(path.dirname(dist)).then(() => {
-            if (/\.mixin\.[^\\\/\.]+$/.test(src)) return undefined
             if (/\.js$/.test(src)) return minifyJs(src, dist, name)
             if (/\.styl$/.test(src)) return compileStylus(src, dist, name)
             if (/\.jade$/.test(src)) return compileJade(src, dist, name)

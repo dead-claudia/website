@@ -2,16 +2,20 @@
 
 @import "./common.mixin.styl"
 
-#body li
-    font-size 1.5em
+#body
+    ul
+        margin-top 0
 
-    > div
-        margin 0 1.5em 1em 0.75em
-        font-size 0.67em
+    li
+        font-size 1.25em
 
-    > a
+    li > div
+        font-size 0.8em
+        vert margin 0.5em
+
+    li > a
         display inline-block
-        margin 0.5em
+        margin-top 0.5em
 
         // These need to *not* be overridden by the :hover and :visited
         // selectors
@@ -21,3 +25,12 @@
         // Make the div trim to size.
         &::after
             display block
+
++phone()
+    #body li > *
+        break-word()
+
++nonphone()
+    #body
+        padding-top 0
+        padding-left 0

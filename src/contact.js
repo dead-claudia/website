@@ -56,46 +56,40 @@
         xhr.send(out)
     }
 
-    function verifyExists(lines, id, message) {
-        if (/^\s*$/.test(document.getElementById(id).value)) {
-            lines.push(message)
-        }
-    }
-
-    function verifyEmail(lines) {
-        var email = document.getElementById("email").value
-
-        if (email !== "" && !emailRegex.test(email)) {
-            lines.push("If you want to give me an email address, it needs to " +
-                "be a valid one.")
-        }
+    var messages = {
+        name: "A name is required, even if it's a pseudonym.",
+        email: "An email address must be valid if given.",
+        subject: "A subject is required. \"No subject\" is okay.",
+        message: "A message is required. \"See title\" works.",
     }
 
     function verifyAndSend() {
         var lines = []
 
-        verifyExists(lines, "name", "A name is required, even if it's a " +
-            "pseudonym. I'd like to know who to call you!")
+        function verifyExists(id) {
+            if (/^\s*$/.test(document.getElementById(id).value)) {
+                lines.push(messages[id])
+            }
+        }
 
-        verifyEmail(lines)
+        verifyExists("name")
 
-        verifyExists(lines, "subject", "A subject is required. Helps with " +
-            "sifting through emails.")
+        var email = document.getElementById("email").value
 
-        verifyExists(lines, "message", "A message is required. Even if the " +
-            "title is the message, I'd prefer that to be explicit.")
+        if (email !== "" && !emailRegex.test(email)) {
+            lines.push(messages.email)
+        }
+
+        verifyExists("subject")
+        verifyExists("message")
 
         var errors = document.getElementById("errors")
 
         if (lines.length) {
-            var text = "<p>Could you fix these problems for me before " +
-                "submitting this form?</p><ul>"
-
-            for (var i = 0; i < lines.length; i++) {
-                text += "<li>" + lines[i] + "</li>"
-            }
-
-            errors.innerHTML = text + "</ul>"
+            errors.innerHTML =
+                "<p>Could you fix these problems for me before submitting " +
+                "this form?</p><ul><li>" + lines.join("</li><li>") +
+                "</li></ul>"
             errors.className = errors.className.replace(/\bhidden\b/g, "")
         } else {
             if (!/\bhidden\b/.test(errors.className)) {
