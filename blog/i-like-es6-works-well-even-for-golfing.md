@@ -1,7 +1,7 @@
 
 
 *Edit (2016-01-14): Remove license disclaimer, re-license it under site's
-general license. I also fixed typographygrammar/bugs/clarity/etc. throughout.*
+general license. I also fixed typography/grammar/bugs/clarity/etc. throughout.*
 
 *Update: updated much of the code, made the JS smaller and the assembly half the
 instruction size. Also fixed the max line length for comments to 80 characters.*
