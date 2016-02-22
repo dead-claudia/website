@@ -31,7 +31,13 @@ mixin page(name, file, title)
         //- Hack for 2-column layout
         #content-body
             #body-wrapper: div
-                h2= name
+                case file || FILE
+                    when "index.html": h2.l0= name
+                    when "projects.html": h2.l1= name
+                    when "blog.html": h2.l2= name
+                    when "music.html": h2.l3= name
+                    when "contact.html": h2.l5= name
+                    default: h2= name
                 #body: block
 
             #license: div
