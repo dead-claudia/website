@@ -3,12 +3,14 @@
 const fs = require("fs")
 const path = require("path")
 const express = require("express")
-const app = express()
-
-const JadeLocals = require("./jade-locals.js")
-const generateBlog = require("./generate-blog-posts.js")
+// TODO: add feed reader support
+// const Feed = require("feed")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
+
+const jadeLocals = require("./jade-locals.js")
+const generateBlog = require("./generate-blog-posts.js")
+const app = express()
 
 function nocache(res) {
     res.setHeader("Pragma", "no-cache")
@@ -35,12 +37,8 @@ app.use((req, res, next) => {
 })
 
 const website = new express.Router()
-
 const missing = {code: "ENOENT"}
-
-function fail(req, res, next) {
-    return next(missing)
-}
+const fail = (req, res, next) => next(missing)
 
 // .mixin.{html,css}, .jade, .ignore, .ignore.*
 website.get(/\.(mixin\.(html|css)|jade|ignore(\.[^\.]+))$/, fail)
@@ -49,7 +47,7 @@ website.get("*.html", (req, res) => {
     const FILE = req.path.slice(1)
     const file = FILE.replace(/\.html$/, ".jade")
 
-    return res.render(file, new JadeLocals(FILE, false))
+    return res.render(file, jadeLocals(FILE, false))
 })
 
 website.get("*.css", stylus.middleware({
@@ -57,11 +55,10 @@ website.get("*.css", stylus.middleware({
     // This'll be cleared when doing a full compilation, anyways.
     dest: path.resolve(__dirname, "../dist"),
     force: true,
-    compile(str, path) {
-        return stylus(str)
+    compile: (str, path) =>
+        stylus(str)
         .set("filename", path)
-        .use(autoprefixer())
-    },
+        .use(autoprefixer()),
 }))
 
 website.get("/blog.json", (req, res, next) => generateBlog().then(data => {
@@ -77,48 +74,40 @@ website.get("/blog/*.md", (req, res, next) => {
 
 const base = path.resolve(__dirname, "../src")
 
-function get(root, methods) {
-    return (req, res, next) => {
-        const file = path.resolve(root, req.path.slice(1))
+const get = (root, methods) => (req, res, next) => {
+    const file = path.resolve(root, req.path.slice(1))
 
-        if (!methods.pre({file, req, res, next})) {
-            return undefined
-        }
-
-        return fs.stat(file, (err, stat) => {
-            if (err != null) return next(err)
-            if (stat.isDirectory()) {
-                return methods.dir({file, req, res, next})
-            } else {
-                return methods.file({file, req, res, next})
-            }
-        })
-    }
+    if (!methods.pre({file, req, res, next})) return undefined
+    return fs.stat(file, (err, stat) => {
+        if (err != null) return next(err)
+        if (stat.isDirectory()) return methods.dir({file, req, res, next})
+        return methods.file({file, req, res, next})
+    })
 }
 
-website.get("*.css", get(path.resolve(__dirname, "../dist"), {
+function renderDir(res, dir) {
+    const file = `${dir.slice(1)}/index`
+
+    return res.render(`${file}.jade`, jadeLocals(`${file}.html`, false))
+}
+
+const read = (pattern, base) => website.get(pattern, get(base, {
     pre: o => (o.res.type(path.basename(o.file)), true),
-    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
+    dir: o => renderDir(o.res, o.req.baseUrl + o.req.path),
     file: o =>
         fs.createReadStream(o.file)
         .on("error", o.next)
         .pipe(o.res.status(200)),
 }))
 
-website.get("*.*", get(base, {
-    pre: o => (o.res.type(path.basename(o.file)), true),
-    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
-    file: o =>
-        fs.createReadStream(o.file)
-        .on("error", o.next)
-        .pipe(o.res.status(200)),
-}))
+read("*.css", path.resolve(__dirname, "../dist"))
+read("*.*", base)
 
 website.get(/^\/license[\/\.]/i, fail)
 
 website.get("*", get(base, {
-    pre: o => o.res.redirect(`${o.req.baseUrl}/index.html`),
-    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/index.html`),
+    pre: o => renderDir(o.res, o.req.baseUrl),
+    dir: o => renderDir(o.res, o.req.baseUrl + o.req.path),
     file: o => o.next(missing),
 }))
 

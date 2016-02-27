@@ -64,8 +64,8 @@
                 // Not touching this...
                 if (e.defaultPrevented) return
 
-                // Just in case the browser has already dropped the
-                // legacy versions or doesn't support the newer version.
+                // Just in case the browser has already dropped the legacy
+                // versions or doesn't support the newer version.
                 if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
                     e.preventDefault()
                     e.stopPropagation()
@@ -85,7 +85,7 @@
                 m("input[type=text]", {
                     value: ctrl.value(),
                     oninput: m.withAttr("value", ctrl.value),
-                    onkeydown: ctrl.onsubmit.bind(ctrl),
+                    onkeydown: ctrl.onsubmit,
                 }),
                 ctrl.fail()
                     ? m(".warning", [
@@ -114,7 +114,9 @@
      */
     var tagHeader = {
         controller: function (len, tag) {
-            if (validateTag(tag)) {
+            if (!validateTag(tag)) {
+                this.banner = "Invalid tag: '" + tag + "'"
+            } else {
                 var tags = splitTag(tag)
                 var list
 
@@ -132,8 +134,6 @@
 
                 this.banner = "Posts tagged " + list + " (" + len + " post" +
                     (len === 1 ? "" : "s") + "):"
-            } else {
-                this.banner = "Invalid tag: '" + tag + "'"
             }
         },
 
@@ -150,6 +150,34 @@
             ])
         },
     }
+
+    var tagList = {
+        view: function (_, post, isTag, resolvedTag) {
+            return m(".post-tags", [
+                m("span", "Tags:"),
+                post.tags.map(function (tag) {
+                    var active = isTag && tag === resolvedTag
+                        ? ".post-tag-active"
+                        : ""
+
+                    return m("a.post-tag" + active,
+                        route("/tags/" + tag),
+                        tag)
+                }),
+            ])
+        },
+    }
+
+    // var feed = {
+    //     view: function (_, type, href) {
+    //         return m("p", [
+    //             type, "feed",
+    //             m("a", {href: href}, [
+    //                 m("img.feed-icon[src=./feed-icon-16.gif]"),
+    //             ]),
+    //         ])
+    //     },
+    // }
 
     /**
      * The combined summary and tag view. The two views are only different in
@@ -169,6 +197,10 @@
                     "coding, etc.)",
                 ]),
 
+                // TODO: add syndication feeds
+                // m(feed, "Atom", "blog.atom.xml"),
+                // m(feed, "RSS", "blog.rss.xml"),
+
                 isTag
                     ? m(tagHeader, posts.length, resolvedTag)
                     : m(summaryHeader),
@@ -186,18 +218,7 @@
                             m(".post-preview", post.preview, "..."),
                         ]),
 
-                        m(".post-tags", [
-                            m("span", "Tags:"),
-                            post.tags.map(function (tag) {
-                                var active = isTag && tag === resolvedTag
-                                    ? ".post-tag-active"
-                                    : ""
-
-                                return m("a.post-tag" + active,
-                                    route("/tags/" + tag),
-                                    tag)
-                            }),
-                        ]),
+                        m(tagList, post, isTag, resolvedTag),
                     ])
                 })),
             ])
@@ -289,6 +310,7 @@
                         ? m.trust(ctrl.content())
                         : m(".post-loading", "Loading..."),
                 ]),
+                m(tagList, post),
                 //                           "Home ►" or "Home \u25ba"
                 m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
             ])
@@ -317,12 +339,12 @@
 
     var posts = m.prop()
     var tags
-    var urls = {}
+    var urls = Object.create(null)
 
     function initTags() {
         // The tags will retain the post sort, because this transformation
         // doesn't modify the order. Also, it's deduplicated.
-        tags = {}
+        tags = Object.create(null)
 
         posts().forEach(function (post) {
             post.tags.forEach(function (tag) {
@@ -340,7 +362,7 @@
         if (!validateTag(tag)) return []
 
         var ret = []
-        var cache = {}
+        var cache = Object.create(null)
 
         // Remove the duplicates. The URL is the key for the posts, since they
         // all have unique URLs.
@@ -366,10 +388,9 @@
     .then(function (data) { return data.posts })
     .then(posts)
     .then(function (posts) {
-        // My timezone offset is -5 hours, and I need to display that
-        // correctly. This calculates the correct relative offset in
-        // milliseconds, which should be 0 if in EST (i.e. offset of -5
-        // hours).
+        // My timezone offset is -5 hours, and I need to display that correctly.
+        // This calculates the correct relative offset in milliseconds, which
+        // should be 0 if in EST (i.e. offset of -5 hours).
         var offset = 60 * 1000 *
             (new Date().getTimezoneOffset() - 5 * 60)
 

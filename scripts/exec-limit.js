@@ -16,12 +16,13 @@ exec.limit = os.cpus().length + 1
 setInterval(() => {
     if (processes >= exec.limit || queue.length === 0) return undefined
     processes++
+
     const job = queue.shift()
 
     job.child = spawn(job.cmd, job.args, job.opts)
     job.child.on("exit", () => processes--)
 
-    return job.run()
+    return run(job)
 }, 0)
 
 function format(cmd, args, code, signal) {
@@ -32,48 +33,32 @@ function format(cmd, args, code, signal) {
             cmd += ` ${arg}`
         }
     }
+
     let res = `'${cmd}' exited with code ${code}.`
 
     if (signal) res = `Child killed with signal ${signal}.\n\n${res}`
     return {stack: res}
 }
 
-class ExecJob {
-    constructor(opts) {
-        this.cmd = opts.cmd
-        this.args = opts.args
-        this.onopen = opts.onopen
-        this.resolve = opts.resolve
-        this.reject = opts.reject
-        this.opts = opts.opts
-        this.child = null
-    }
+function call(job, prop, value) {
+    if (typeof job[prop] !== "function") return undefined
+    const callback = job[prop]
 
-    call(prop) {
-        return value => {
-            if (this[prop] == null) return undefined
-            const callback = this[prop]
+    job[prop] = undefined
 
-            this[prop] = null
+    return callback(value)
+}
 
-            return callback(value)
+function run(job) {
+    call(job, "onopen", job.child)
+    job.child.once("error", err => call(job, "reject", err))
+    job.child.once("close", (code, signal) => {
+        if (code || signal) {
+            return call(job, "reject", format(job.cmd, job.args, code, signal))
+        } else {
+            return call(job, "resolve")
         }
-    }
-
-    run() {
-        new Promise((resolve, reject) => {
-            this.child.once("error", reject)
-            this.child.once("close", (code, signal) => {
-                if (code || signal) {
-                    return reject(format(this.cmd, this.args, code, signal))
-                } else {
-                    return resolve()
-                }
-            })
-        })
-        .then(this.call("resolve"), this.call("reject"))
-        return this.call("onopen")(this.child)
-    }
+    })
 }
 
 module.exports = exec
@@ -84,6 +69,6 @@ function exec(str, onopen, opts) {
     const cmd = args.shift()
 
     return new Promise((resolve, reject) => {
-        queue.push(new ExecJob({cmd, args, onopen, resolve, reject, opts}))
+        queue.push({cmd, args, onopen, resolve, reject, opts, child: null})
     })
 }

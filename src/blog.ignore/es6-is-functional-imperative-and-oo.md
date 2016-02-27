@@ -154,24 +154,24 @@ function* filter(fn) {
 I can't end this section properly without at least mentioning the new Array
 methods:
 
-- `[].copyWithin(target, start, end = this.length)` ‒ Copies entries
-  in-place from the range `start` to `end` to the range of same length
-  starting at `target`. Example:
+-   `[].copyWithin(target, start, end = this.length)` ‒ Copies entries
+    in-place from the range `start` to `end` to the range of same length
+    starting at `target`. Example:
 
-  ```js
-  [1, 2, 3, 4, 5].copyWithin(0, 3) //=> [4, 5, 1, 2, 3]
-  ```
+    ```js
+    [1, 2, 3, 4, 5].copyWithin(0, 3) //=> [4, 5, 1, 2, 3]
+    ```
 
-- `[].entries()` ‒ Returns an iterator (like a generator) for the array.
+-   `[].entries()` ‒ Returns an iterator (like a generator) for the array.
 
-- `[].find(fn)` ‒ Returns the first entry that `fn` returns `true` for,
-  `undefined` otherwise.
+-   `[].find(fn)` ‒ Returns the first entry that `fn` returns `true` for,
+    `undefined` otherwise.
 
-- `[].findIndex(fn)` ‒ Like `[].indexOf(val)`, but for functions. Returns
-  the first index that `fn` returns true for, -1 otherwise.
+-   `[].findIndex(fn)` ‒ Like `[].indexOf(val)`, but for functions. Returns
+    the first index that `fn` returns true for, -1 otherwise.
 
-- `[].keys()`, `[].values()` ‒ Mainly for consistency with
-  `Map.prototype.keys()`, `Map.prototype.values()`, and the `Set` equivalents.
+-   `[].keys()`, `[].values()` ‒ Mainly for consistency with
+    `Map.prototype.keys()`, `Map.prototype.values()`, and the `Set` equivalents.
 
 ## Imperative
 
@@ -239,18 +239,19 @@ ES6 will add to the confusion of what JavaScript really is, albeit in an awesome
 way. There are three primary categories people typically try to lump JavaScript
 into, and they're all (mostly) right:
 
-- Functional: arrow functions, more generic Array methods, some new Array
-  methods, lazy generators.
+-   Functional: arrow functions, more generic Array methods, some new Array
+    methods, lazy generators.
 
-- Imperative: relatively self-explanatory
+-   Imperative: relatively self-explanatory.
 
-- Object-oriented: simpler class declaration syntax, more deeply integrated with
-  the language, may make more parts of the DOM possible to implement in
-  JavaScript.
+-   Object-oriented: simpler class declaration syntax, more deeply integrated
+    with the language, may make more parts of the DOM possible to implement in
+    JavaScript.
 
-  - DOM Level 4 will replace HTMLCollections and NodeLists with Elements, an
-    actual ES6-style Array subclass with two additional methods:
-    `Elements.prototype.query()` (like `Element.prototype.querySelector()`) and
-    `Elements.prototype.queryAll()` (like
-    `Element.prototype.querySelectorAll()`). This will make the DOM even easier
-    to work with and an even better fit for both functional and OO programming.
+    -   DOM Level 4 will replace HTMLCollections and NodeLists with Elements, an
+        actual ES6-style Array subclass with two additional methods:
+        `Elements.prototype.query()` (like `Element.prototype.querySelector()`)
+        and `Elements.prototype.queryAll()` (like
+        `Element.prototype.querySelectorAll()`). This will make the DOM even
+        easier to work with and an even better fit for both functional and OO
+        programming.

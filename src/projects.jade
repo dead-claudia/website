@@ -2,33 +2,42 @@ include ./page.mixin.jade
 
 link(rel="stylesheet" href="projects.css")
 
-mixin project(name, href)
+mixin project(name, href, external)
+    - if (!href) href = name.toLowerCase()
+    - if (!external) href = "https://github.com/isiahmeadows/" + href
     li
-        a(target="_blank" href=href)= name
+        +a(href, true)= name
         div: block
+
+mixin func(name)
+    - var base = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/"
+    +a(base + name.replace(/\./g, "/"))= name
 
 +page("Projects")
     ul
-        +project("This Website", "https://github.com/isiahmeadows/website").
+        +project("This Website", "website").
             This website itself has its source open, ready to explore. I've got
-            nothing at all to hide here. No secret codes or anything that isn't
-            anything obvious like a special key or password. I love open source!
+            nothing at all to hide here. I keep as few secret keys and passwords
+            for this as possible. I love open source!
 
-        +project("Mithril", "https://mithril.js.org").
-            A lightweight, simple, and unopinionated MVC framework originally
-            created by #[a(target="_blank" href="http://lhorie.blogspot.com") Leo Horie].
-            I am an active contributor to this framework, but my main focus is
-            in performance, where this also really shines (it's light enough and
-            fast enough to work very well in mobile). My blog also uses this.
+        +project("Mithril", "https://mithril.js.org", true).
+            A lightweight, simple, and unopinionated
+            #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller", true) Model-View-Controller]
+            framework originally created by #[+a("http://lhorie.blogspot.com", true) Leo Horie].
+            I am an active contributor to this framework, but I primarily
+            contribute to its performance, where this also really shines. It's
+            light enough and fast enough to work very efficiently on mobile,
+            where most larger JavaScript frameworks struggle. My blog happens to
+            use this framework itself.
         
-        +project("Techtonic", "https://github.com/isiahmeadows/techtonic").
-            An experimental test framework that eschews several existing
-            conventions, such as traditional assertion messages and decoupled
-            assertions, in favor for simplicity and very easy, modular
-            extensibility. It's still a work in progress, but it does use itself
-            for its own testing.
+        +project("Techtonic").
+            An experimental test framework of I'm currently writing that eschews
+            several existing conventions, such as traditional assertion messages
+            and decoupled assertions, in favor for simplicity and very easy
+            extensibility. It's still a large work in progress, but it already
+            uses itself for its own testing.
 
-        +project("m-iso", "https://github.com/isiahmeadows/m-iso").
+        +project("m-iso").
             A now-deprecated attempt to bring Mithril server-side, which unlike
             the majority of attempts I know of, this tried to bring Mithril's
             full data model as well as mere rendering, for full server-side
@@ -36,21 +45,26 @@ mixin project(name, href)
             future extension of it was to allow for multiple roots. It was
             capable from the start to render XML, XHTML, legacy HTML, and HTML5
             Polyglot, as well as regular HTML5. It could also support external
-            renderers. This had not yet made it to 1.0.
+            renderers. This had not yet made it to 1.0. I am considering
+            resurrecting this project later, if enough people are interested
+            enough.
 
-        +project("babel-plugin-proto-to-create", "https://github.com/isiahmeadows/babel-plugin-proto-to-create").
-            A plugin for Babel 5 to convert simple object literals that contain
-            a literal #[code __proto__] property to use
-            #[a(target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create") Object.create]
-            and simple property assignment for regular properties and
-            #[a(target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty") Object.defineProperty]
-            to assign getters and setters. I plan to update this to support
-            Babel 6 eventually.
+        +project("babel-plugin-proto-to-create").
+            A plugin for Babel, a ECMAScript 6+ to ECMAScript 5 transpiler to
+            convert simple object literals that contain a literal
+            #[code __proto__] property to use #[+func("Object.create")] and
+            simple property assignment for regular properties and
+            #[+func("Object.defineProperty")] to assign getters and setters. It
+            currently is written for Babel 5, but I plan to update this to
+            support Babel 6 eventually.
 
-        +project("ttyped", "https://github.com/isiahmeadows/ttyped").
-            A simple runtime type-checking framework designed for LiveScript,
-            JavaScript, and CoffeeScript, made to act like a function or method
-            decorator. It is currently powered by
-            #[a(target="_blank" href="http://npmjs.com/packages/type-check") type-check], but
-            that may likely change in the future. It's still highly unstable,
-            and I have a significant change in progress.
+        +project("ttyped").
+            A simple runtime type-checking framework designed for JavaScript
+            using the #[+a("https://github.com/wycats/javascript-decorators", true) decorator proposal],
+            #[+a("http://livescript.net", true) LiveScript], and
+            #[+a("http://coffeescript.org", true) CoffeeScript], made to act
+            like a function or method decorator. It is currently powered by
+            #[+a("http://npmjs.com/packages/type-check", true) type-check], but
+            that is likely to change in the next major update. It's still highly
+            unstable, and I have a significant change in progress which uses its
+            own engine instead.

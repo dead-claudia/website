@@ -4,9 +4,9 @@ if (require.main === module) {
     throw new Error("This isn't a runnable script!")
 }
 
-const p = require("./promise.js")
-const fs = p.promisifyAll(require("fs"), ["stat", "readdir"])
+const fs = require("fs")
 const path = require("path")
+const p = require("./promise.js")
 
 function flatten(list) {
     return [].concat.apply([], list.map(file =>
@@ -14,11 +14,11 @@ function flatten(list) {
 }
 
 function walk(dir, ignore) {
-    return fs.readdirAsync(dir)
+    return p.call(fs.readdir, dir)
     .then(files => files.filter(file => !ignore || !ignore(file)))
     .then(files => files.map(file => path.join(dir, file)))
     .then(files => Promise.all(files.map(file => {
-        return fs.statAsync(file).then(stat => {
+        return p.call(fs.stat, file).then(stat => {
             if (stat.isDirectory()) return walk(file, ignore)
             if (stat.isFile()) return file
             return []
@@ -26,6 +26,4 @@ function walk(dir, ignore) {
     })))
 }
 
-module.exports = function (dir, ignore) {
-    return walk(dir, ignore).then(flatten)
-}
+module.exports = (dir, ignore) => walk(dir, ignore).then(flatten)

@@ -22,6 +22,7 @@
     "eslint": "^2.1.0",
     "eslint-config-isiahmeadows": "0.1.4",
     "express": "^4.13.3",
+    "feed": "^0.3.0",
     "html-minifier": "^1.1.1",
     "jade": "^1.11.0",
     "js-yaml": "^3.5.1",

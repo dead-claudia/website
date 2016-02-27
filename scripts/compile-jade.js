@@ -9,7 +9,7 @@ const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.jade$/, ".html")
 const name = process.argv[4]
 
-const JadeLocals = require("./jade-locals.js")
+const jadeLocals = require("./jade-locals.js")
 const jade = require("jade")
 const HTMLMinifier = require("html-minifier")
 
@@ -20,7 +20,7 @@ const FILE = name
 
 try {
     const src = jade.compileFile(infile, {filename: infile})(
-        new JadeLocals(FILE, true)
+        jadeLocals(FILE, true)
     )
 
     const minified = HTMLMinifier.minify(src, {

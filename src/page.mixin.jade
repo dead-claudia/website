@@ -5,6 +5,10 @@ link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0
 link(rel="license" href="https://github.com/isiahmeadows/website/blob/master/LICENSE")
 link(rel="stylesheet" href=resolve("page.css"))
 link(rel="shortcut icon" href=resolve("favicon.ico"))
+        
+mixin a(href, newTab)
+    a(href=href target=(!!newTab && "_blank"))&attributes(attributes)
+        block
 
 mixin page--link(name, file)
     a&attributes(navAttrs(name, file))
@@ -19,20 +23,20 @@ mixin page(name, file, title)
     #content
         #header
             nav
-                a(href=resolve("index.html")) Isiah Meadows
+                +a(resolve("index.html")) Isiah Meadows
 
                 div
                     .link.l0: +page--link("index.html", file) Home
                     .link.l1: +page--link("projects.html", file) Projects
                     .link.l2: +page--link("blog.html", file) Blog
                     .link.l3: +page--link("music.html", file) Music
-                    .link.l4: a(href="https://github.com/isiahmeadows") Github
+                    .link.l4: +a("https://github.com/isiahmeadows", true) Github
                     .link.l5: +page--link("contact.html", file) Contact
 
         //- Hack for 2-column layout
         #content-body
             #body-wrapper: div
-                case file || FILE
+                case file != null ? file : FILE
                     when "index.html": h2.l0= name
                     when "projects.html": h2.l1= name
                     when "blog.html": h2.l2= name
@@ -50,7 +54,7 @@ mixin page(name, file, title)
                             International License, and all source code is licensed
                             under the ISC License, unless otherwise specified.
                         p: a(
+                            href="https://github.com/isiahmeadows/website/blob/master/LICENSE"
                             target="_blank"
                             rel="license"
-                            href="https://github.com/isiahmeadows/website/blob/master/LICENSE"
                         ) See here for the text of both of these licenses.

@@ -4,7 +4,7 @@ include ./cc-licenses.mixin.jade
 link(rel="stylesheet" href="music.css")
 
 mixin song(href)
-    li: a(href=href)
+    li: +a(href, true)
         block
 
 +page("Music")
@@ -14,8 +14,7 @@ mixin song(href)
             still enjoy it now. I haven't finished as much recently mostly due
             to time being taken up by other things, but in the meantime, I still
             enjoy improvising on the piano and other various smaller instruments
-            (I really enjoy my
-            #[a(href="https://en.wikipedia.org/wiki/Tin_whistle") tin whistle],
+            (I really enjoy my #[+a("https://en.wikipedia.org/wiki/Tin_whistle") tin whistle],
             even though I don't play it nearly as much). In some of the pieces,
             I explained some of my inspiration and/or background when I wrote
             the piece itself.

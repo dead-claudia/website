@@ -137,7 +137,9 @@ const Type = {
 }
 ```
 
-Very lightweight mixins that don't need any syntactical support. Not to mention you could even define these is-a/has-a relationships conditionally at object creation time:
+Very lightweight mixins that don't need any syntactical support. Not to mention
+you could even define these is-a/has-a relationships conditionally at object
+creation time:
 
 ```js
 const Type = {

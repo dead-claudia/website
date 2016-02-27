@@ -3,32 +3,42 @@ include ./page.mixin.jade
 link(rel="stylesheet" href="index.css")
 
 +page("Home")
-    - var langs = "https://github.com/jashkenas/coffeescript/wiki/list-of-languages-that-compile-to-js"
     div: img(src="pic.jpg" alt="picture of Isiah Meadows")
 
     p.
         I'm a full stack web developer who specializes in (and loves)
-        #[a(href="https://nodejs.org") Node.js]. I also enjoy occasionally
-        experimenting with other programming languages, such as Haskell, C++,
-        Scala, Clojure (if #[a(href="http://leiningen.org/") Leiningen] wasn't
-        so slow), and
-        #[a(href=langs) many of the languages that compile to JavaScript] (my
-        favorite is #[a(href="http://livescript.net/") LiveScript]). I also
-        maintain a #[a(href="blog.html") blog], full of various ramblings on
-        coding, religion, politics, and whatever else crosses my mind that's
-        vaguely worth rambling in a blog post for.
+        #[+a("https://nodejs.org") Node.js], a server-side JavaScript
+        platform. I often work on tools for the back end and front end, but I
+        also create beautiful websites for all my clients, using modern Web
+        technologies such as HTML5, CSS3, and JavaScript, as well as several
+        tools to help accomplish these with even more flexibility. This website
+        itself is created to take full advantage of HTML5, CSS3, and the latest
+        JavaScript trends where applicable. If you're interested,
+        #[+a("contact.html?w") please contact me here]. (Please make sure to
+        give me your email in that form as well.)
+    
+    p.
+        Another thing I enjoy to do is develop many useful #[+a("projects.html") JavaScript tools].
+        These help me in creating Web sites and other tools, but I keep them
+        open source so they can not only help me create great things, but also
+        others who are interested as well.
+    
+    p.
+        I do occasionally maintain a #[+a("blog.html") low-traffic blog] full of
+        professional and not-so-professional whatevers that cross my head. It's
+        mostly targeted towards those with a coding background, so it
+        predictably has quite a bit of jargon within it.
 
     p.
-        My passions aren't limited to merely programming. I also enjoy playing
-        piano (sorry, no recordings), listening to music, and even
-        #[a(href="music.html") creating it myself]. My own music spans quite a
-        few genres, but even the music I listen to is a bit broad. Oh, and I
-        like reading anything intellectually interesting like
-        #[a(href="http://www.iflscience.com/") IFLScience] or
-        #[a(href="http://www.buzzfeed.com/") BuzzFeed]
-        (and
-        #[a(href="http://www.theatlantic.com/politics/") occasionally],
-        #[a(href="http://www.huffingtonpost.com/politics/") less]
-        #[a(href="https://www.washingtonpost.com/politics/") intellectually]
-        #[a(href="https://www.salon.com/category/politics/") satisfying]
-        #[a(href="http://www.nbcnews.com/politics") ones], too).
+        My passions aren't limited to coding. I also enjoy playing piano (sorry,
+        no recordings yet), listening to music, and even
+        #[+a("music.html") creating it myself]. My own music spans quite a few
+        genres, but even the music I listen to is a bit broad. Oh, and I like
+        reading anything intellectually interesting like
+        #[+a("http://www.iflscience.com/") IFLScience] or
+        #[+a("http://www.buzzfeed.com/") BuzzFeed] (and
+        #[+a("http://www.theatlantic.com/politics/") occasionally],
+        #[+a("http://www.huffingtonpost.com/politics/") less]
+        #[+a("https://www.washingtonpost.com/politics/") intellectually]
+        #[+a("https://www.salon.com/category/politics/") satisfying]
+        #[+a("http://www.nbcnews.com/politics") ones], too).

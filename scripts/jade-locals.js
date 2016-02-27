@@ -5,46 +5,64 @@ if (require.main === module) {
 }
 
 const path = require("path").posix
+const cache = new Map()
 
-function getAllMethods(obj) {
-    return Object.getOwnPropertyNames(obj)
-    .filter(key => key !== "constructor")
-    .concat(Object.getOwnPropertySymbols(obj))
-    .filter(key => typeof obj[key] === "function")
+function getRegExp(name) {
+    if (cache.has(name)) return cache.get(name)
+
+    const escaped = name.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&")
+    const re = new RegExp(`\\b${escaped}\\b`)
+
+    cache.set(name, re)
+    return re
 }
 
-module.exports = class JadeLocals {
-    constructor(FILE, minified) {
-        this.FILE = FILE
-        this.minified = minified
+function checkType(object, name, type) {
+    if (typeof object !== type) {
+        const a = /^[aeiou]/.test(type) ? "an" : "a"
 
-        // Bind all the functions on the prototype, so they can just be called.
-        for (const key of getAllMethods(Object.getPrototypeOf(this))) {
-            this[key] = this[key].bind(this)
-        }
+        throw new TypeError(`Expected ${name} to be ${a} ${type}`)
     }
+}
 
-    assert(cond, message, ErrorType) {
-        if (ErrorType == null) ErrorType = Error
-        if (!cond) throw new ErrorType(message)
-    }
+module.exports = (FILE, minified) => {
+    function resolve(url) {
+        checkType(url, "url", "string")
 
-    resolve(url) {
-        const ret = path.relative(path.dirname(this.FILE), url)
+        const ret = path.relative(path.dirname(FILE), url)
 
         // Minor size optimization
         return ret.slice(0, 2) === "./" ? ret.slice(2) : ret
     }
 
-    navAttrs(href, file) {
-        file = file || this.FILE
-        if (file === href) {
-            return {
-                class: "selected",
-                href: this.resolve(href),
+    return {
+        FILE, minified, resolve,
+
+        assert(cond, message, ErrorType) {
+            if (ErrorType == null) ErrorType = Error
+            if (!cond) throw new ErrorType(message)
+        },
+
+        navAttrs(href, file) {
+            if (file == null) file = FILE
+
+            checkType(href, "href", "string")
+            checkType(file, "file", "string")
+
+            if (file === href) {
+                return {
+                    class: "selected",
+                    href: resolve(href),
+                }
+            } else {
+                return {href: resolve(href)}
             }
-        } else {
-            return {href: this.resolve(href)}
-        }
+        },
+
+        hasClass(attrs, name) {
+            checkType(attrs, "attrs", "object")
+            checkType(name, "name", "string")
+            return getRegExp(name).test(attrs)
+        },
     }
 }

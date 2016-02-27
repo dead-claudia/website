@@ -8,12 +8,15 @@ mixin control(id)
 
 +page("Contact")
     p.
-        You can always email me directly. My email is below. Otherwise, you can
-        use the contact form provided below for convenience.
+        You can always email me directly. My email is below (after you put in
+        the code). Otherwise, I have a contact form here for convenience. (It's
+        also for if you would prefer, you don't have to reveal your email
+        address to me. I understand the concept of privacy.)
 
     .wrapper: include ./contact-email.mixin.jade
 
-    noscript: p You need JavaScript enabled for this form to work.
+    noscript: p.
+        You need JavaScript enabled for this form to work. It's dead otherwise.
 
     .form: form#contact(novalidate)
         div
@@ -42,6 +45,8 @@ mixin control(id)
         small.
             Legal note: By submitting this form, you agree that it is not
             confidential, as I cannot guarantee any 100% safety or privacy
-            through the Internet.
+            through the Internet. Even end-to-end HTTPS through
+            #[+a("https://www.torproject.org") Tor] through a VPN can't legally
+            guarantee you that. #[img(src="wink.png" alt="winking face")]
 
     script(src="contact.js")

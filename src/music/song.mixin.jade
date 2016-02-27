@@ -8,8 +8,7 @@ mixin song--link(href)
             block
             | #{""} (zip)
     else
-        a(href=href)
-            block
+        a(href=href): block
 
 //- Arguments:
 //- name = "name of song"
@@ -26,15 +25,7 @@ mixin song(name)
         case attributes.license
             when "by-4.0": +cc-by-4.inline.single.noauthor
             when "by-nc-3.0": +cc-by-nc-3.inline.single.noauthor
-            default
-                p(style={
-                    "display": "block",
-                    "background-color": "red",
-                    "padding": "0.5em",
-                    "text-align": "center",
-                    "font-weight": "900",
-                }).cc-license
-                    | FIXME: Invalid license: #{attributes.license}
+            default: - throw new Error("FIXME: Invalid license: " + attributes.license)
 
         if block
             .description

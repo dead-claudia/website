@@ -1,5 +1,8 @@
 "use strict"
 
+// `next()` has a completely different meaning here.
+/* eslint-disable callback-return */
+
 if (require.main === module) {
     throw new Error("This isn't a runnable script!")
 }
@@ -43,144 +46,116 @@ const inlineLexer = new marked.InlineLexer([], {
     image: () => "",
 })
 
-class FragmentCompiler {
-    constructor(src) {
-        this.tokens = marked.lexer(src)
-        this.index = 0
-        this.str = ""
-        this.break = false
+module.exports = src => {
+    const tokens = marked.lexer(src)
+    let index = 0
+    let str = ""
+    let end = false
+
+    const peek = () => tokens[index + 1]
+    const next = () => tokens[++index]
+    const hasNext = () => !end && index < tokens.length
+    const waitingFor = tok => hasNext() && next().type !== tok
+
+    function loopAny(cond, body) {
+        for (let i = 0; cond();) if (body(i++)) return true
+        return false
     }
 
-    peek() { return this.tokens[this.index + 1] }
-    next() { return this.tokens[++this.index] }
-
-    hasNext() { return !this.break && this.index < this.tokens.length }
-
-    compile() {
-        while (this.hasNext() && !this.single()) {
-            this.index++
-        }
-        // Cue to Node to flatten the string's internal representation
-        return this.str.concat()
-    }
-
-    push(str) {
+    function push(part) {
         // Safety check.
-        if (this.break) return true
+        if (end) return true
 
         // Prevent more than single spaces from getting in in the first place.
         // This won't be a perf problem, since the length limit is relatively
         // low, in which the compilation will abort anyways.
-        if (str === " ") return false
+        if (part === " ") return false
 
-        str = str.replace(/\s+/g, " ").trim()
-        if (str === "") return false
+        part = part.replace(/\s+/g, " ").trim()
+        if (part === "") return false
 
-        this.str += str
+        str += part
 
-        if (this.str.length > PREVIEW_LENGTH) {
+        if (str.length > PREVIEW_LENGTH) {
             // Break compilation.
-            this.break = true
-            this.str = cap(this.str)
+            end = true
+            str = cap(str)
             return true
         }
 
-        this.str += " "
+        str += " "
         return false
     }
 
-    waitingFor(tok) {
-        return this.hasNext() && this.next().type !== tok
-    }
-
-    textItem(src) {
-        return this.push(sanitizeHtml(inlineLexer.output(src), {
+    function textItem(src) {
+        return push(sanitizeHtml(inlineLexer.output(src), {
             allowedTags: [],
             allowedAttributes: [],
         }))
     }
 
-    text(token) {
+    function text(token) {
         let body = token.text
 
-        while (this.hasNext() && this.peek().type === "text") {
-            body += ` ${this.next().text}`
+        while (hasNext() && peek().type === "text") {
+            body += ` ${next().text}`
         }
 
-        return this.textItem(body)
+        return textItem(body)
     }
 
-    codeBlock(token) {
-        return this.push(`\`\`\`${token.lang}`) &&
-            this.push(token.code.trim()) &&
-            this.push("```")
+    const codeBlock = token =>
+        push(`\`\`\`${token.lang}`) &&
+        push(token.code.trim()) &&
+        push("```")
+
+    const simpleList = (prefix, end) =>
+        loopAny(
+            () => waitingFor(end),
+            i => push(prefix(i)) || single())
+
+    const blockquote = () => simpleList(() => ">", "blockquote_end")
+    const ordered = () => simpleList(i => `${i + 1}.`, "list_end")
+    const unordered = () => simpleList(() => "-", "list_end")
+    const looseItem = () => simpleList(() => " ", "list_item_end")
+
+    function listItem() {
+        return loopAny(
+            () => waitingFor("list_item_end"),
+            () => tokens[index].type === "text"
+                ? text(tokens[index])
+                : single())
     }
 
-    simpleList(prefix, end) {
-        while (this.waitingFor(end)) {
-            if (this.push(prefix) || this.single()) return true
-        }
-        return false
-    }
-
-    blockquote() {
-        return this.simpleList(">", "blockquote_end")
-    }
-
-    ordered() {
-        for (let i = 1; this.waitingFor("list_end"); i++) {
-            if (this.push(`${i}.`) || this.single()) return true
-        }
-        return false
-    }
-
-    unordered() {
-        return this.simpleList("-", "list_end")
-    }
-
-    listItem() {
-        while (this.waitingFor("list_item_end")) {
-            if (this.tokens[this.index].type === "text") {
-                if (this.text(this.tokens[this.index])) return true
-            } else if (this.single()) {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    looseItem() {
-        return this.simpleList(" ", "list_item_end")
-    }
-
-    single() {
+    function single() {
         // Don't even bother if the compilation has already broken.
-        if (this.break) return true
+        if (end) return true
 
-        const token = this.tokens[this.index]
+        const token = tokens[index]
 
         switch (token.type) {
         // Ignore tables and HTML
-        case "table": return this.push(" ")
-        case "html": return this.push(" ")
+        case "table": return push(" ")
+        case "html": return push(" ")
 
-        case "space": return this.push(" ")
-        case "hr": return this.push(" --- ")
-        case "heading": return this.textItem(token.text)
-        case "code": return this.codeBlock(token)
-        case "blockquote_start": return this.blockquote()
-
-        case "list_start":
-            return token.ordered ? this.ordered() : this.unordered()
-
-        case "list_item_start": return this.listItem(token)
-        case "loose_item_start": return this.looseItem()
-        case "paragraph": return this.textItem(token.text)
-        case "text": return this.text(token)
+        case "space": return push(" ")
+        case "hr": return push(" --- ")
+        case "heading": return textItem(token.text)
+        case "code": return codeBlock(token)
+        case "blockquote_start": return blockquote()
+        case "list_start": return token.ordered ? ordered() : unordered()
+        case "list_item_start": return listItem(token)
+        case "loose_item_start": return looseItem()
+        case "paragraph": return textItem(token.text)
+        case "text": return text(token)
         default: return false
         }
     }
-}
 
-module.exports = src => new FragmentCompiler(src).compile()
+    while (hasNext() && !single()) {
+        index++
+    }
+
+    // Cue to Node to flatten the string's internal representation
+    return str.concat()
+}

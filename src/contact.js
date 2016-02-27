@@ -117,4 +117,11 @@
             verifyAndSend()
         }
     }
+
+    if (/[?&]w/.test(window.location.search)) {
+        document.getElementById("subject").value = "Website design request"
+        // This is intentionally invalid.
+        document.getElementById("email").value =
+            "Don't forget to leave me a way to get back to you!"
+    }
 })()
