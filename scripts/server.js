@@ -10,6 +10,7 @@ const autoprefixer = require("autoprefixer-stylus")
 
 const jadeLocals = require("./jade-locals.js")
 const generateBlog = require("./generate-blog-posts.js")
+
 const app = express()
 
 function nocache(res) {
@@ -36,9 +37,15 @@ app.use((req, res, next) => {
     return next()
 })
 
-const website = new express.Router()
+const website = new express.Router({
+    strict: app.get("strict routing"),
+})
+
 const missing = {code: "ENOENT"}
-const fail = (req, res, next) => next(missing)
+
+function fail(req, res, next) {
+    return next(missing)
+}
 
 // .mixin.{html,css}, .jade, .ignore, .ignore.*
 website.get(/\.(mixin\.(html|css)|jade|ignore(\.[^\.]+))$/, fail)
@@ -55,10 +62,11 @@ website.get("*.css", stylus.middleware({
     // This'll be cleared when doing a full compilation, anyways.
     dest: path.resolve(__dirname, "../dist"),
     force: true,
-    compile: (str, path) =>
-        stylus(str)
+    compile(str, path) {
+        return stylus(str)
         .set("filename", path)
-        .use(autoprefixer()),
+        .use(autoprefixer())
+    },
 }))
 
 website.get("/blog.json", (req, res, next) => generateBlog().then(data => {
@@ -77,27 +85,20 @@ const base = path.resolve(__dirname, "../src")
 const get = (root, methods) => (req, res, next) => {
     const file = path.resolve(root, req.path.slice(1))
 
-    if (!methods.pre({file, req, res, next})) return undefined
     return fs.stat(file, (err, stat) => {
         if (err != null) return next(err)
-        if (stat.isDirectory()) return methods.dir({file, req, res, next})
-        return methods.file({file, req, res, next})
+        const f = stat.isDirectory() ? methods.dir : methods.file
+
+        return f({file, req, res, next})
     })
 }
 
-function renderDir(res, dir) {
-    const file = `${dir.slice(1)}/index`
-
-    return res.render(`${file}.jade`, jadeLocals(`${file}.html`, false))
-}
-
-const read = (pattern, base) => website.get(pattern, get(base, {
-    pre: o => (o.res.type(path.basename(o.file)), true),
-    dir: o => renderDir(o.res, o.req.baseUrl + o.req.path),
+const read = (pattern, root) => website.get(pattern, get(root, {
+    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
     file: o =>
         fs.createReadStream(o.file)
         .on("error", o.next)
-        .pipe(o.res.status(200)),
+        .pipe(o.res.type(path.basename(o.file)).status(200)),
 }))
 
 read("*.css", path.resolve(__dirname, "../dist"))
@@ -105,9 +106,15 @@ read("*.*", base)
 
 website.get(/^\/license[\/\.]/i, fail)
 
+website.get("/", (req, res) =>
+    res.render("index.jade", jadeLocals("index.html", false)))
+
 website.get("*", get(base, {
-    pre: o => renderDir(o.res, o.req.baseUrl),
-    dir: o => renderDir(o.res, o.req.baseUrl + o.req.path),
+    dir: o => {
+        const file = `${o.req.baseUrl}${o.req.path}/index`
+
+        return o.res.render(`${file}.jade`, jadeLocals(`${file}.html`, false))
+    },
     file: o => o.next(missing),
 }))
 
