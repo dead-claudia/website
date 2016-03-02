@@ -12,12 +12,12 @@ mixin cc-licenses--base(url, name, attrs)
     - var size = /\bsmall\b/.test(attrs.class) ? "80x15" : "88x31"
     - var unless = /\bmaybe\b/.test(attrs.class) ? " unless otherwise stated" : ""
     - var works = /\bsingle\b/.test(attrs.class) ? "This work " + author + "is" : "These works " + author + " are"
-    
+
     unless /\binline\b/.test(attrs.class)
         hr.cc-license
 
     .cc-license
-        +a("http://creativecommons.org/licenses/" + url + "/")(rel="license")
+        +a("http://creativecommons.org/licenses/" + url + "/", true)(rel="license")
             img(
                 alt="Creative Commons License"
                 src=("https://i.creativecommons.org/l/" + url + "/" + size + ".png")
@@ -26,7 +26,7 @@ mixin cc-licenses--base(url, name, attrs)
         //- element
         small
             | !{works} licensed under a !{""}
-            +a("http://creativecommons.org/licenses/by/4.0/")(rel="license").
+            +a("http://creativecommons.org/licenses/by/4.0/", true)(rel="license").
                 Creative Commons !{name} License
             | !{unless}.
 

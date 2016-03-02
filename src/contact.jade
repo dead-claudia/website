@@ -21,7 +21,7 @@ mixin control(id)
     .form: form#contact(novalidate)
         div
             p #[span.required] = Required
-                
+
             +control("name")(autocomplete="name" required) Name:
             +control("email")(autocomplete="email" type="email") E-mail:
             +control("subject")(autocomplete="off" required) Subject:
@@ -46,7 +46,7 @@ mixin control(id)
             Legal note: By submitting this form, you agree that it is not
             confidential, as I cannot guarantee any 100% safety or privacy
             through the Internet. Even end-to-end HTTPS through
-            #[+a("https://www.torproject.org") Tor] through a VPN can't legally
+            #[+a("https://www.torproject.org", true) Tor] through a VPN can't legally
             guarantee you that. #[img(src="wink.png" alt="winking face")]
 
     script(src="contact.js")

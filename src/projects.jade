@@ -11,7 +11,7 @@ mixin project(name, href, external)
 
 mixin func(name)
     - var base = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/"
-    +a(base + name.replace(/\./g, "/"))= name
+    +a(base + name.replace(/\./g, "/"), true)= name
 
 +page("Projects")
     ul
@@ -29,7 +29,7 @@ mixin func(name)
             light enough and fast enough to work very efficiently on mobile,
             where most larger JavaScript frameworks struggle. My blog happens to
             use this framework itself.
-        
+
         +project("Techtonic").
             An experimental test framework of I'm currently writing that eschews
             several existing conventions, such as traditional assertion messages

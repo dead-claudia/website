@@ -1,9 +1,8 @@
 "use strict"
 
 const path = require("path")
-const mkdirp = require("mkdirp")
-const spawn = require("child_process").spawn
 const os = require("os")
+const mkdirp = require("mkdirp")
 
 const p = require("./promise.js")
 const exec = require("./exec-limit.js")
@@ -71,28 +70,11 @@ require("./run.js")({
         t["compile:rest"](),
     ])),
 
-    "lint": () => new Promise((resolve, reject) => {
-        // This will never run concurrently with anything else spawned in this
-        // script.
-        return spawn("eslint", ["."], {
-            cwd: r(".."),
-            stdio: "inherit",
-        }).on("close", (code, signal) => {
-            if (code == null || code) {
-                if (signal) console.error(`Child killed with signal ${signal}`)
-
-                /* eslint-disable no-process-exit */
-
-                return process.exit(code || 1)
-
-                /* eslint-enable no-process-exit */
-            } else {
-                return resolve()
-            }
-        }).on("error", reject)
-    }),
+    "lint:check-whitespace": () => exec(["node", r("check-whitespace.js")]),
+    "lint:eslint": () => exec("eslint .", undefined, {cwd: r("..")}),
 
     "deploy": () => exec(["node", r("deploy.js")]),
 
+    "lint": t => t["lint:eslint"]().then(t["lint:check-whitespace"]),
     "default": t => t.lint().then(t.compile),
 })
