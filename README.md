@@ -6,15 +6,9 @@ Nothing too interesting.
 
 Things I still have left to do:
 
-- Make this responsive (mobile-friendly).
-
 - Make a Heroku server to deal with AJAX-based email better.
 
-- Make the blog be able to read from subfolders. Mostly a build process fix
-
-- Make the blog, contact form, and email retrieval work without JavaScript. This
-  will also require some server-side assistance, likely with a token of some
-  sort.
+- Make the blog be able to read from subfolders. Mostly a build system fix.
 
 - Make the blog more scalable (hundreds of posts should *just work*, and be
   paginated).
@@ -82,7 +76,7 @@ If you'd prefer, there's also `npm run compile` for `node make` and
 
   - scripts/
 
-    Helper files for make.js and server.js.
+    My build system experiment + helper utilities.
 
 ## Technologies:
 
