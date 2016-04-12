@@ -1,10 +1,5 @@
 /* global m: false, marked: false, hljs: false */
 
-// TODO:
-// Compile the blog posts themselves to actual HTML files, and use this as a
-// progressive enhancement tool (it'll result in duplicate data over the wire,
-// but broader support).
-
 (function () { // eslint-disable-line max-statements
     "use strict"
 
@@ -168,16 +163,16 @@
         },
     }
 
-    // var feed = {
-    //     view: function (_, type, href) {
-    //         return m("p", [
-    //             type, "feed",
-    //             m("a", {href: href}, [
-    //                 m("img.feed-icon[src=./feed-icon-16.gif]"),
-    //             ]),
-    //         ])
-    //     },
-    // }
+    var feed = {
+        view: function (_, type, href) {
+            return m(".feed", [
+                type + " feed",
+                m("a", {href: href}, [
+                    m("img.feed-icon[src=./feed-icon-16.gif]"),
+                ]),
+            ])
+        },
+    }
 
     /**
      * The combined summary and tag view. The two views are only different in
@@ -197,9 +192,8 @@
                     "coding, etc.)",
                 ]),
 
-                // TODO: add syndication feeds
-                // m(feed, "Atom", "blog.atom.xml"),
-                // m(feed, "RSS", "blog.rss.xml"),
+                m(feed, "Atom", "blog.atom.xml"),
+                m(feed, "RSS", "blog.rss.xml"),
 
                 isTag
                     ? m(tagHeader, posts.length, resolvedTag)
@@ -433,23 +427,33 @@
         loaded.resolve()
     })
 
+    function recordView() {
+        window.ga("send", "pageview", location.pathname + m.route())
+    }
+
     // Redraw with the actual data once it is loaded.
     m.sync([blogRequest, loaded.promise]).then(function () {
         m.route.mode = "hash"
         m.route(document.getElementById("blog"), "/", {
             "/": {
+                controller: recordView,
                 view: function () {
                     return m(summaryView, posts())
                 },
             },
 
             "/posts/:post": {
+                controller: recordView,
                 view: function () {
                     return m(postView, urls[m.route.param("post")])
                 },
             },
 
             "/tags/:tag": {
+                controller: function () {
+                    window.ga("send", "pageview", location.pathname + "/tags")
+                },
+
                 view: function () {
                     return m(summaryView, getTag(m.route.param("tag")), true)
                 },

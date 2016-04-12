@@ -3,8 +3,6 @@
 const fs = require("fs")
 const path = require("path")
 const express = require("express")
-// TODO: add feed reader support
-// const Feed = require("feed")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 
@@ -68,6 +66,14 @@ website.get("*.css", stylus.middleware({
         .use(autoprefixer())
     },
 }))
+
+website.get("/blog.atom.xml", (req, res, next) => generateBlog().then(data => {
+    return res.type("xml").send(data.feed.render("atom-1.0"))
+}).catch(next))
+
+website.get("/blog.rss.xml", (req, res, next) => generateBlog().then(data => {
+    return res.type("xml").send(data.feed.render("rss-2.0"))
+}).catch(next))
 
 website.get("/blog.json", (req, res, next) => generateBlog().then(data => {
     return res.send({posts: data.posts})

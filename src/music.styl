@@ -1,18 +1,15 @@
 @charset "UTF-8"
 
 @require "./common.mixin.styl"
-@import "./cc-licenses.mixin.styl"
+@import "./cc-by-4.mixin.styl"
 
 #body
-    h3
-        color header-color
-        font-weight 500
-        font-size 1.25em
-        margin-top 0.75em
-
     label
         display block
         font-weight 700
+
+    li.divider
+        visibility hidden
 
     .cc-license img
         padding-right 0.5em
@@ -24,7 +21,6 @@
     .license
         margin-bottom 0.5em
 
-+nonphone()
-    #body h3
-        border-top 2px solid border-color
-        padding-top 0.5em
+    .intro
+        border-bottom 2px solid border-color
+        margin-bottom 1em

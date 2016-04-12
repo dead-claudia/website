@@ -7,26 +7,29 @@
 const fs = require("fs")
 const path = require("path")
 const mkdirp = require("mkdirp")
-// TODO: add feed reader support
-// const Feed = require("feed")
 
 const p = require("./promise.js")
 const generate = require("./generate-blog-posts.js")
 
-const distDir = path.resolve(__dirname, "../dist")
-const json = path.resolve(distDir, "blog.json")
+const dist = path.resolve(__dirname, "../dist")
+const resolve = path.resolve.bind(null, dist)
 
 generate((file, contents, url) => {
-    const dest = path.resolve(distDir, "blog", url)
+    const md = resolve("blog", url)
 
-    return p.call(mkdirp, path.dirname(dest))
-    .then(() => p.call(fs.writeFile, dest, contents, "utf-8"))
+    return p.call(mkdirp, path.dirname(md))
+    .then(() => p.call(fs.writeFile, md, contents, "utf-8"))
 })
 .then(data => {
-    const serialized = JSON.stringify({posts: data.posts})
+    const json = JSON.stringify({posts: data.posts})
+    const atom = data.feed.render("atom-1.0")
+    const rss = data.feed.render("rss-2.0")
 
-    // TODO: support syndication for Atom (blog.atom.xml) & RSS (blog.rss.xml)
-    return p.call(fs.writeFile, json, serialized, "utf-8")
+    return Promise.all([
+        p.call(fs.writeFile, resolve("blog.json"), json, "utf-8"),
+        p.call(fs.writeFile, resolve("blog.atom.xml"), atom, "utf-8"),
+        p.call(fs.writeFile, resolve("blog.rss.xml"), rss, "utf-8"),
+    ])
 })
 .catch(err => {
     console.error(err.stack)

@@ -1,0 +1,55 @@
+include ./page.mixin.jade
+
+link(rel="stylesheet" href="about.css")
+
++page("About")
+    div: img.pic(src="pic.jpg" alt="picture of Isiah Meadows")
+
+    p.
+        I'm a full-stack JavaScript web developer who specializes in the latest
+        HTML5, CSS, JavaScript, and the #[+a("https://nodejs.org", true) Node.js]
+        JavaScript runtime. Some of the tools I use include
+        #[+a("http://jade-lang.com") Jade], #[+a("http://stylus-lang.com") Stylus],
+        and #[+a("http://mithril.js.org") Mithril].
+
+    p.
+        I maintain a #[+a("blog.html") low-traffic, infrequently updated blog]
+        full of whatever ramblings come across my head, mostly technical stuff,
+        but occasionally less professional topics such as religion or random
+        things I stumble across or think of. Also, I enjoy reading
+        #[+a("http://www.iflscience.com/", true) IFLScience] and
+        #[+a("http://www.buzzfeed.com/", true) BuzzFeed], and when I can find
+        time not spent coding or doing other things, I occasionally
+        #[+a("music.html") create music], but lately, I haven't been able to
+        find that time.
+
+    p.
+        If you want to contact me, you can always use the
+        #[+a("contact.html") contact form] here on this site, or if you would
+        prefer, you can also find me here:
+
+    ul
+        li
+            | GitHub &ndash; #{""}
+            iframe.github(
+                src="https://ghbtns.com/github-btn.html?user=isiahmeadows&type=follow"
+                frameborder="0"
+                scrolling="0"
+            )
+
+        li
+            | LinkedIn &ndash; #{""}
+            a.linkedin(href="https://www.linkedin.com/pub/isiah-meadows/a6/a75/230")
+                span
+                    img(
+                        src="https://static.licdn.com/scds/common/u/img/webpromo/btn_in_20x15.png"
+                        alt="View Isiah Meadows's LinkedIn profile"
+                    )
+                    | &nbsp;View Isiah Meadows's profile
+
+        li.twitter
+            | Twitter &ndash; #{""}
+            a.twitter-follow-button(href="https://twitter.com/isiahmeadows1" data-show-count="false")
+                | Follow @isiahmeadows1
+            script.
+                !function(d,s,i){var j,f=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(i)){j=d.createElement(s);j.id=i;j.src=p+'://platform.twitter.com/widgets.js';f.parentNode.insertBefore(j,f)}}(document,'script','twitter-wjs');

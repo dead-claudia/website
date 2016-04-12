@@ -1,4 +1,6 @@
-(function (document, wrapper) {
+/* global m */
+
+(function () {
     "use strict"
 
     // Set of the 62 alpha-numeric characters, as a string
@@ -23,75 +25,62 @@
         return code
     }
 
-    function n(type, attrs, children) {
-        var elem = document.createElement(type)
-
-        for (var attr in attrs) {
-            if ({}.hasOwnProperty.call(attrs, attr)) {
-                elem[attr] = attrs[attr]
-            }
-        }
-
-        (function append(e) {
-            if (Array.isArray(e)) {
-                e.forEach(append)
-            } else if (e != null) {
-                elem.appendChild(
-                    typeof e === "string" ? document.createTextNode(e) : e)
-            }
-        })(children)
-
-        return elem
+    function getFixed() {
+        return emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
     }
 
-    var input, wrong, random
+    m.mount(document.getElementById("email--base"), {
+        controller: function () {
+            this.reveal = false
+            this.code = generate()
+            this.value = m.prop("")
+            this.email = null
+            this.fail = false
 
-    while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild)
+            var self = this
 
-    // The content is generated via JavaScript, for progressive enhancement.
-    wrapper.appendChild(n("div", null, [
-        n("p", {className: "text"}, [
-            "(Trying to limit spammers. Type or copy code to see my email: ",
-            random = n("span", {textContent: generate()}), ")",
-        ]),
-        input = n("input", {
-            className: "input",
-            onkeydown: function (e) {
-                e = e || event
-                if (e.defaultPrevented) return
-                // Just in case the browser has already dropped the legacy
-                // versions or doesn't support the newer version.
-                if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
-                    check(e)
+            function check() {
+                if (self.value() === self.code) {
+                    self.email = getFixed()
+                    self.reveal = true
+                } else {
+                    self.code = generate()
+                    self.fail = true
                 }
-            },
-        }),
-        n("button", {
-            className: "submit",
-            onclick: function (e) {
+            }
+
+            this.onsubmit = function (e) {
                 e = e || event
-                if (!e.defaultPrevented) check(e)
-            },
-        }, "Submit"),
-        wrong = n("div", {className: "wrong hidden"}, [
-            "Wrong code. Please try again. Do note that it's case-sensitive.",
-        ]),
-    ]))
+                e.preventDefault()
+                e.stopPropagation()
+                check()
+            }
+        },
 
-    function check(e) {
-        e.preventDefault()
-        e.stopPropagation()
+        view: function (ctrl) {
+            if (ctrl.reveal) {
+                return m("div", [
+                    m("p", m("a", {href: "mailto:" + ctrl.email}, ctrl.email)),
+                ])
+            }
 
-        if (input.value === random.textContent) {
-            var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
-
-            while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild)
-            wrapper.appendChild(n("div", null, [
-                n("p", null, n("a", {href: "mailto:" + fixed}, fixed)),
-            ]))
-        } else {
-            random.textContent = generate()
-            wrong.className = wrong.className.replace(/\bhidden\b/, "")
-        }
-    }
-})(document, document.getElementById("email--base"))
+            return m("form", {onsubmit: ctrl.onsubmit}, [
+                m("p.text", [
+                    "(Trying to limit spammers. Type or copy code to see my " +
+                        "email: ",
+                    m("span", ctrl.code), ")",
+                ]),
+                m("input.input", {
+                    onchange: m.withAttr("value", ctrl.value),
+                    value: ctrl.value(),
+                }),
+                m("button.submit", "Submit"),
+                ctrl.fail
+                    ? m(".wrong",
+                        "Wrong code. Please try again. Do note that it's " +
+                        "case-sensitive.")
+                    : null,
+            ])
+        },
+    })
+})()

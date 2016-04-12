@@ -1,5 +1,5 @@
 include ../page.mixin.jade
-include ../cc-licenses.mixin.jade
+include ../cc-by-4.mixin.jade
 link(rel="stylesheet" href="./song.css")
 
 mixin song--link(href)
@@ -17,15 +17,11 @@ mixin song--link(href)
 //- download="https://drive.google.com/uc?id=<download-url>&export=download"
 //- audio="https://drive.google.com/uc?id=<audio-url>&export=download"
 //- preview="https://drive.google.com/uc?id=<preview-url>"
-//- license="license type, see below"
 mixin song(name)
     +page("Music", "music.html", "Music - " + name): .wrapper
         h3= name
 
-        case attributes.license
-            when "by-4.0": +cc-by-4.inline.single.noauthor
-            when "by-nc-3.0": +cc-by-nc-3.inline.single.noauthor
-            default: - throw new Error("FIXME: Invalid license: " + attributes.license)
+        +cc-by-4.single
 
         if block
             .description

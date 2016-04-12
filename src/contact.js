@@ -1,3 +1,5 @@
+/* global m */
+
 (function () {
     "use strict"
 
@@ -32,28 +34,23 @@
 
         if (!email) name = "(Anonymous) " + name
 
-        var out =
-            "name=" + encodeURIComponent(name) +
-            "&_subject=" + encodeURIComponent("[Personal Site] " + subject) +
-            "&message=" + encodeURIComponent(message)
-
-        if (email) out += "&email=" + encodeURIComponent(email)
-
         // TODO: create Heroku dyno to POST email json to.
-        var xhr = new XMLHttpRequest()
-
-        xhr.open("POST", "//formspree.io/" + fixed)
-        xhr.setRequestHeader("Accept", "application/json")
-        xhr.setRequestHeader("Content-Type",
-            "application/x-www-form-urlencoded")
-
-        xhr.onreadystatechange = function () {
-            if (this.readyState === 4) {
-                location.href = "./contact-finish.html"
-            }
-        }
-
-        xhr.send(out)
+        m.request({
+            method: "POST",
+            url: "//formspree.io/" + fixed,
+            config: function (xhr) {
+                xhr.setRequestHeader("Accept", "application/json")
+                xhr.setRequestHeader("Content-Type",
+                    "application/x-www-form-urlencoded")
+            },
+            data: m.route.buildQueryString({
+                name: name,
+                _subject: "[Personal Site] " + subject,
+                message: message,
+                email: email || undefined,
+            }),
+        })
+        .then(function () { location.href = "./contact-finish.html" })
     }
 
     var messages = {

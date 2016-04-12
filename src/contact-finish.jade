@@ -2,6 +2,12 @@ include ./page.mixin.jade
 
 link(rel="stylesheet" href="contact-finish.css")
 
+//- for the contact email mixin.
+script(src=(
+    "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.3/mithril" +
+        (minified ? ".min" : "") + ".js"
+))
+
 +page("Contact", "contact.html", "Contact - Thank you")
     p.
         Thank you for your message. I should receive this shortly. If my quota

@@ -14,10 +14,22 @@ if (require.main === module) {
 const fs = require("fs")
 const path = require("path")
 const yaml = require("js-yaml")
+const Feed = require("feed")
 
 const compilePreview = require("./compile-markdown-preview.js")
 
 const postDir = path.resolve(__dirname, "../src/blog.ignore")
+
+const idsFile = path.resolve(postDir, "blog-ids.json")
+const idsJson = require(idsFile)
+
+function ensureKey(name) {
+    name = path.relative(postDir, name)
+
+    if (idsJson.ids.indexOf(name) >= 0) return
+    idsJson.ids.push(name)
+    fs.writeFileSync(idsFile, JSON.stringify(idsJson, null, 4))
+}
 
 // Splits the given string into a meta section and a markdown section.
 function splitInput(file, reject, resolve) {
@@ -62,6 +74,24 @@ module.exports = write => new Promise((resolve, reject) => {
         if (err != null) return reject(err)
         if (files.length === 0) return resolve([])
 
+        const feed = new Feed({
+            title: "Isiah Meadows' blog",
+            description: "My personal blog",
+            id: "http://isiahmeadows.com/blog.html",
+            link: "http://isiahmeadows.com/blog.html",
+            copyright: "Some rights reserved 2013-present, Isiah Meadows.",
+            author: {
+                name: "Isiah Meadows",
+                email: "me@isiahmeadows.com",
+                link: "http://isiahmeadows.com/",
+            },
+        })
+
+        feed.addCategory("technology")
+        feed.addCategory("politics")
+        feed.addCategory("opinions")
+        feed.addCategory("javascript")
+
         const posts = []
         let counter = files.length
 
@@ -74,7 +104,7 @@ module.exports = write => new Promise((resolve, reject) => {
             }
 
             if (!--counter) {
-                return resolve({posts, compiled})
+                return resolve({posts, compiled, feed})
             }
 
             return undefined
@@ -84,14 +114,38 @@ module.exports = write => new Promise((resolve, reject) => {
             return (err, stat) => {
                 if (err != null) return done(err)
                 if (!stat.isFile()) return done()
+
+                ensureKey(file)
+
                 if (mtimes[file] >= stat.mtime) {
-                    posts.push(cache[file])
+                    const post = cache[file]
+
+                    posts.push(post)
+                    feed.addItem({
+                        title: post.title,
+                        id: idsJson.ids.indexOf(file),
+                        description: post.preview,
+                        date: post.date,
+                        published: post.date,
+                        link: `http://isiahmeadows.com/blog.html#/posts/${post.url}`,
+                    })
+
                     return done()
                 }
                 return splitInput(file, reject, split => {
                     const url = path.posix.relative(postDir, file)
 
                     mtimes[file] = stat.mtime
+
+                    feed.addItem({
+                        title: split.meta.title,
+                        id: idsJson.ids.indexOf(file),
+                        description: split.preview,
+                        date: split.meta.date,
+                        published: split.meta.date,
+                        link: `http://isiahmeadows.com/blog.html#/posts/${url}`,
+                    })
+
                     posts.push(cache[file] = {
                         date: split.meta.date,
                         title: split.meta.title,

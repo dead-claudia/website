@@ -1,0 +1,57 @@
+@charset "UTF-8"
+
+@require "./common.mixin.styl"
+
+#body
+    img.pic
+        width-scale 100% 150px 250px
+        border 2px solid border-color
+
+    li
+        vert margin 0.3em
+
+    .github
+        display inline-block
+        margin-bottom -0.1em
+        width 168px
+        height 20px
+        overflow hidden
+
+    // This is copied from the LinkedIn button's inline styles
+    .linkedin
+        text-decoration none
+
+        span
+            font 80% Arial, sans-serif
+            color #0783B6
+
+        img
+            vertical-align middle
+            width 20px
+            height 15px
+            border none
+
+    // Align the button to be closer to the center
+    .twitter > iframe
+        margin-bottom -0.2em
+
++phone()
+    #body
+        div
+            margin 0.5em auto
+            text-align center
+
++nonphone()
+    #body
+        // Work around default stylesheets
+        p
+            margin-top 0
+            margin-bottom 1em
+
+        p ~ p
+            margin-top 1em
+
+        div
+            margin 0.5em
+            margin-right 0
+            float right

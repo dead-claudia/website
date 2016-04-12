@@ -1,5 +1,5 @@
 include ./page.mixin.jade
-include ./cc-licenses.mixin.jade
+include ./cc-by-4.mixin.jade
 
 link(rel="stylesheet" href="music.css")
 
@@ -10,49 +10,42 @@ mixin song(href)
 +page("Music")
     .intro
         p.
-            I've been into creating music as far back as middle school, and I
-            still enjoy it now. I haven't finished as much recently mostly due
-            to time being taken up by other things, but in the meantime, I still
-            enjoy improvising on the piano and other various smaller instruments
-            (I really enjoy my #[+a("https://en.wikipedia.org/wiki/Tin_whistle", true) tin whistle],
-            even though I don't play it nearly as much). In some of the pieces,
-            I explained some of my inspiration and/or background when I wrote
-            the piece itself.
+            Although I don't have as much time to create music as I used to, I
+            have always enjoyed both playing music and creating it. My
+            compositions range from very classically inspired pieces I created
+            as far back as late middle school to darker modern classical piano
+            solos and a single electronic song a little more recently. I still
+            enjoy improvising on my piano or
+            #[+a("https://en.wikipedia.org/wiki/Tin_whistle", true) tin whistle]
+            on occasion, even though I don't have as much time to compose. Most
+            of what my more recent creations now are a mixture of piano solos
+            and electronic music, but most of my earlier pieces are closer to
+            modern classical with some film influences. But admittedly, my older
+            pieces.
 
         p.
-            Most of what I create now are a mixture of piano solos and
-            electronic music, but most of my earlier pieces are closer to modern
-            classical with film influences. And admittedly, they're probably not
-            nearly as good as my newer songs.
+            I explained my inspiration and/or relevant background on many of the
+            pieces I created, for your reading pleasure, and to give an idea why
+            it may seem a certain way or have a certain mood.
 
         p.
-            Also, as an item of note, some programs erroneously associate
-            artwork with my pieces. This is likely a bug in those programs,
-            since I never associated any artwork with any of my songs.
+            Please note that some programs erroneously associate artwork with my
+            pieces. That is purely the work of those programs, not me, so you
+            can feel free to ignore it.
 
-    h3 Newer Pieces
-
-    .license: +cc-by-4.inline.noauthor
-
-    div
-        label Instrumental
-
-        ul
-            +song("music/funeral-of-stress.html") Funeral of Stress
-
-        label Electronic
-
-        p Note: these are download links only.
-
-        ul
-            +song("https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
-                | Under Pressure
-
-    h3 Older pieces
-
-    .license: +cc-by-nc-3.inline.noauthor
+    .license: +cc-by-4
 
     ul
+        +song("music/funeral-of-stress.html") Funeral of Stress
+
+        //- Little nit
+        li
+            +a("https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
+                | Under Pressure
+            | #{""} (electronic, download-only)
+
+        li.divider
+
         +song("music/a-day-at-the-theme-park.html") A Day at the Theme Park
         +song("music/a-normal-day.html") A Normal Day
         +song("music/a-tribute-to-hymns.html") A Tribute to Hymns

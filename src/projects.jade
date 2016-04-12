@@ -16,55 +16,55 @@ mixin func(name)
 +page("Projects")
     ul
         +project("This Website", "website").
-            This website itself has its source open, ready to explore. I've got
-            nothing at all to hide here. I keep as few secret keys and passwords
-            for this as possible. I love open source!
+            This website itself is fully open-source, ready to explore. I love
+            open source!
 
         +project("Mithril", "https://mithril.js.org", true).
             A lightweight, simple, and unopinionated
-            #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller", true) Model-View-Controller]
-            framework originally created by #[+a("http://lhorie.blogspot.com", true) Leo Horie].
-            I am an active contributor to this framework, but I primarily
-            contribute to its performance, where this also really shines. It's
-            light enough and fast enough to work very efficiently on mobile,
-            where most larger JavaScript frameworks struggle. My blog happens to
-            use this framework itself.
+            #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller", true) MVC]
+            framework created by #[+a("http://lhorie.blogspot.com", true) Leo Horie].
+            I am an active contributor, but my primary focus is on its
+            performance, where this truly shines. It's light enough and fast
+            enough that it flies even on mobile, where there's not a lot of
+            power. Matter of fact, this website even uses Mithril in places.
 
         +project("Techtonic").
-            An experimental test framework of I'm currently writing that eschews
-            several existing conventions, such as traditional assertion messages
-            and decoupled assertions, in favor for simplicity and very easy
-            extensibility. It's still a large work in progress, but it already
-            uses itself for its own testing.
+            An experimental JavaScript unit test framework I'm currently working
+            on that aims to be very unopinionated, simple to use, and easy to
+            tailor to your needs, no matter how complicated they are. Upon
+            completion, I plan on porting this to Python, with a few changes to
+            fit the language better. I also plan on using this in my own
+            projects once it becomes complete enough to be usable.
 
-        +project("m-iso").
-            A now-deprecated attempt to bring Mithril server-side, which unlike
-            the majority of attempts I know of, this tried to bring Mithril's
-            full data model as well as mere rendering, for full server-side
-            rendering and potentially other applications. Another considered
-            future extension of it was to allow for multiple roots. It was
-            capable from the start to render XML, XHTML, legacy HTML, and HTML5
-            Polyglot, as well as regular HTML5. It could also support external
-            renderers. This had not yet made it to 1.0. I am considering
-            resurrecting this project later, if enough people are interested
-            enough.
+        +project("m-iso")
+            p.
+                A deprecated attempt to port Mithril in its entirety to the
+                server side with Node.js, with a very flexible rendering
+                mechanism. Unlike most attempts to make Mithril interoperate
+                with Node, this did not merely render HTML fragments, but entire
+                web pages. It could print out modern HTML5, XML, legacy HTML and
+                XHTML, and HTML5 Polyglot syntax as output formats, as well as
+                any custom format you create a renderer for. I had also planned
+                to implement the rest of Mithril's object model in this, but
+                that proved to be too complex for the time I had available then.
+
+            p.
+                This project had not made it to 1.0, but I am willing to
+                resurrect this project if enough people are interested.
 
         +project("babel-plugin-proto-to-create").
-            A plugin for Babel, a ECMAScript 6+ to ECMAScript 5 transpiler to
-            convert simple object literals that contain a literal
-            #[code __proto__] property to use #[+func("Object.create")] and
-            simple property assignment for regular properties and
-            #[+func("Object.defineProperty")] to assign getters and setters. It
-            currently is written for Babel 5, but I plan to update this to
-            support Babel 6 eventually.
+            A plugin for Babel 5, a ECMAScript 6+ transpiler, to convert objects
+            that contain a literal #[code __proto__] to use
+            #[+func("Object.create")] and simple property assignment instead for
+            regular properties and #[+func("Object.defineProperty")] to for
+            getters and setters. I eventually want to update this for Babel 6.
 
         +project("ttyped").
-            A simple runtime type-checking framework designed for JavaScript
-            using the #[+a("https://github.com/wycats/javascript-decorators", true) decorator proposal],
+            A simple runtime type-checking system for JavaScript via the
+            #[+a("https://github.com/wycats/javascript-decorators", true) decorator proposal],
             #[+a("http://livescript.net", true) LiveScript], and
-            #[+a("http://coffeescript.org", true) CoffeeScript], made to act
-            like a function or method decorator. It is currently powered by
+            #[+a("http://coffeescript.org", true) CoffeeScript], as a set of
+            function decorators. It is currently powered by
             #[+a("http://npmjs.com/packages/type-check", true) type-check], but
-            that is likely to change in the next major update. It's still highly
-            unstable, and I have a significant change in progress which uses its
-            own engine instead.
+            I have some very large changes slated for the next update, whenever
+            I can get it completed, including to the types themselves.

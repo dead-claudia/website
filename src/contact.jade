@@ -1,6 +1,12 @@
 include ./page.mixin.jade
 link(rel="stylesheet" href="contact.css")
 
+//- for the contact email mixin.
+script(src=(
+    "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.3/mithril" +
+        (minified ? ".min" : "") + ".js"
+))
+
 mixin control(id)
     div
         label(for=id, class={required: !!attributes.required}): block
