@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://isiahmeadows.com/blog.html</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2016-04-12T05:09:56Z</updated>
+    <updated>2016-04-28T17:59:06Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -21,6 +21,14 @@
     <category term="javascript">
     </category>
     <entry>
+        <title type="html"><![CDATA[Basis of all our society's problems]]></title>
+        <id>-1</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md">
+        </link>
+        <updated>2014-05-27T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-14): Minor grammar/typographic/semantic fixes throughout. Also note that this was written in 2014, so it may not reflect current knowledge and events, and it]]></summary>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Major content update]]></title>
         <id>-1</id>
         <link href="http://isiahmeadows.com/blog.html#/posts/content-update.md">
@@ -37,6 +45,14 @@
         <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
     </entry>
     <entry>
+        <title type="html"><![CDATA[I like ES6...works well, even for golfing (factorial demo hack)]]></title>
+        <id>-1</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/i-like-es6-works-well-even-for-golfing.md">
+        </link>
+        <updated>2014-07-28T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-14): Remove license disclaimer, re-license it under site's general license. I also fixed typography/grammar/bugs/clarity/etc. throughout. Update: updated much of]]></summary>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Site redesign]]></title>
         <id>-1</id>
         <link href="http://isiahmeadows.com/blog.html#/posts/new-redesign.md">
@@ -45,12 +61,12 @@
         <summary type="html"><![CDATA[I've recently completed a very large redesign of my website to make it look more modern and look much better. If you saw it between the recent move and now, you probably see a]]></summary>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Basis of all our society's problems]]></title>
+        <title type="html"><![CDATA[Objects linked to other objects - Simplifies so much]]></title>
         <id>-1</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md">
+        <link href="http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md">
         </link>
-        <updated>2014-05-27T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-14): Minor grammar/typographic/semantic fixes throughout. Also note that this was written in 2014, so it may not reflect current knowledge and events, and it]]></summary>
+        <updated>2015-07-27T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[Society in a nutshell]]></title>
@@ -69,35 +85,19 @@
         <summary type="html"><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></summary>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Welcome to my new site!]]></title>
-        <id>-1</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md">
-        </link>
-        <updated>2016-01-16T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Objects linked to other objects - Simplifies so much]]></title>
-        <id>-1</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md">
-        </link>
-        <updated>2015-07-27T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[I like ES6...works well, even for golfing (factorial demo hack)]]></title>
-        <id>-1</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/i-like-es6-works-well-even-for-golfing.md">
-        </link>
-        <updated>2014-07-28T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-14): Remove license disclaimer, re-license it under site's general license. I also fixed typography/grammar/bugs/clarity/etc. throughout. Update: updated much of]]></summary>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[User friendliness and SEO optimization for clients without JS using <noscript>, <meta>]]></title>
         <id>-1</id>
         <link href="http://isiahmeadows.com/blog.html#/posts/user-friendliness-and-seo-optimization.md">
         </link>
         <updated>2014-05-27T00:00:00Z</updated>
         <summary type="html"><![CDATA[Edit (2016-01-14): correct the last paragraph, as IE6+ can still parse HTML5, albeit not display it properly without shims. --- The following is a simple HTML hack to really]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Welcome to my new site!]]></title>
+        <id>-1</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md">
+        </link>
+        <updated>2016-01-16T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></summary>
     </entry>
 </feed>
