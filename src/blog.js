@@ -428,7 +428,12 @@
     })
 
     function recordView() {
-        window.ga("send", "pageview", location.pathname + m.route())
+        // Don't crash if Google Analytics doesn't load.
+        try {
+            window.ga("send", "pageview", location.pathname + m.route())
+        } catch (_) {
+            // ignore
+        }
     }
 
     // Redraw with the actual data once it is loaded.
