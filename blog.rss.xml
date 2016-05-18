@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>http://isiahmeadows.com/blog.html</link>
-        <lastBuildDate>Thu, 28 Apr 2016 17:59:06 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 18 May 2016 08:50:20 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2013-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -13,18 +13,18 @@
         <category>opinions</category>
         <category>javascript</category>
         <item>
-            <title><![CDATA[Basis of all our society's problems]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</guid>
-            <pubDate>Tue, 27 May 2014 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-14): Minor grammar/typographic/semantic fixes throughout. Also note that this was written in 2014, so it may not reflect current knowledge and events, and it]]></description>
-        </item>
-        <item>
             <title><![CDATA[Major content update]]></title>
             <link>http://isiahmeadows.com/blog.html#/posts/content-update.md</link>
             <guid>http://isiahmeadows.com/blog.html#/posts/content-update.md</guid>
             <pubDate>Tue, 12 Apr 2016 00:00:00 GMT</pubDate>
             <description><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Basis of all our society's problems]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</guid>
+            <pubDate>Tue, 27 May 2014 00:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-14): Minor grammar/typographic/semantic fixes throughout. Also note that this was written in 2014, so it may not reflect current knowledge and events, and it]]></description>
         </item>
         <item>
             <title><![CDATA[ES6 is functional, imperative, and OO]]></title>
@@ -48,11 +48,11 @@
             <description><![CDATA[I've recently completed a very large redesign of my website to make it look more modern and look much better. If you saw it between the recent move and now, you probably see a]]></description>
         </item>
         <item>
-            <title><![CDATA[Objects linked to other objects - Simplifies so much]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</guid>
-            <pubDate>Mon, 27 Jul 2015 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></description>
+            <title><![CDATA[Tape === awesome]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</guid>
+            <pubDate>Tue, 29 Sep 2015 00:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></description>
         </item>
         <item>
             <title><![CDATA[Society in a nutshell]]></title>
@@ -62,11 +62,11 @@
             <description><![CDATA[There are two factions: people who religiously cling to the past, and the people who are disillusioned. These two seemingly endlessly conflict over most things. Then, there]]></description>
         </item>
         <item>
-            <title><![CDATA[Tape === awesome]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</guid>
-            <pubDate>Tue, 29 Sep 2015 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></description>
+            <title><![CDATA[Welcome to my new site!]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md</guid>
+            <pubDate>Sat, 16 Jan 2016 00:00:00 GMT</pubDate>
+            <description><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></description>
         </item>
         <item>
             <title><![CDATA[User friendliness and SEO optimization for clients without JS using <noscript>, <meta>]]></title>
@@ -76,11 +76,11 @@
             <description><![CDATA[Edit (2016-01-14): correct the last paragraph, as IE6+ can still parse HTML5, albeit not display it properly without shims. --- The following is a simple HTML hack to really]]></description>
         </item>
         <item>
-            <title><![CDATA[Welcome to my new site!]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/welcome-to-my-new-site.md</guid>
-            <pubDate>Sat, 16 Jan 2016 00:00:00 GMT</pubDate>
-            <description><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></description>
+            <title><![CDATA[Objects linked to other objects - Simplifies so much]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</guid>
+            <pubDate>Mon, 27 Jul 2015 00:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></description>
         </item>
     </channel>
 </rss>
