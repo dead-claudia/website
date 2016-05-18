@@ -14,14 +14,15 @@
     .description, .link, .cc-license, h3
         vert margin 1em
 
-    .link a
-        @media screen and (min-width 500px)
-            display inline
+    +nonphone()
+        .link span.separator::after
+            content "‒"
+            color text-color
+            padding 0.25em
 
-            &:nth-child(2)::before
-                content "‒"
-                color black
-                padding 0.25em
+    .link a
+        +nonphone()
+            display inline
 
         +phone()
             display block

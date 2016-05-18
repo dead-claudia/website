@@ -19,6 +19,26 @@ mixin func(name)
             This website itself is fully open-source, ready to explore. I love
             open source!
 
+        +project("Thallium")
+            p.
+                An experimental JavaScript testing framework I'm currently
+                working on that aims to be very unopinionated, simple to use,
+                and easy to tailor to your needs, no matter how complicated they
+                are. My goal is to make a testing framework that gets out of
+                your way and lets you test how you want, instead of making you
+                conform to its opinions on how your tests should be structured
+                or go through extensive setup and/or boilerplate to start. I
+                want something that is small and simple for the small and simple
+                projects, but I want to still be able to have something very
+                powerful and structured for large applications.
+
+            p.
+                After I finish the main implementation, I would really like to
+                see about porting this to Python, with a few tweaks to better
+                fit the language. I also plan on using this test framework in my
+                own projects as it matures, even in production applications. For
+                this reason, it is my primary project at the moment.
+
         +project("Mithril", "https://mithril.js.org", true).
             A lightweight, simple, and unopinionated
             #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller", true) MVC]
@@ -27,14 +47,6 @@ mixin func(name)
             performance, where this truly shines. It's light enough and fast
             enough that it flies even on mobile, where there's not a lot of
             power. Matter of fact, this website even uses Mithril in places.
-
-        +project("Techtonic").
-            An experimental JavaScript unit test framework I'm currently working
-            on that aims to be very unopinionated, simple to use, and easy to
-            tailor to your needs, no matter how complicated they are. Upon
-            completion, I plan on porting this to Python, with a few changes to
-            fit the language better. I also plan on using this in my own
-            projects once it becomes complete enough to be usable.
 
         +project("m-iso")
             p.
@@ -66,5 +78,5 @@ mixin func(name)
             #[+a("http://coffeescript.org", true) CoffeeScript], as a set of
             function decorators. It is currently powered by
             #[+a("http://npmjs.com/packages/type-check", true) type-check], but
-            I have some very large changes slated for the next update, whenever
-            I can get it completed, including to the types themselves.
+            I have some very large changes to it slated for the next update,
+            whenever I get it completed, including to the types themselves.
