@@ -3,55 +3,10 @@
 (function () {
     "use strict"
 
-    var got = false
+    var undefined // eslint-disable-line no-shadow-restricted-names
 
     // See https://www.w3.org/TR/html5/forms.html#valid-e-mail-address
     var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/ // eslint-disable-line max-len
-
-    // Fool a few spam bots (hopefully) by making my email not appear directly
-    // in the source, either. Note that this is purposefully *not* a valid email
-    // address, if a spam bot finds this. And hey, it might crash a few poorly
-    // written ones that try to parse this. :)
-    //
-    // Unobfuscated, it's `me@isiahmeadows.com`, but this comment will disappear
-    // before it makes its way to the public site.
-    var emailText = "@mbef@gi23#jfski^\\l2anhp\0m2r%etaud??voxwys&.*c<ozm"
-
-    function failed() {
-        document.getElementById("submit").className += " hidden"
-        var div = document.getElementById("gotcha-message")
-
-        div.className = div.className.replace(/\bhidden\b/g, "")
-    }
-
-    function sendRequest() {
-        // My email shouldn't require escaping here to display.
-        var fixed = emailText.slice(1).replace(/[^\.@acdehimosw]/g, "")
-        var name = document.getElementById("name").value
-        var email = document.getElementById("email").value
-        var subject = document.getElementById("subject").value
-        var message = document.getElementById("message").value
-
-        if (!email) name = "(Anonymous) " + name
-
-        // TODO: create Heroku dyno to POST email json to.
-        m.request({
-            method: "POST",
-            url: "//formspree.io/" + fixed,
-            config: function (xhr) {
-                xhr.setRequestHeader("Accept", "application/json")
-                xhr.setRequestHeader("Content-Type",
-                    "application/x-www-form-urlencoded")
-            },
-            data: m.route.buildQueryString({
-                name: name,
-                _subject: "[Personal Site] " + subject,
-                message: message,
-                email: email || undefined,
-            }),
-        })
-        .then(function () { location.href = "./contact-finish.html" })
-    }
 
     var messages = {
         name: "A name is required, even if it's a pseudonym.",
@@ -60,65 +15,153 @@
         message: "A message is required. \"See title\" works.",
     }
 
-    function verifyAndSend() {
-        var lines = []
+    var control = {
+        view: function (_, attrs, text) {
+            return m("label", [
+                m("span", {class: attrs.required ? "required" : ""}, text),
+                m("input", attrs),
+            ])
+        },
+    }
 
-        function verifyExists(id) {
-            if (/^\s*$/.test(document.getElementById(id).value)) {
-                lines.push(messages[id])
-            }
-        }
+    m.mount(document.getElementById("contact"), {
+        controller: function () {
+            this.locked = m.prop(false)
+            this.name = m.prop("")
+            this.email = m.prop("")
+            this.subject = m.prop("")
+            this.message = m.prop("")
+            this.errors = m.prop()
 
-        verifyExists("name")
-
-        var email = document.getElementById("email").value
-
-        if (email !== "" && !emailRegex.test(email)) {
-            lines.push(messages.email)
-        }
-
-        verifyExists("subject")
-        verifyExists("message")
-
-        var errors = document.getElementById("errors")
-
-        if (lines.length) {
-            errors.innerHTML =
-                "<p>Could you fix these problems for me before submitting " +
-                "this form?</p><ul><li>" + lines.join("</li><li>") +
-                "</li></ul>"
-            errors.className = errors.className.replace(/\bhidden\b/g, "")
-        } else {
-            if (!/\bhidden\b/.test(errors.className)) {
-                errors.className += " hidden"
+            /*
+             * Fill in some useful, informative defaults if the user clicked on
+             * the website design request link.
+             */
+            if (/[?&]w/.test(location.search)) {
+                this.subject("Website design request")
+                // This is intentionally invalid.
+                this.email("Don't forget to leave me a way to get back to you!")
             }
 
-            sendRequest()
-        }
-    }
+            this.onsubmit = function (e) {
+                e = e || event
+                e.preventDefault()
+                e.stopPropagation()
 
-    var contact = document.getElementById("contact")
+                if (this.locked()) return
 
-    contact.reset()
-    contact.onsubmit = function (e) {
-        e = e || event
-        e.preventDefault()
-        e.stopPropagation()
+                var lines = []
 
-        // Don't repeat the same steps if the form was locked.
-        if (got) return
+                if (/^\s*$/.test(this.name())) lines.push(messages.name)
 
-        if (document.getElementById("gotcha").value) {
-            failed()
-        } else {
-            verifyAndSend()
-        }
-    }
+                if (this.email() !== "" && !emailRegex.test(this.email())) {
+                    lines.push(messages.email)
+                }
 
-    if (/[?&]w/.test(window.location.search)) {
-        document.getElementById("subject").value = "Website design request"
-        // This is intentionally invalid.
-        document.getElementById("email").value =
-            "Don't forget to leave me a way to get back to you!"
-    }
+                if (/^\s*$/.test(this.subject())) lines.push(messages.subject)
+                if (/^\s*$/.test(this.message())) lines.push(messages.message)
+
+                if (lines.length) {
+                    this.errors(lines)
+                    return
+                }
+
+                this.errors(undefined)
+                if (!this.email()) this.name("(Anonymous) " + this.name())
+
+                // TODO: create Heroku dyno to POST email json to.
+                m.request({
+                    method: "POST",
+                    url: "//formspree.io/me@isiahmeadows.com",
+                    config: function (xhr) {
+                        xhr.setRequestHeader("Accept", "application/json")
+                        xhr.setRequestHeader("Content-Type",
+                            "application/x-www-form-urlencoded")
+                    },
+                    data: m.route.buildQueryString({
+                        name: this.name(),
+                        _subject: "[Personal Site] " + this.subject(),
+                        message: this.message(),
+                        email: this.email() || undefined,
+                    }),
+                })
+                .then(function () { location.href = "./contact-finish.html" })
+            }
+        },
+
+        view: function (ctrl) {
+            return m("form", {
+                novalidate: "",
+                onchange: function (e) { ctrl[e.target.name](e.target.value) },
+                onsubmit: ctrl.onsubmit.bind(ctrl),
+            }, [
+                m("div", [
+                    m("p", m("span.required"), " = Required"),
+
+                    m(control, {
+                        name: "name",
+                        required: "required",
+                        autocomplete: "name",
+                    }, "Name:"),
+
+                    m(control, {
+                        name: "email",
+                        type: "email",
+                        autocomplete: "email",
+                    }, "Email:"),
+
+                    m(control, {
+                        name: "subject",
+                        required: "required",
+                        autocomplete: "off",
+                    }, "Subject:"),
+
+                    m("label.msg", [
+                        m("span.required", "Message"),
+                        m("textarea", {
+                            autocomplete: "off",
+                            required: "required",
+                            name: "message",
+                        }),
+                    ]),
+
+                    m("input[type=hidden]", {
+                        onchange: ctrl.locked.bind(ctrl, true),
+                    }),
+
+                    !ctrl.errors() ? null : m(".warning", [
+                        m("p", [
+                            "Could you fix these problems for me before ",
+                            "submitting this form?",
+                        ]),
+                        m("ul", ctrl.errors().map(function (error) {
+                            return m("li", error)
+                        })),
+                    ]),
+
+                    m(".submit", [
+                        m("input[type=submit][value=Send]"),
+                    ]),
+
+                    !ctrl.locked() ? null : m(".warning", [
+                        "Hidden field modified. Form locked. (If you are a ",
+                        "human, you might want to be careful messing with the ",
+                        "source code ",
+                        m("img.wink[src=wink.png][alt='winking face']"),
+                        ". And while you are at it, you can always reload the ",
+                        "page.)",
+                    ]),
+                ]),
+                m("small", [
+                    "Legal note: By submitting this form, you agree that it ",
+                    "is not confidential, as I cannot guarantee any 100% ",
+                    "safety or privacy through the Internet. Even end-to-end ",
+                    "HTTPS through ",
+                    m("a[target=_blank][href=https://torproject.org]", "Tor"),
+                    " and a VPN can't legally guarantee you that.",
+                    m("img.wink[src=wink.png][alt='winking face']"),
+                ]),
+            ])
+        },
+    })
 })()

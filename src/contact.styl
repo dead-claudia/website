@@ -1,32 +1,30 @@
 @charset "UTF-8"
 
-@import "./contact-email.mixin.styl"
 @require "./common.mixin.styl"
 
-#contact .required::after
-    display inline-block
-    content "*"
-    font-size 1em
-    margin-left 0.25em
-    color red
-
 #body
-    .wrapper
-        text-align center
-        margin 0 -0.5em 1em -0.5em
-        padding 0 0.5em 1em 0.5em
+    > p
+        margin-bottom 1em
+        padding-bottom 1em
         border-bottom 2px solid border-color
 
-    .form
-        margin 0 auto
-
-#gotcha-message img
-    display inline
-    height 1em
-    width 1em
+    img.wink
+        display inline
+        height 1em
+        width 1em
 
 #contact
+    margin 0 auto
+
+#contact form
     width 100%
+
+    .required::after
+        display inline-block
+        content "*"
+        font-size 1em
+        margin-left 0.25em
+        color red
 
     .warning
         background-color #f88
@@ -40,7 +38,7 @@
             color black
             text-align left
 
-    label.msg
+    label.msg span
         vertical-align top
 
     small
@@ -58,20 +56,20 @@
         min-height 10em
         font-size small
 
-    div
+    div, label
         margin 0.5em auto
         display block
         white-space nowrap
 
-    div input, textarea
+    input, textarea
         font-size 1em
         padding 0.5em
         border 2px solid border-color
 
-#submit-wrapper
-    text-align center
+    .submit
+        text-align center
 
-    #submit
+    input[type=submit]
         height auto
         max-width 5em
         color header-text
@@ -81,68 +79,66 @@
 // The large form layout doesn't work as well with smaller tablets in portrait
 // mode.
 @media screen and (max-width 700px)
-    #body .form
+    #contact
         width 80%
 
-    #contact
-        div input, textarea
+    #contact form
+        input, textarea
             input-fix()
 
-        div label
+        label span
             display block
             vert margin 0.5em
 
-    // Nested to increase specificity (the parent style is ID + type)
-    #submit-wrapper #submit
-        margin-top 0.5em
-        display inline-block
-
-@media screen and (min-width 700px)
-    #body .form
-        text-align center
-
-    #contact
-        display inline-block
-        text-align center
-
-        div
-            text-align center
-
-        div input, textarea
+        input[type=submit]
+            margin-top 0.5em
             display inline-block
 
-        div label
+@media screen and (min-width 700px)
+    #contact
+        text-align center
+
+    #contact form
+        display inline-block
+        text-align center
+
+        div, label
+            text-align center
+
+        input, textarea
+            display inline-block
+
+        label span
             display inline-block
             padding-top 0.75em
             vertical-align middle
 
-        div input
+        input
             vertical-align text-top
 
-    // Nested to increase specificity (the parent style is ID + type)
-    #submit-wrapper #submit
-        margin-top 1em
-        text-align center
+        input[type=submit]
+            margin-top 1em
+            text-align center
 
 @media screen and (min-width 700px) and (max-width 1000px)
-    #body .form
+    #contact
         width 90%
 
-    #contact
-        div input, textarea
+    #contact form
+        input, textarea
             width 70%
 
-        div label
+        label span
             // constrain to keep the labels from getting squished
             width-scale 30% 80px 100px
 
 +desktop()
-    #body .form
+    #contact
         width 75%
 
-    #contact
-        div input, textarea
+    #contact form
+        input, textarea
             width 80%
 
-        div label
+        label span
             width 7em

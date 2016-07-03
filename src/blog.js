@@ -10,10 +10,11 @@
         var old = m.deferred.onerror
 
         return function (e) {
-            if (typeof console !== "undefined" && console.error) {
+            try {
                 console.error(e)
+            } finally {
+                return old(e)
             }
-            return old(e)
         }
     })()
 
@@ -24,6 +25,20 @@
     // So I'm not typing out this crap every time.
     function route(href) {
         return {href: href, config: m.route}
+    }
+
+    function pure(view) {
+        return {
+            view: function () {
+                var args = []
+
+                for (var i = 1; i < arguments.length; i++) {
+                    args.push(arguments[i])
+                }
+
+                return view.apply(null, args)
+            },
+        }
     }
 
     /**
@@ -94,14 +109,12 @@
     /**
      * The header for the basic summary loaded by default.
      */
-    var summaryHeader = {
-        view: function () {
-            return m(".summary-header", [
-                m(".summary-title", "Posts, sorted by most recent."),
-                m(tagSearch),
-            ])
-        },
-    }
+    var summaryHeader = pure(function () {
+        return m(".summary-header", [
+            m(".summary-title", "Posts, sorted by most recent."),
+            m(tagSearch),
+        ])
+    })
 
     /**
      * The header for the tag view, which requires a little more logic to
@@ -146,33 +159,25 @@
         },
     }
 
-    var tagList = {
-        view: function (_, post, isTag, resolvedTag) {
-            return m(".post-tags", [
-                m("span", "Tags:"),
-                post.tags.map(function (tag) {
-                    var active = isTag && tag === resolvedTag
-                        ? ".post-tag-active"
-                        : ""
+    var tagList = pure(function (post, isTag, resolved) {
+        return m(".post-tags", [
+            m("span", "Tags:"),
+            post.tags.map(function (tag) {
+                return m("a.post-tag", {
+                    class: isTag && tag === resolved ? ".post-tag-active" : "",
+                    href: "/tags/" + tag,
+                    config: m.route,
+                }, tag)
+            }),
+        ])
+    })
 
-                    return m("a.post-tag" + active,
-                        route("/tags/" + tag),
-                        tag)
-                }),
-            ])
-        },
-    }
-
-    var feed = {
-        view: function (_, type, href) {
-            return m(".feed", [
-                type + " feed",
-                m("a", {href: href}, [
-                    m("img.feed-icon[src=./feed-icon-16.gif]"),
-                ]),
-            ])
-        },
-    }
+    var feed = pure(function (type, href) {
+        return m(".feed", [
+            type + " feed",
+            m("a", {href: href}, m("img.feed-icon[src=./feed-icon-16.gif]")),
+        ])
+    })
 
     /**
      * The combined summary and tag view. The two views are only different in
@@ -181,43 +186,41 @@
      * Eventually, this needs to be paginated, but I don't see that being a
      * problem in the near term.
      */
-    var summaryView = {
-        view: function (_, posts, isTag) {
-            var rawTag = m.route.param("tag")
-            var resolvedTag = rawTag && rawTag.toLowerCase()
+    var summaryView = pure(function (posts, isTag) {
+        var rawTag = m.route.param("tag")
+        var resolvedTag = rawTag && rawTag.toLowerCase()
 
-            return m(".blog-summary", [
-                m("p", [
-                    "My ramblings about everything (religion, politics, ",
-                    "coding, etc.)",
-                ]),
+        return m(".blog-summary", [
+            m("p", [
+                "My ramblings about everything (religion, politics, ",
+                "coding, etc.)",
+            ]),
 
-                m(feed, "Atom", "blog.atom.xml"),
-                m(feed, "RSS", "blog.rss.xml"),
+            m(feed, "Atom", "blog.atom.xml"),
+            m(feed, "RSS", "blog.rss.xml"),
 
-                isTag
-                    ? m(tagHeader, posts.length, resolvedTag)
-                    : m(summaryHeader),
+            isTag
+                ? m(tagHeader, posts.length, resolvedTag)
+                : m(summaryHeader),
 
-                m(".blog-list", posts.map(function (post) {
-                    return m(".blog-summary-item", [
-                        m(".post-date", post.date.toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })),
+            m(".blog-list", posts.map(function (post) {
+                return m(".blog-entry", [
+                    m(".post-date", post.date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })),
 
-                        m("a.post-stub", route("/posts/" + post.url), [
-                            m(".post-title", post.title),
-                            m(".post-preview", post.preview, "..."),
-                        ]),
+                    m("a.post-stub", route("/posts/" + post.url), [
+                        m(".post-title", post.title),
+                        m(".post-preview", post.preview, "..."),
+                    ]),
 
-                        m(tagList, post, isTag, resolvedTag),
-                    ])
-                })),
-            ])
-        },
-    }
+                    m(tagList, post, isTag, resolvedTag),
+                ])
+            })),
+        ])
+    })
 
     var renderer = new marked.Renderer()
 
@@ -405,15 +408,9 @@
      * The entry point.
      */
     document.addEventListener("DOMContentLoaded", function () {
-        // Show a helpful bit of info if Mithril is being uncooperative in
-        // loading its routes (I know it's likely a Mithril routing bug, but not
-        // something I have time to fix ATM).
-        //
-        // I don't actually mention this in
-        // the alert, since I don't want to make the assumption it's *only* tech
-        // people that read this thing. I blog about more than just developer
-        // stuff, so I know it's not a safe assumption to make.
-        document.getElementById("info").innerHTML =
+        // Show a helpful bit of info if the blog posts are being slow to load
+        // for whatever reason.
+        document.getElementById("blog").innerHTML =
             "<p>Loading...</p>" +
             "<p>If this text doesn't disappear within a few seconds, you may " +
             "have to reload the page, as the blog is loading slowly. If that " +
@@ -427,12 +424,26 @@
         loaded.resolve()
     })
 
-    function recordView() {
-        // Don't crash if Google Analytics doesn't load.
-        try {
-            window.ga("send", "pageview", location.pathname + m.route())
-        } catch (_) {
-            // ignore
+    var lastIsTags = false
+
+    function createBase(tags, view) {
+        return {
+            controller: function () {
+                // Avoid duplicate hits for tag searches.
+                if (lastIsTags) return
+
+                // Don't crash if Google Analytics doesn't load.
+                try {
+                    var route = tags ? "/tags" : m.route()
+
+                    lastIsTags = !!tags
+                    window.ga("send", "pageview", location.pathname + route)
+                } catch (_) {
+                    // ignore
+                }
+            },
+
+            view: view,
         }
     }
 
@@ -440,31 +451,20 @@
     m.sync([blogRequest, loaded.promise]).then(function () {
         m.route.mode = "hash"
         m.route(document.getElementById("blog"), "/", {
-            "/": {
-                controller: recordView,
-                view: function () {
-                    return m(summaryView, posts())
-                },
-            },
+            "/": createBase(false, function () {
+                return m(summaryView, posts())
+            }),
 
-            "/posts/:post": {
-                controller: recordView,
-                view: function () {
-                    return m(postView, urls[m.route.param("post")])
-                },
-            },
+            "/posts/:post": createBase(false, function () {
+                return m(postView, urls[m.route.param("post")])
+            }),
 
-            "/tags/:tag": {
-                controller: function () {
-                    window.ga("send", "pageview", location.pathname + "/tags")
-                },
-
-                view: function () {
-                    return m(summaryView, getTag(m.route.param("tag")), true)
-                },
-            },
+            "/tags/:tag": createBase(true, function () {
+                return m(summaryView, getTag(m.route.param("tag")), true)
+            }),
         })
 
+        // Force an update
         m.route(m.route())
     })
 })()

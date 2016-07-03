@@ -3,6 +3,10 @@
 @import "./common.mixin.styl"
 
 #body
+    +nonphone()
+        > :first-child
+            margin 0.5em
+
     ul
         margin-top 0
 

@@ -2,24 +2,32 @@ include ./page.mixin.jade
 
 link(rel="stylesheet" href="projects.css")
 
-mixin project(name, href, external)
+mixin project(name, href)
     - if (!href) href = name.toLowerCase()
-    - if (!external) href = "https://github.com/isiahmeadows/" + href
+    - if (href.indexOf("/") < 0) href = "https://github.com/isiahmeadows/" + href
     li
-        +a(href, true)= name
-        div: block
+        +a(href).new= name
+        div
+            if /[\s^]npm[\s$]/.test(attributes.class || "")
+                p.npm: +a("https://npmjs.com/package/" + name).new Find this on npm!
+            block
 
 mixin func(name)
     - var base = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/"
-    +a(base + name.replace(/\./g, "/"), true)= name
+    +a(base + name.replace(/\./g, "/")).new= name
 
 +page("Projects")
+    div.
+        Here's a list of projects I'm most active in, and things I feel most
+        accomplished for:
     ul
-        +project("This Website", "website").
-            This website itself is fully open-source, ready to explore. I love
-            open source!
+        +project("This Website", "website")
+            p.
+                This website itself is fully open-source, ready to explore. I
+                love open source! You can see a description of the technologies
+                used to power this website there.
 
-        +project("Thallium")
+        +project("Thallium").npm
             p.
                 An experimental JavaScript testing framework I'm currently
                 working on that aims to be very unopinionated, simple to use,
@@ -39,14 +47,39 @@ mixin func(name)
                 own projects as it matures, even in production applications. For
                 this reason, it is my primary project at the moment.
 
-        +project("Mithril", "https://mithril.js.org", true).
-            A lightweight, simple, and unopinionated
-            #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller", true) MVC]
-            framework created by #[+a("http://lhorie.blogspot.com", true) Leo Horie].
-            I am an active contributor, but my primary focus is on its
-            performance, where this truly shines. It's light enough and fast
-            enough that it flies even on mobile, where there's not a lot of
-            power. Matter of fact, this website even uses Mithril in places.
+        +project("Mithril", "https://mithril.js.org").npm
+            p.
+                A lightweight, simple, and unopinionated
+                #[+a("https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller").new MVC]
+                framework created by #[+a("http://lhorie.blogspot.com").new Leo Horie].
+                I am an active contributor, but my primary focus is on its
+                performance, where this truly shines, and making it easier for
+                people to contribute where they feel best. It's light enough and
+                fast enough that it flies even on mobile, where there's little
+                to no processing power. Matter of fact, several parts of this
+                website are powered by Mithril ‒ most notably, the blog is itself a
+                #[+a("https://github.com/isiahmeadows/website/blob/master/src/blog.js").new small Mithril web app].
+
+        +project("simple-require-loader").npm
+            p.
+                A very simple, minimalistic, and flexible module loader that
+                racks up a whopping 510 bytes minified and compressed. It
+                supports many of the features you would expect of a larger,
+                heavier module loader, but in a fraction of the size. It is
+                fully tested, and it has a very simple API.
+
+            p.
+                It does not provide any particular facilities for bundling, but
+                it is possible to concatenate all your modules into a single
+                script at the end. And unlike Webpack and similar, if you want
+                to load a bundle remotely, there is a very simple API call to
+                load those.
+
+            p.
+                It was created as an experiment to see how small I could create
+                a functional, usable, module loader that could work beyond just
+                the smallest of scales. I myself don't use this in anything, but
+                I have already found others interested in using it themselves.
 
         +project("m-iso")
             p.
@@ -61,22 +94,8 @@ mixin func(name)
                 that proved to be too complex for the time I had available then.
 
             p.
-                This project had not made it to 1.0, but I am willing to
-                resurrect this project if enough people are interested.
-
-        +project("babel-plugin-proto-to-create").
-            A plugin for Babel 5, a ECMAScript 6+ transpiler, to convert objects
-            that contain a literal #[code __proto__] to use
-            #[+func("Object.create")] and simple property assignment instead for
-            regular properties and #[+func("Object.defineProperty")] to for
-            getters and setters. I eventually want to update this for Babel 6.
-
-        +project("ttyped").
-            A simple runtime type-checking system for JavaScript via the
-            #[+a("https://github.com/wycats/javascript-decorators", true) decorator proposal],
-            #[+a("http://livescript.net", true) LiveScript], and
-            #[+a("http://coffeescript.org", true) CoffeeScript], as a set of
-            function decorators. It is currently powered by
-            #[+a("http://npmjs.com/packages/type-check", true) type-check], but
-            I have some very large changes to it slated for the next update,
-            whenever I get it completed, including to the types themselves.
+                This project had not made it to 1.0, because
+                #[+a("https://github.com/StephanHoyer/mithril-node-render").new Stephen Hoyer&apos;s mithril-node-render]
+                was already fufilling a similar need and recent developments in
+                Mithril core were already making it easier to add such support,
+                especially with the recent core rewrite.

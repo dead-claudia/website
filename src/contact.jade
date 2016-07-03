@@ -1,58 +1,30 @@
 include ./page.mixin.jade
-link(rel="stylesheet" href="contact.css")
 
-//- for the contact email mixin.
+link(rel="stylesheet" href="contact.css")
 script(src=(
     "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.3/mithril" +
         (minified ? ".min" : "") + ".js"
 ))
 
-mixin control(id)
-    div
-        label(for=id, class={required: !!attributes.required}): block
-        input(id=id)&attributes(attributes)
-
 +page("Contact")
     p.
         You can always email me directly. My email is below (after you put in
-        the code). Otherwise, I have a contact form here for convenience. (It's
-        also for if you would prefer, you don't have to reveal your email
-        address to me. I understand the concept of privacy.)
+        the code). Otherwise, I have a contact form here powered by
+        #[+a("https://formspree.io").new Formspree] for convenience or if, for
+        any reason, you would rather remain as anonymous as possible when
+        contacting me (Yes, I do understand the power and peace of anonymity).
+        If you'd prefer instead, you may also email me directly at
+        #[+a("mailto:me@isiahmeadows.com") me@isiahmeadows.com].
 
-    .wrapper: include ./contact-email.mixin.jade
+    .form#contact
+        noscript: p.
+            You need JavaScript enabled for this form to appear. It's dead
+            otherwise. Don't worry ‒ it's not going to record your IP address
+            or do any other crazy snooping when it runs. You can even
+            #[+a("https://github.com/isiahmeadows/website/blob/master/src/contact.js").new verify this yourself]
+            if you feel paranoid enough. I'm not the one to hide evil things
+            like secret trackers in plain sight. #[img(src="wink.png" alt="winking face").wink]
 
-    noscript: p.
-        You need JavaScript enabled for this form to work. It's dead otherwise.
-
-    .form: form#contact(novalidate)
-        div
-            p #[span.required] = Required
-
-            +control("name")(autocomplete="name" required) Name:
-            +control("email")(autocomplete="email" type="email") E-mail:
-            +control("subject")(autocomplete="off" required) Subject:
-
-            div
-                label.msg(for="message").required Message:
-                textarea(autocomplete="off" required)#message
-
-            input(type="hidden")#gotcha
-
-            #errors.warning.hidden
-
-            #submit-wrapper: input(type="submit" value="Send")#submit
-
-            #gotcha-message.warning.hidden
-                | Hidden field modified. Form locked. (If you are a human,
-                | you might want to be careful messing with the source code
-                img(src="wink.png" alt="winking face")
-                | . And while you are at it, you can always reload the page.)
-
-        small.
-            Legal note: By submitting this form, you agree that it is not
-            confidential, as I cannot guarantee any 100% safety or privacy
-            through the Internet. Even end-to-end HTTPS through
-            #[+a("https://www.torproject.org", true) Tor] through a VPN can't legally
-            guarantee you that. #[img(src="wink.png" alt="winking face")]
-
+    //- Cue browsers to preload this, but don't display it.
+    img(src="wink.png").hidden
     script(src="contact.js")

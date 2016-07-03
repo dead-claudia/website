@@ -19,7 +19,10 @@ script.
     ga("create", "UA-38960675-5", "auto", {anonymizeIp: true, forceSSL: true});
     ga("send", "pageview");
 
-mixin a(href, newTab)
+mixin a(href)
+    - var class_ = attributes.class || ""
+    - var newTab = /[\s^]new[\s$]/.test(class_)
+    - attributes.class = class_.replace(/[\s^]+new[\s$]+/g, "")
     a(href=href target=(!!newTab && "_blank"))&attributes(attributes)
         block
 
@@ -43,7 +46,6 @@ mixin page(name, file, title)
                     .link.l1: +page--link("about.html", file) About
                     .link.l2: +page--link("projects.html", file) Projects
                     .link.l3: +page--link("blog.html", file) Blog
-                    .link.l4: +page--link("music.html", file) Music
                     .link.l5: +page--link("contact.html", file) Contact
 
         //- Hack for 2-column layout
@@ -54,7 +56,6 @@ mixin page(name, file, title)
                     when "about.html": h2.l1= name
                     when "projects.html": h2.l2= name
                     when "blog.html": h2.l3= name
-                    when "music.html": h2.l4= name
                     when "contact.html": h2.l5= name
                     default: h2= name
                 #body: block
