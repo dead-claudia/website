@@ -174,7 +174,7 @@
 
     var feed = pure(function (type, href) {
         return m(".feed", [
-            type + " feed",
+            type,
             m("a", {href: href}, m("img.feed-icon[src=./feed-icon-16.gif]")),
         ])
     })
@@ -196,8 +196,10 @@
                 "coding, etc.)",
             ]),
 
-            m(feed, "Atom", "blog.atom.xml"),
-            m(feed, "RSS", "blog.rss.xml"),
+            m(".feeds", [
+                m(feed, "Atom", "blog.atom.xml"),
+                m(feed, "RSS", "blog.rss.xml"),
+            ]),
 
             isTag
                 ? m(tagHeader, posts.length, resolvedTag)
