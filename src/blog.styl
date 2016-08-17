@@ -65,6 +65,9 @@ secondary-text-color = #666
             .post-title
                 color mix(#ccc, header-color, 25%)
 
+            .post-tag.post-tag-active, .post-tag:hover
+                background-color #aaa
+
         &:last-child
             border-bottom 2px solid border-color
 
@@ -103,9 +106,6 @@ secondary-text-color = #666
 
         &:visited
             color secondary-text-color
-
-        &.post-tag-active, &:hover
-            background-color #eee
 
         &.post-tag-active
             font-weight 700
