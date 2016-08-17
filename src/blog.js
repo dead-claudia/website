@@ -91,7 +91,7 @@
 
         view: function (ctrl) {
             return m(".tag-search", [
-                m("label", "Search for tag:"),
+                m("label", "Search by tag:"),
                 m("input[type=text]", {
                     value: ctrl.value(),
                     oninput: m.withAttr("value", ctrl.value),
