@@ -1,23 +1,18 @@
 # My personal website
 
-This is probably uninteresting to you unless you want to see the source code of
-my personal website. And if you do, you're looking at a giant work in progress.
-Nothing too interesting.
+This is probably uninteresting to you unless you want to see the source code of my personal website. And if you do, you're looking at a giant, perpetual work in progress. Nothing too interesting.
 
 Things I still have left to do:
 
+- Update Jade to Pug.
+
 - Make a Heroku server to deal with AJAX-based email better.
 
-- Make the blog be able to read from subfolders. Mostly a build system fix.
-
-- Make the blog more scalable (hundreds of posts should *just work*, and be
-  paginated).
+- Make the blog more scalable (hundreds of posts should *just work*, and be paginated). Low priority until I actually have a lot of posts.
 
 ## Building
 
-You need at least [Node.js v4.0][node] to build this. And although this *might*
-build on Windows or OS X (I'm running Linux), since I have made efforts to try
-to make the build system work there, I can't guarantee anything.
+You need at least [Node.js v4.0][node] to build this. And although this *might* build on Windows or OS X (I'm running Linux), since I have made efforts to try to make the build system work there, I can't guarantee anything.
 
 First, before you run *anything*, run `npm i`.
 
@@ -25,98 +20,71 @@ First, before you run *anything*, run `npm i`.
 
 - `node make clean` - Clean dist/.
 
-- `node make compile` - Compile the site in dist/. This cleans the directory
-  first.
+- `node make compile` - Compile the site in dist/. This cleans the directory first.
 
 - `node make lint` - Lint the JavaScript in the code base.
 
-- `node make` - Run `lint`, then `compile`. It's equivalent to
-  `node make lint compile`
+- `node make` - Run `lint`, then `compile`. It's equivalent to `node make lint compile`
 
 - There's also `node make deploy`, but that requires push privileges first.
 
-If you'd prefer, there's also `npm run compile` for `node make` and
-`npm run server` for `node server`
+If you'd prefer, there's also `npm run compile` for `node make` and `npm run server` for `node server`
 
 ## Description of files:
 
-  - [src/][src]
+- [src/][src]
 
-    Where all the client files are. This includes Jade, CSS, and JS files.
+  Where all the client files are. This includes Jade, CSS, and JS files.
 
-  - [src/blog/][blog]
+- [src/blog/][blog]
 
-    Where my blog posts live, all written in [Markdown][markdown], particularly
-    [GitHub-Flavored Markdown][gfm] (with [YAML][yaml] metadata).
+  Where my blog posts live, all written in [Markdown][markdown], particularly [GitHub-Flavored Markdown][gfm] (with [YAML][yaml] metadata).
 
-  - dist/
+- dist/
 
-    Where all the auto-generated files are.
+  Where all the auto-generated files are.
 
-  - dist-base/
+- dist-base/
 
-    A template for dist/
+  A template for dist/
 
-  - [make.js, scripts/make.js][make]
+- [make.js, scripts/make.js][make]
 
-    Built off of my homegrown build system, an experiment with a truly
-    concurrent JS build system, not merely asynchronous like [Gulp][gulp] or
-    [Grunt][grunt]. And this isn't exactly a massive website written in 10
-    different languages, so that simplifies the matter.
+  Built off of my homegrown build system, an experiment with a truly concurrent JS build system, not merely asynchronous like [Gulp][gulp] or [Grunt][grunt]. And this isn't exactly a massive website written in 10 different languages, so that simplifies the matter.
 
-  - [server.js, scripts/server.js][server]
+- [server.js, scripts/server.js][server]
 
-    A simple dev server. Easy to use, and works for the job. It took a fraction
-    of the time it would normally take for most of the premade solutions for the
-    initial prototype (before the blog and transition from plain CSS to Stylus).
+  A simple dev server. Easy to use, and works for the job. It took a fraction of the time it would normally take for most of the premade solutions for the initial prototype (before the blog and transition from plain CSS to Stylus).
 
-    Note that this loads the home page at http://localhost:8080/website, so that
-    I can guarantee it's viewable on both http://isiahmeadows.com and
-    http://isiahmeadows.github.io/website.
+  Note that this loads the home page at http://localhost:8080/website, so that I can guarantee it's viewable on both [www.isiahmeadows.com](http://www.isiahmeadows.com) and [isiahmeadows.github.io](http://isiahmeadows.github.io/website).
 
-  - scripts/
+- scripts/
 
-    My build system experiment + helper utilities.
+  My build system experiment + helper utilities.
 
 ## Technologies:
 
-  - [Jade][jade], for preprocessing HTML.
+- [Jade][jade], for preprocessing HTML.
 
-  - [Stylus][stylus] to preprocess the CSS.
+- [Stylus][stylus] to preprocess the CSS.
 
-  - [Autoprefixer][autoprefixer], for automatically adding prefixes to the CSS.
-    This is used via the [autoprefixer-stylus][autoprefixer-stylus] plugin.
+- [Autoprefixer][autoprefixer], for automatically adding prefixes to the CSS. This is used via the [autoprefixer-stylus][autoprefixer-stylus] plugin.
 
-  - [Express][express] + a [couple][stylus-middleware] [related][morgan]
-    middlewares, for a simple development server that "just works" without extra
-    annoying configuration (it's only a few small files).
+- [Express][express] + a [couple][stylus-middleware] [related][morgan] middlewares, for a simple development server that "just works" without extra annoying configuration (it's only a few small files).
 
-  - [HTML Minifier][html-minifier] + [Clean CSS][clean-css] +
-    [UglifyJS][uglifyjs] for minifying the files before they go into the wild,
-    where people don't need to download pretty source code to view pretty
-    content. :wink:
+- [HTML Minifier][html-minifier] + [Clean CSS][clean-css] + [UglifyJS][uglifyjs] for minifying the files before they go into the wild, where people don't need to download pretty source code to view pretty content. :wink:
 
-  - A [custom build system][build-system] for this thing, as an experiment with
-    a truly concurrent JavaScript-based and [promise-based][es6-promise] build
-    system. The initial callback-based prototype was written about as quick as
-    a typical setup would take, but it didn't scale very well. So I turned to
-    promises, and started experimenting.
-    [It turned out surprisingly elegant.][make]
+- A [custom build system][build-system] for this thing, as an experiment with a truly concurrent JavaScript-based and [promise-based][es6-promise] build system. The initial callback-based prototype was written about as quick as a typical setup would take, but it didn't scale very well. So I turned to promises, and started experimenting. [It turned out surprisingly elegant.][make]
 
-  - GitHub Pages, to host this thing.
+- GitHub Pages, to host this thing.
 
 ## License/Copyrights
 
 &copy; 2015 Isiah Meadows. Some Rights Reserved.
 
-All the content in this website is under the [CC-BY 4.0 International][cc-by-4],
-and the source code of this website is under the [ISC License][isc], unless
-otherwise stated. Both of these licenses may be viewed in the
-[LICENSE][license] file.
+All the content in this website is under the [CC-BY 4.0 International][cc-by-4], and the source code of this website is under the [ISC License][isc], unless otherwise stated. Both of these licenses may be viewed in the [LICENSE][license] file.
 
-*One example includes my music, in which many of the older songs are under the
-CC-BY-SA or CC-BY-NC licenses. I am trying my best to make sure that's clear
-here and in the website. Note that those aren't even hosted here.*
+*One example includes my music, in which many of the older songs are under the CC-BY-SA or CC-BY-NC licenses. I am trying my best to make sure that's clear here and in the website. Note that those aren't even hosted here.*
 
 [node]: https://nodejs.org/en/
 [src]: https://github.com/isiahmeadows/website/tree/master/src

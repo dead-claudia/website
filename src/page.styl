@@ -47,6 +47,9 @@ a:visited
     nav
         background-color header-color
 
+    nav > :first-child a:hover
+        background-notify-inner header-color 45%
+
     a
         color header-text
         text-decoration none
@@ -61,10 +64,10 @@ a:visited
 
 for x, i in random-colors
     #header .l{i} a
-        background-color x
+        background-notify x 45%
 
-        &.selected, &:hover
-            background-color mix(#ccc, x, 45%)
+        &.selected
+            background-notify-inner x 45%
 
     // This has higher specificity, and thus will render correctly.
     #body-wrapper > div > h2.l{i}
@@ -87,7 +90,7 @@ for x, i in random-colors
         font-weight normal
 
 #body
-    padding 0.5em
+    padding 1.5em
 
 #license
     position relative
@@ -114,6 +117,8 @@ for x, i in random-colors
 
     footer
         margin 1em auto
+        padding-left 1em
+        padding-right 1em
         text-align center
 
 header-size(size)

@@ -10,11 +10,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://@github.com/impinball/website.git"
+    "url": "git+https://@github.com/isiahmeadows/website.git"
   },
   "author": "Isiah Meadows",
-  "license": "UNLICENSED",
-  "homepage": "https://github.com/impinball/website#readme",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/isiahmeadows/website#readme",
   "devDependencies": {
     "autoprefixer-stylus": "^0.9.1",
     "clean-css": "^3.4.8",

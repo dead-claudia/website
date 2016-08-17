@@ -204,14 +204,14 @@
                 : m(summaryHeader),
 
             m(".blog-list", posts.map(function (post) {
-                return m(".blog-entry", [
+                return m("a.blog-entry", route("/posts/" + post.url), [
                     m(".post-date", post.date.toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
                     })),
 
-                    m("a.post-stub", route("/posts/" + post.url), [
+                    m(".post-stub", [
                         m(".post-title", post.title),
                         m(".post-preview", post.preview, "..."),
                     ]),
@@ -298,7 +298,7 @@
         },
 
         view: function (ctrl, post) {
-            return m(".blog-post", [
+            return m(".blog-post", m(".blog-post-wrapper", [
                 //                           "Home ►" or "Home \u25ba"
                 m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
                 m("h3.post-title", post.title),
@@ -307,10 +307,12 @@
                         ? m.trust(ctrl.content())
                         : m(".post-loading", "Loading..."),
                 ]),
-                m(tagList, post),
-                //                           "Home ►" or "Home \u25ba"
-                m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
-            ])
+                m(".post-footer", [
+                    //                           "Home ►" or "Home \u25ba"
+                    m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
+                    m(tagList, post),
+                ]),
+            ]))
         },
     }
 
@@ -426,24 +428,18 @@
 
     var lastIsTags = false
 
-    function createBase(tags, view) {
-        return {
-            controller: function () {
-                // Avoid duplicate hits for tag searches.
-                if (lastIsTags) return
+    function sendView(tags) {
+        // Avoid duplicate hits for tag searches.
+        if (lastIsTags) return
 
-                // Don't crash if Google Analytics doesn't load.
-                try {
-                    var route = tags ? "/tags" : m.route()
+        // Don't crash if Google Analytics doesn't load.
+        try {
+            var route = tags ? "/tags" : m.route()
 
-                    lastIsTags = !!tags
-                    window.ga("send", "pageview", location.pathname + route)
-                } catch (_) {
-                    // ignore
-                }
-            },
-
-            view: view,
+            lastIsTags = !!tags
+            window.ga("send", "pageview", location.pathname + route)
+        } catch (_) {
+            // ignore
         }
     }
 
@@ -451,17 +447,32 @@
     m.sync([blogRequest, loaded.promise]).then(function () {
         m.route.mode = "hash"
         m.route(document.getElementById("blog"), "/", {
-            "/": createBase(false, function () {
-                return m(summaryView, posts())
-            }),
+            "/": {
+                controller: function () { sendView(false) },
+                view: function () { return m(summaryView, posts()) },
+            },
 
-            "/posts/:post": createBase(false, function () {
-                return m(postView, urls[m.route.param("post")])
-            }),
+            "/posts/:post": {
+                controller: function () {
+                    // `null`/`undefined` post = post not found
+                    // TODO: create pseudo-404 for this case.
+                    if (!{}.hasOwnProperty.call(urls, m.route.param("post"))) {
+                        return m.route("/", null, true)
+                    } else {
+                        return sendView(false)
+                    }
+                },
+                view: function () {
+                    return m(postView, urls[m.route.param("post")])
+                },
+            },
 
-            "/tags/:tag": createBase(true, function () {
-                return m(summaryView, getTag(m.route.param("tag")), true)
-            }),
+            "/tags/:tag": {
+                controller: function () { sendView(true) },
+                view: function () {
+                    return m(summaryView, getTag(m.route.param("tag")), true)
+                },
+            },
         })
 
         // Force an update

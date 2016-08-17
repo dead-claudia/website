@@ -7,11 +7,17 @@
         width-scale 100% 150px 250px
         border 2px solid border-color
 
-+phone()
-    #body
-        div
-            margin 0.5em auto
-            text-align center
+@media screen and (max-width 650px)
+    #body div
+        margin 0.5em auto
+        margin-bottom 1em
+        text-align center
+
+@media screen and (min-width 650px)
+    #body div
+        margin 0.5em
+        margin-right 0
+        float right
 
 +nonphone()
     #body
@@ -22,8 +28,3 @@
 
         p ~ p
             margin-top 1em
-
-        div
-            margin 0.5em
-            margin-right 0
-            float right

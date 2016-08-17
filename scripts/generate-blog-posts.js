@@ -28,7 +28,7 @@ function ensureKey(name) {
 
     if (idsJson.ids.indexOf(name) >= 0) return
     idsJson.ids.push(name)
-    fs.writeFileSync(idsFile, JSON.stringify(idsJson, null, 4))
+    fs.writeFileSync(idsFile, `${JSON.stringify(idsJson, null, 4)}\n`)
 }
 
 // Splits the given string into a meta section and a markdown section.

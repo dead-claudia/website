@@ -41,6 +41,14 @@ border-color = #666
 clearfix()
     overflow auto
 
+background-notify(color, level)
+    background-color color
+    &:hover
+        background-notify-inner color level
+
+background-notify-inner(color, level)
+    background-color mix(#ccc, color, level)
+
 vert(prop, args...)
     {prop}-top args
     {prop}-bottom args
