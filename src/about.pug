@@ -1,4 +1,4 @@
-include ./page.mixin.jade
+include ./page.mixin.pug
 
 link(rel="stylesheet" href="about.css")
 
@@ -6,11 +6,12 @@ link(rel="stylesheet" href="about.css")
     div: img.pic(src="pic.jpg" alt="picture of Isiah Meadows")
 
     p.
-        I'm a full-stack JavaScript web developer who specializes in the latest
-        HTML5, CSS, JavaScript, and the #[+a("https://nodejs.org").new Node.js]
+        I'm a full-stack web developer who specializes in the latest HTML5, CSS,
+        JavaScript, and the #[+a("https://nodejs.org").new Node.js]
         JavaScript runtime. Some of the tools I use include
-        #[+a("http://jade-lang.com") Jade], #[+a("http://stylus-lang.com") Stylus],
-        and #[+a("http://mithril.js.org") Mithril].
+        #[+a("http://pugjs.org") Pug], #[+a("http://stylus-lang.com") Stylus],
+        and #[+a("http://mithril.js.org") Mithril], all of which are used in
+        this website.
 
     p.
         I maintain a #[+a("blog.html") low-traffic, infrequently updated blog]
@@ -21,13 +22,6 @@ link(rel="stylesheet" href="about.css")
         #[+a("http://www.buzzfeed.com/").new BuzzFeed], and when I can find
         time not spent coding or doing other things, I occasionally play music,
         mostly improvised, on my keyboard.
-
-    p.
-        Also, once upon a time (read: middle and high school), I loved to create
-        music. This mostly predates my coding days, and as much as I wish I
-        could continue creating, I sadly don't have nearly the time available I
-        used to. It no longer reflects my current musical style, but in case
-        you're curious, you can still find my old songs #[+a("music.html") here].
 
     p.
         If you want to contact me, you can always use the

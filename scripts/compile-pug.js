@@ -5,22 +5,22 @@
 const fs = require("fs")
 
 const infile = process.argv[2]
-// The second argument is a Jade file. That needs fixed.
-const outfile = process.argv[3].replace(/\.jade$/, ".html")
+// The second argument is a Pug file. That needs fixed.
+const outfile = process.argv[3].replace(/\.pug$/, ".html")
 const name = process.argv[4]
 
-const jadeLocals = require("./jade-locals.js")
-const jade = require("jade")
+const pugLocals = require("./pug-locals.js")
+const pug = require("pug")
 const HTMLMinifier = require("html-minifier")
 
 const FILE = name
-    .replace(/\.jade$/, ".html")
+    .replace(/\.pug$/, ".html")
     .replace(/[\\\/]/g, "/")
     .replace(/^src(?:\/)/g, "")
 
 try {
-    const src = jade.compileFile(infile, {filename: infile})(
-        jadeLocals(FILE, true)
+    const src = pug.compileFile(infile, {filename: infile})(
+        pugLocals(FILE, true)
     )
 
     const minified = HTMLMinifier.minify(src, {
@@ -48,7 +48,7 @@ try {
     // TODO: Report this somehow to the Node.js devs. And try to reduce the test
     // case somehow. I hate engine bugs... :(
     //
-    // For whatever reason, this runs twice when Jade throws, but only when run
+    // For whatever reason, this runs twice when Pug throws, but only when run
     // through the build process. I can't repro it by even running this script
     // with the same arguments through the shell. It's clearly a bug in V8,
     // triggered by something in Node's internals.

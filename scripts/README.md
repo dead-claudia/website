@@ -7,7 +7,7 @@ This is a combination of two things, with their associated modules:
 
 Everything here is written using much of what
 [ES6 has to offer](https://kangax.github.io/compat-table/es6/) (that's
-[implemented in Node 4](https://nodejs.org/en/docs/es6/)).
+[implemented in Node 6](https://nodejs.org/en/docs/es6/)).
 
 Everything here except for the server is callable at some point by the build
 system. It was also not made to be particularly general-purpose, although it is
@@ -41,9 +41,9 @@ a quick description of several of the more important files:
   This is a basic promise wrapper utility for Node-style callbacks to be
   converted into ES6 promises.
 
-- jade-locals.js
+- pug-locals.js
 
-  This holds the Jade locals available within the Jade files in src/
+  This holds the Pug locals available within the Pug files in src/
 
 - generate-blog-posts.js, compile-markdown-preview.js
 

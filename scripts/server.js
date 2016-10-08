@@ -6,22 +6,20 @@ const express = require("express")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 
-const jadeLocals = require("./jade-locals.js")
+const pugLocals = require("./pug-locals.js")
 const generateBlog = require("./generate-blog-posts.js")
 
 const app = express()
 
 function nocache(res) {
     res.setHeader("Pragma", "no-cache")
-    res.setHeader("Cache-Control", [
-        "no-cache", "private", "no-store", "must-revalidate", "max-stale=0",
-        "post-check=0", "pre-check=0",
-    ].join())
+    res.setHeader("Cache-Control", "no-cache,private,no-store," +
+        "must-revalidate,max-stale=0,post-check=0,pre-check=0")
     res.setHeader("Expires", 0)
 }
 
 app.set("views", "src")
-app.set("view engine", "jade")
+app.set("view engine", "pug")
 app.set("strict routing", true)
 app.use((req, res, next) => {
     nocache(res)
@@ -30,6 +28,7 @@ app.use((req, res, next) => {
 
 app.use(require("morgan")("common"))
 
+// Return a permission error on directory traversal
 app.use((req, res, next) => {
     if (path.posix.join("/", req.path) !== req.path) return res.sendStatus(403)
     return next()
@@ -39,20 +38,15 @@ const website = new express.Router({
     strict: app.get("strict routing"),
 })
 
-const missing = {code: "ENOENT"}
-
-function fail(req, res, next) {
-    return next(missing)
-}
-
-// .mixin.{html,css}, .jade, .ignore, .ignore.*
-website.get(/\.(mixin\.(html|css)|jade|ignore(\.[^\.]+))$/, fail)
+// /license.*, .mixin.{html,css}, .pug, .ignore.*
+website.get(
+    /^\/license[\/\.]|\.(mixin\.(html|css)|pug|ignore(\.[^\.]+))$/,
+    (req, res, next) => next({code: "ENOENT"}))
 
 website.get("*.html", (req, res) => {
-    const FILE = req.path.slice(1)
-    const file = FILE.replace(/\.html$/, ".jade")
+    const file = req.path.slice(1)
 
-    return res.render(file, jadeLocals(FILE, false))
+    return res.render(file.replace(/\.html$/, ".pug"), pugLocals(file, false))
 })
 
 website.get("*.css", stylus.middleware({
@@ -67,69 +61,58 @@ website.get("*.css", stylus.middleware({
     },
 }))
 
-website.get("/blog.atom.xml", (req, res, next) => generateBlog().then(data => {
-    return res.type("xml").send(data.feed.render("atom-1.0"))
-}).catch(next))
+function getBlog(route, render) {
+    website.get("/blog.atom.xml", (req, res, next) =>
+        generateBlog().then(data => render(req, res, data)).catch(next))
+}
 
-website.get("/blog.rss.xml", (req, res, next) => generateBlog().then(data => {
-    return res.type("xml").send(data.feed.render("rss-2.0"))
-}).catch(next))
+getBlog("/blog.atom.xml", (req, res, data) =>
+    res.type("xml").send(data.feed.render("atom-1.0")))
 
-website.get("/blog.json", (req, res, next) => generateBlog().then(data => {
-    return res.send({posts: data.posts})
-}).catch(next))
+getBlog("/blog.rss.xml", (req, res, data) =>
+    res.type("xml").send(data.feed.render("rss-2.0")))
 
-website.get("/blog/*.md", (req, res, next) => {
-    return generateBlog().then(data => {
-        // Slice off the `/blog/` in req.path
-        return res.send(data.compiled[req.path.slice(6)])
-    }).catch(next)
-})
+getBlog("/blog.json", (req, res, data) => res.send({posts: data.posts}))
+
+getBlog("/blog/*.md", (req, res, data) =>
+    // Slice off the initial `/blog/` in req.path
+    res.send(data.compiled[req.path.slice(6)]))
 
 const base = path.resolve(__dirname, "../src")
 
-const get = (root, methods) => (req, res, next) => {
+const read = root => (req, res, next) => {
     const file = path.resolve(root, req.path.slice(1))
 
     return fs.stat(file, (err, stat) => {
         if (err != null) return next(err)
-        const f = stat.isDirectory() ? methods.dir : methods.file
-
-        return f({file, req, res, next})
+        if (!stat.isFile()) return res.redirect(`${req.baseUrl}${req.path}/`)
+        return fs.createReadStream(file)
+        .on("error", next)
+        .pipe(res.type(path.basename(file)).status(200))
     })
 }
 
-const read = (pattern, root) => website.get(pattern, get(root, {
-    dir: o => o.res.redirect(`${o.req.baseUrl}${o.req.path}/`),
-    file: o =>
-        fs.createReadStream(o.file)
-        .on("error", o.next)
-        .pipe(o.res.type(path.basename(o.file)).status(200)),
-}))
-
-read("*.css", path.resolve(__dirname, "../dist"))
-read("*.*", base)
-
-website.get(/^\/license[\/\.]/i, fail)
+website.get("*.css", read(path.resolve(__dirname, "../dist")))
+website.get("*.*", read(base))
 
 website.get("/", (req, res) =>
-    res.render("index.jade", jadeLocals("index.html", false)))
+    res.render("index.pug", pugLocals("index.html", false)))
 
-website.get("*", get(base, {
-    dir: o => {
-        const file = `${o.req.baseUrl}${o.req.path}/index`
+website.get("*", (req, res, next) => {
+    const file = path.resolve(base, req.path.slice(1))
 
-        return o.res.render(`${file}.jade`, jadeLocals(`${file}.html`, false))
-    },
-    file: o => o.next(missing),
-}))
+    return fs.stat(file, (err, stat) => {
+        if (err != null) return next(err)
+        if (stat.isFile()) return next({code: "ENOENT"})
+        const file = `${req.baseUrl}${req.path}/index`
+
+        return res.render(`${file}.jade`, pugLocals(`${file}.html`, false))
+    })
+})
 
 app.use("/website", website)
 
-app.use("*", (err, req, res, next) => {
-    if (err.code === "ENOENT") return res.sendStatus(404)
-    return next(err)
-})
+app.use("*", (req, res) => res.sendStatus(404))
 
 app.listen(8080, () =>
     console.log("Server ready at http://localhost:8080/website"))

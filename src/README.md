@@ -19,14 +19,14 @@ These are all the client files. And a simple guide to my code structure:
   Photos of my pretty face. The .ignore.\* suffix on the latter prevents it from
   showing up after compilation or being seen by the dev server.
 
-- \*.mixin.jade, \*.mixin.styl, etc.
+- \*.mixin.pug, \*.mixin.styl, etc.
 
   These are merely helper files that don't make it to the public site. If it's
   not meant to be a page or user-loaded stylesheet, it's not loaded. Except for
   the global styles, any of the mixins have their stylesheet also named this
   way.
 
-- page.mixin.jade, page.styl
+- page.mixin.pug, page.styl
 
   These are the general templates for all the pages on this site. It made
   consistency magically easy to accomplish, while also automagically marking the
@@ -43,7 +43,7 @@ These are all the client files. And a simple guide to my code structure:
 
   This contains the stylesheet for code run through [Highlight.js][hljs].
 
-- *page-name*.jade, *page-name*.styl, *page-name*.js
+- *page-name*.pug, *page-name*.styl, *page-name*.js
 
   The rest of the site is separated into components like these (or their
   .mixin.\* variants). Not all pages have all of these (e.g. most do not use a

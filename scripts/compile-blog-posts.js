@@ -8,7 +8,7 @@ const fs = require("fs")
 const path = require("path")
 const mkdirp = require("mkdirp")
 
-const p = require("./promise.js")
+const pcall = require("./promise.js")
 const generate = require("./generate-blog-posts.js")
 
 const dist = path.resolve(__dirname, "../dist")
@@ -17,8 +17,8 @@ const resolve = path.resolve.bind(null, dist)
 generate((file, contents, url) => {
     const md = resolve("blog", url)
 
-    return p.call(mkdirp, path.dirname(md))
-    .then(() => p.call(fs.writeFile, md, contents, "utf-8"))
+    return pcall(mkdirp, path.dirname(md))
+    .then(() => pcall(fs.writeFile, md, contents, "utf-8"))
 })
 .then(data => {
     const json = JSON.stringify({posts: data.posts})
@@ -26,9 +26,9 @@ generate((file, contents, url) => {
     const rss = data.feed.render("rss-2.0")
 
     return Promise.all([
-        p.call(fs.writeFile, resolve("blog.json"), json, "utf-8"),
-        p.call(fs.writeFile, resolve("blog.atom.xml"), atom, "utf-8"),
-        p.call(fs.writeFile, resolve("blog.rss.xml"), rss, "utf-8"),
+        pcall(fs.writeFile, resolve("blog.json"), json, "utf-8"),
+        pcall(fs.writeFile, resolve("blog.atom.xml"), atom, "utf-8"),
+        pcall(fs.writeFile, resolve("blog.rss.xml"), rss, "utf-8"),
     ])
 })
 .catch(err => {

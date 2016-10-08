@@ -4,11 +4,9 @@ This is probably uninteresting to you unless you want to see the source code of 
 
 Things I still have left to do:
 
-- Update Jade to Pug.
-
 - Make a Heroku server to deal with AJAX-based email better.
 
-- Make the blog more scalable (hundreds of posts should *just work*, and be paginated). Low priority until I actually have a lot of posts.
+- Make the blog more scalable (hundreds of posts should be paginated). Low priority until I actually have a lot of posts.
 
 ## Building
 
@@ -34,7 +32,7 @@ If you'd prefer, there's also `npm run compile` for `node make` and `npm run ser
 
 - [src/][src]
 
-  Where all the client files are. This includes Jade, CSS, and JS files.
+  Where all the client files are. This includes Pug, CSS, and JS files.
 
 - [src/blog/][blog]
 
@@ -64,7 +62,7 @@ If you'd prefer, there's also `npm run compile` for `node make` and `npm run ser
 
 ## Technologies:
 
-- [Jade][jade], for preprocessing HTML.
+- [Pug][pug], for preprocessing HTML.
 
 - [Stylus][stylus] to preprocess the CSS.
 
@@ -96,7 +94,7 @@ All the content in this website is under the [CC-BY 4.0 International][cc-by-4],
 [gulp]: http://gulpjs.com/
 [grunt]: http://gruntjs.com/
 [server]: https://github.com/isiahmeadows/website/blob/master/scripts/server.js
-[jade]: http://gruntjs.com/
+[pug]: http://pugjs.org/
 [stylus]: http://stylus-lang.com/
 [autoprefixer]: https://twitter.com/autoprefixer
 [autoprefixer-stylus]: https://www.npmjs.com/package/autoprefixer-stylus

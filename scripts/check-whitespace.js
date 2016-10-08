@@ -7,7 +7,7 @@
 const fs = require("fs")
 const path = require("path")
 
-const p = require("./promise.js")
+const pcall = require("./promise.js")
 const walk = require("./walk.js")
 
 // This only can check files.
@@ -34,7 +34,7 @@ function check(code, file, item, re) {
 
 walk(path.dirname(__dirname), ignore)
 .then(files => Promise.all(files.map(name =>
-    p.call(fs.readFile, name, "utf-8").then(contents => ({name, contents})))))
+    pcall(fs.readFile, name, "utf-8").then(contents => ({name, contents})))))
 .then(files => files.reduce((code, file) => {
     // Test for any non-line-break whitespace that precedes a line-break
     // whitespace and reject it.

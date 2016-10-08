@@ -1,4 +1,4 @@
-include ./page.mixin.jade
+include ./page.mixin.pug
 
 link(rel="stylesheet" href="contact.css")
 script(src=(
@@ -19,11 +19,12 @@ script(src=(
     .form#contact
         noscript: p.
             You need JavaScript enabled for this form to appear. It's dead
-            otherwise. Don't worry ‒ it's not going to record your IP address
-            or do any other crazy snooping when it runs. You can even
+            otherwise. Don't worry ‒ it's not going to record your IP address or
+            do any other crazy snooping when it runs. You can even
             #[+a("https://github.com/isiahmeadows/website/blob/master/src/contact.js").new verify this yourself]
-            if you feel paranoid enough. I'm not the one to hide evil things
-            like secret trackers in plain sight. #[img(src="wink.png" alt="winking face").wink]
+            if you feel paranoid enough (and understand JavaScript). I'm not the
+            one to hide evil things like secret trackers in plain sight.
+            #[img(src="wink.png" alt="winking face").wink]
 
     //- Cue browsers to preload this, but don't display it.
     img(src="wink.png").hidden

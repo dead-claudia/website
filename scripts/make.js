@@ -4,7 +4,7 @@ const path = require("path")
 const os = require("os")
 const mkdirp = require("mkdirp")
 
-const p = require("./promise.js")
+const pcall = require("./promise.js")
 const exec = require("./exec-limit.js")
 const walk = require("./walk.js")
 
@@ -22,7 +22,7 @@ const makeCompiler = (verb, script) => (src, dist, name) =>
     runScript(verb, ["node", script, src, dist, name], name)
 
 const compileStylus = makeCompiler("Compiling", r("compile-stylus.js"))
-const compileJade = makeCompiler("Compiling", r("compile-jade.js"))
+const compilePug = makeCompiler("Compiling", r("compile-pug.js"))
 const copyFile = makeCompiler("Copying", r("copy.js"))
 
 // The directory separator never appears in fs.readdir listings
@@ -36,7 +36,7 @@ require("./run.js")({
         const name = path.relative(r("../dist-tmpl"), src)
         const dist = path.join(r("../dist"), name)
 
-        return p.call(mkdirp, path.dirname(dist)).then(() => {
+        return pcall(mkdirp, path.dirname(dist)).then(() => {
             return exec(["node", r("copy.js"), src, dist], () => {
                 console.log(`Copying file: ${path.join("dist-tmpl", name)}`)
             })
@@ -56,10 +56,10 @@ require("./run.js")({
         const name = path.relative(r("../src"), src)
         const dist = path.join(r("../dist"), name)
 
-        return p.call(mkdirp, path.dirname(dist)).then(() => {
+        return pcall(mkdirp, path.dirname(dist)).then(() => {
             if (/\.js$/.test(src)) return minifyJs(src, dist, name)
             if (/\.styl$/.test(src)) return compileStylus(src, dist, name)
-            if (/\.jade$/.test(src)) return compileJade(src, dist, name)
+            if (/\.pug$/.test(src)) return compilePug(src, dist, name)
             return copyFile(src, dist, name)
         })
     }))),

@@ -2,19 +2,18 @@
 
 // Pulled out into a separate file for parallelization.
 
-const p = require("./promise.js")
-
-const fs = p.promisifyAll(require("fs"), ["readFile", "writeFile"])
-
+const fs = require("fs")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 const CleanCss = require("clean-css")
 
+const pcall = require("./promise.js")
+
 const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.styl$/, ".css")
 
-fs.readFileAsync(infile, "utf-8")
-.then(data => p.call(stylus.render, data, {
+pcall(fs.readFile, infile, "utf-8")
+.then(data => pcall(stylus.render, data, {
     filename: infile,
     use: [autoprefixer({browsers: ["last 2 versions", "> 5%"]})],
     define: {url: stylus.resolver()},
@@ -40,7 +39,7 @@ fs.readFileAsync(infile, "utf-8")
         return output.styles
     }
 })
-.then(styles => fs.writeFileAsync(outfile, styles, "utf-8"))
+.then(styles => pcall(fs.writeFile, outfile, styles, "utf-8"))
 .catch(err => {
     console.error(err.message)
     if (err.stack) {

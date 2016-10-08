@@ -1,4 +1,4 @@
-include ./page.mixin.jade
+include ./page.mixin.pug
 
 link(rel="stylesheet" href="projects.css")
 
@@ -63,10 +63,11 @@ mixin func(name)
         +project("simple-require-loader").npm
             p.
                 A very simple, minimalistic, and flexible module loader that
-                racks up a whopping 510 bytes minified and compressed. It
+                racks up a whopping 528 bytes minified and compressed. It
                 supports many of the features you would expect of a larger,
-                heavier module loader, but in a fraction of the size. It is
-                fully tested, and it has a very simple API.
+                heavier module loader, including worker support, but in a
+                fraction of the size. It is fully tested, and it has a very
+                simple API.
 
             p.
                 It does not provide any particular facilities for bundling, but
@@ -77,9 +78,10 @@ mixin func(name)
 
             p.
                 It was created as an experiment to see how small I could create
-                a functional, usable, module loader that could work beyond just
-                the smallest of scales. I myself don't use this in anything, but
-                I have already found others interested in using it themselves.
+                a functional, usable, module loader that could actually
+                potentially scale beyond a small toy project. I myself don't
+                actively use this yet, but I have already found others
+                interested in it themselves.
 
         +project("m-iso")
             p.
@@ -95,7 +97,7 @@ mixin func(name)
 
             p.
                 This project had not made it to 1.0, because
-                #[+a("https://github.com/StephanHoyer/mithril-node-render").new Stephen Hoyer&apos;s mithril-node-render]
+                #[+a("https://github.com/StephanHoyer/mithril-node-render").new Stephen Hoyer's mithril-node-render]
                 was already fufilling a similar need and recent developments in
                 Mithril core were already making it easier to add such support,
                 especially with the recent core rewrite.
