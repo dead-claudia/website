@@ -62,7 +62,7 @@ website.get("*.css", stylus.middleware({
 }))
 
 function getBlog(route, render) {
-    website.get("/blog.atom.xml", (req, res, next) =>
+    website.get(route, (req, res, next) =>
         generateBlog().then(data => render(req, res, data)).catch(next))
 }
 
