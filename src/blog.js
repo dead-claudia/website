@@ -1,43 +1,81 @@
-/* global m: false, marked: false, hljs: false */
+/* global m: false, marked: false, hljs: false, Promise: false */
 
 (function () { // eslint-disable-line max-statements
     "use strict"
 
-    // I need better error logging than the weirdness that Mithril seems to have
-    // in that it doesn't print most native errors (even though I previously
-    // patched this, it doesn't seem to have carried over in the 80% revert).
-    m.deferred.onerror = (function () {
-        var old = m.deferred.onerror
-
-        return function (e) {
-            try {
-                console.error(e)
-            } finally {
-                return old(e)
-            }
-        }
-    })()
-
     /**
-     * Useful utilities
+     * The (barely-existing) data model. A quick explanation:
+     *
+     * posts: The list of blog posts, with only metadata, but sorted by date.
+     * This is retrieved with few modifications from ./blogs.json.
+     *
+     * tags: A mapping of tag -> post. Note that it references the post
+     * directly, not the index. Also, all matches are case-insensitive.
+     *
+     * urls: A mapping of post url -> post. This is purely for resolving the URL
+     * to a post without having to search the entirety of posts. It may be
+     * currently insignificant, but that may change later on as I write more
+     * blog posts.
+     *
+     * getTag(): Gets a list of posts from one or more comma-separated tags. If
+     * either the tag isn't valid or no posts have that tag, then it returns an
+     * empty list. Eventually, I might restructure the code to not be so bound
+     * to the route parameter, and have validation happen only once.
      */
 
-    // So I'm not typing out this crap every time.
-    function route(href) {
-        return {href: href, config: m.route}
+    function validateTag(tag) {
+        return !tag || !/^[\w ,\-]+$/.test(tag)
     }
 
-    function pure(view) {
-        return {
-            view: function () {
-                var args = []
+    var urls = Object.create(null)
+    var posts, tags
 
-                for (var i = 1; i < arguments.length; i++) {
-                    args.push(arguments[i])
+    function getTag(tag) {
+        if (tags == null) {
+            tags = Object.create(null)
+            posts.forEach(function (post) {
+                post.tags.forEach(function (tag) {
+                    tag = tag.toLowerCase()
+                    tags[tag] = tags[tag] || []
+                    if (tags[tag].indexOf(post) < 0) tags[tag].push(post)
+                })
+            })
+        }
+
+        if (!validateTag(tag)) return []
+
+        var ret = []
+        var cache = Object.create(null)
+
+        // Remove the duplicates. The URL is the key for the posts, since
+        // they all have unique URLs.
+        tag.toLowerCase().split(/\s*,\s*/g).forEach(function (tag) {
+            if (!tags[tag]) return
+            tags[tag].forEach(function (post) {
+                if (!cache[post.url]) {
+                    cache[post.url] = true
+                    ret.push(post)
                 }
+            })
+        })
 
-                return view.apply(null, args)
-            },
+        return ret
+    }
+
+    var lastIsTags = false
+
+    function sendView(tags) {
+        // Avoid duplicate hits for tag searches.
+        if (lastIsTags) return
+
+        // Don't crash if Google Analytics doesn't load.
+        try {
+            var route = tags ? "/tags" : m.route.get()
+
+            lastIsTags = !!tags
+            window.ga("send", "pageview", location.pathname + route)
+        } catch (_) {
+            // ignore
         }
     }
 
@@ -45,87 +83,69 @@
      * The views.
      */
 
-    function validateTag(tag) {
-        return tag != null && /^[\w ,\-]+$/.test(tag)
-    }
-
-    function splitTag(tag) {
-        return tag != null ? tag.split(/\s*,\s*/g) : []
-    }
-
     /**
      * A component for a simple tag search with validation, even on load. Note
      * that the validation is duplicated by necessity in getTag as well.
      */
     var tagSearch = {
-        controller: function () {
+        oninit: function () {
             var tag = m.route.param("tag")
-            var self = this
 
             // A null tag is valid.
-            this.fail = m.prop(tag != null && !validateTag(tag))
+            this.fail = tag != null && !validateTag(tag)
 
             // Set the initial value based on the URL.
-            this.value = m.prop(tag != null ? tag : "")
+            this.value = tag != null ? tag : ""
+        },
 
-            this.onsubmit = function (e) {
-                e = e || event
+        submit: function (e) {
+            e = e || event
 
-                // Not touching this...
-                if (e.defaultPrevented) return
+            // Not touching this...
+            if (e.defaultPrevented) return
 
-                // Just in case the browser has already dropped the legacy
-                // versions or doesn't support the newer version.
-                if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
-                    e.preventDefault()
-                    e.stopPropagation()
+            // Just in case the browser has already dropped the legacy
+            // versions or doesn't support the newer version.
+            if ((e.which || e.keyCode) === 13 || e.key === "Enter") {
+                e.preventDefault()
+                e.stopPropagation()
 
-                    if (validateTag(self.value())) {
-                        m.route("/tags/" + encodeURIComponent(self.value()))
-                    } else {
-                        self.fail(true)
-                    }
+                if (validateTag(this.value)) {
+                    m.route.set("/tags/" + encodeURIComponent(this.value))
+                } else {
+                    this.fail = true
                 }
             }
         },
 
-        view: function (ctrl) {
+        view: function () {
+            var self = this
+
             return m(".tag-search", [
                 m("label", "Search by tag:"),
                 m("input[type=text]", {
-                    value: ctrl.value(),
-                    oninput: m.withAttr("value", ctrl.value),
-                    onkeydown: ctrl.onsubmit,
+                    value: this.value,
+                    oninput: function (vnode) { self.value = vnode.dom.value },
+                    onkeydown: this.submit.bind(this),
                 }),
-                ctrl.fail()
-                    ? m(".warning", [
-                        "Tags may only be a comma-separated list of phrases.",
-                    ])
-                    : null,
+                !this.fail ? null : m(".warning", [
+                    "Tags may only be a comma-separated list of phrases.",
+                ]),
             ])
         },
     }
-
-    /**
-     * The header for the basic summary loaded by default.
-     */
-    var summaryHeader = pure(function () {
-        return m(".summary-header", [
-            m(".summary-title", "Posts, sorted by most recent."),
-            m(tagSearch),
-        ])
-    })
 
     /**
      * The header for the tag view, which requires a little more logic to
      * correctly display the tag.
      */
     var tagHeader = {
-        controller: function (len, tag) {
-            if (!validateTag(tag)) {
-                this.banner = "Invalid tag: '" + tag + "'"
+        oninit: function (vnode) {
+            if (!validateTag(vnode.attrs.tag)) {
+                this.banner = "Invalid vnode.attrs.tag: '" +
+                    vnode.attrs.tag + "'"
             } else {
-                var tags = splitTag(tag)
+                var tags = vnode.attrs.tag.split(/\s*,\s*/g)
                 var list
 
                 if (tags.length === 1) {
@@ -135,21 +155,24 @@
                 } else {
                     var last = tags.pop()
 
-                    list = tags.map(function (tag) {
-                        return "'" + tag + "'"
-                    }).join(", ") + ", or '" + last + "'"
+                    list = ""
+                    for (var i = 0; i < tags.length; i++) {
+                        list += "'" + tags[i] + "', "
+                    }
+
+                    list += "'" + last + "'"
                 }
 
-                this.banner = "Posts tagged " + list + " (" + len + " post" +
-                    (len === 1 ? "" : "s") + "):"
+                this.banner = "Posts tagged " + list + " (" + vnode.attrs.len +
+                    " post" + (vnode.attrs.len === 1 ? "" : "s") + "):"
             }
         },
 
-        view: function (ctrl) {
+        view: function () {
             return m(".summary-header", [
                 m(".summary-title", [
-                    m(".tag-title", ctrl.banner),
-                    m("a.back", route("/"), [
+                    m(".tag-title", this.banner),
+                    m("a.back", {href: "/", oncreate: m.route.link}, [
                         // "Back to posts ►" or "Back to posts \u25ba"
                         "Back to posts ", m.trust("&#9658;"),
                     ]),
@@ -159,25 +182,25 @@
         },
     }
 
-    var tagList = pure(function (post, isTag, resolved) {
+    function tagList(post, current) {
         return m(".post-tags", [
             m("span", "Tags:"),
             post.tags.map(function (tag) {
                 return m("a.post-tag", {
-                    class: isTag && tag === resolved ? ".post-tag-active" : "",
+                    class: tag === current ? ".post-tag-active" : "",
                     href: "/tags/" + tag,
                     config: m.route,
                 }, tag)
             }),
         ])
-    })
+    }
 
-    var feed = pure(function (type, href) {
+    function feed(type, href) {
         return m(".feed", [
             type,
             m("a", {href: href}, m("img.feed-icon[src=./feed-icon-16.gif]")),
         ])
-    })
+    }
 
     /**
      * The combined summary and tag view. The two views are only different in
@@ -186,43 +209,64 @@
      * Eventually, this needs to be paginated, but I don't see that being a
      * problem in the near term.
      */
-    var summaryView = pure(function (posts, isTag) {
-        var rawTag = m.route.param("tag")
-        var resolvedTag = rawTag && rawTag.toLowerCase()
+    var summaryView = {
+        oninit: function (vnode) {
+            sendView(vnode.attrs.tag != null)
+            if (vnode.attrs.tag != null) {
+                this.tag = vnode.attrs.tag.toLowerCase()
+                this.posts = getTag(this.tag)
+            } else {
+                this.tag = undefined
+                this.posts = posts
+            }
+        },
 
-        return m(".blog-summary", [
-            m("p", [
-                "My ramblings about everything (religion, politics, ",
-                "coding, etc.)",
-            ]),
+        // To ensure the tag gets properly diffed on route change.
+        onbeforeupdate: function (vnode) {
+            this.oninit(vnode)
+            return true
+        },
 
-            m(".feeds", [
-                m(feed, "Atom", "blog.atom.xml"),
-                m(feed, "RSS", "blog.rss.xml"),
-            ]),
+        view: function () {
+            return m(".blog-summary", [
+                m("p", [
+                    "My ramblings about everything (religion, politics, ",
+                    "coding, etc.)",
+                ]),
 
-            isTag
-                ? m(tagHeader, posts.length, resolvedTag)
-                : m(summaryHeader),
+                m(".feeds", [
+                    feed("Atom", "blog.atom.xml"),
+                    feed("RSS", "blog.rss.xml"),
+                ]),
 
-            m(".blog-list", posts.map(function (post) {
-                return m("a.blog-entry", route("/posts/" + post.url), [
-                    m(".post-date", post.date.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                    })),
-
-                    m(".post-stub", [
-                        m(".post-title", post.title),
-                        m(".post-preview", post.preview, "..."),
+                this.tag != null
+                    ? m(tagHeader, {len: this.posts.length, tag: this.tag})
+                    : m(".summary-header", [
+                        m(".summary-title", "Posts, sorted by most recent."),
+                        m(tagSearch),
                     ]),
 
-                    m(tagList, post, isTag, resolvedTag),
-                ])
-            })),
-        ])
-    })
+                m(".blog-list", this.posts.map(function (post) {
+                    return m("a.blog-entry", {
+                        href: "/posts/" + post.url, oncreate: m.route.link,
+                    }, [
+                        m(".post-date", post.date.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })),
+
+                        m(".post-stub", [
+                            m(".post-title", post.title),
+                            m(".post-preview", post.preview, "..."),
+                        ]),
+
+                        tagList(post, this.tag),
+                    ])
+                }, this)),
+            ])
+        },
+    }
 
     var renderer = new marked.Renderer()
 
@@ -286,109 +330,51 @@
      * metadata already retrieved from ./blog.json.
      */
     var postView = {
-        controller: function (post) {
-            var content = this.content = m.prop()
+        oninit: function (vnode) {
+            var self = this
 
-            m.request({
-                method: "GET",
-                url: "./blog/" + post.url,
-                // Return the literal data as a string. It's markdown, not JSON.
+            this.content = ""
+            this.post = urls[vnode.attrs.post]
+
+            // Return the literal data as a string. It's markdown, not JSON.
+            m.request("./blog/" + this.post.url, {
+                background: true,
                 deserialize: function (data) { return data },
             }).then(function (data) {
-                if (content(marked(data))) m.redraw()
+                self.content = marked(data)
+                if (self.content) m.redraw()
             })
         },
 
-        view: function (ctrl, post) {
+        view: function () {
             return m(".blog-post", m(".blog-post-wrapper", [
-                //                           "Home ►" or "Home \u25ba"
-                m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
-                m("h3.post-title", post.title),
+                //                           "Home ►"
+                m("a.post-home", {href: "/", oncreate: m.route.link}, [
+                    "Home \u25ba",
+                ]),
+                m("h3.post-title", this.post.title),
                 m(".post-body", [
-                    ctrl.content() != null
-                        ? m.trust(ctrl.content())
+                    this.content
+                        ? m.trust(this.content)
                         : m(".post-loading", "Loading..."),
                 ]),
                 m(".post-footer", [
-                    //                           "Home ►" or "Home \u25ba"
-                    m("a.post-home", route("/"), "Home ", m.trust("&#9658;")),
-                    m(tagList, post),
+                    //                           "Home ►"
+                    m("a.post-home", {href: "/", oncreate: m.route.link}, [
+                        "Home \u25ba",
+                    ]),
+                    tagList(this.post),
                 ]),
             ]))
         },
     }
 
     /**
-     * The (barely-existing) data model. A quick explanation:
-     *
-     * posts: The list of blog posts, with only metadata, but sorted by date.
-     * This is retrieved with few modifications from ./blogs.json.
-     *
-     * tags: A mapping of tag -> post. Note that it references the post
-     * directly, not the index. Also, all matches are case-insensitive.
-     *
-     * urls: A mapping of post url -> post. This is purely for resolving the URL
-     * to a post without having to search the entirety of posts. It may be
-     * currently insignificant, but that may change later on as I write more
-     * blog posts.
-     *
-     * getTag(): Gets a list of posts from one or more comma-separated tags. If
-     * either the tag isn't valid or no posts have that tag, then it returns an
-     * empty list. Eventually, I might restructure the code to not be so bound
-     * to the route parameter, and have validation happen only once.
-     */
-
-    var posts = m.prop()
-    var tags
-    var urls = Object.create(null)
-
-    function initTags() {
-        // The tags will retain the post sort, because this transformation
-        // doesn't modify the order. Also, it's deduplicated.
-        tags = Object.create(null)
-
-        posts().forEach(function (post) {
-            post.tags.forEach(function (tag) {
-                tag = tag.toLowerCase()
-
-                var result = tags[tag] = tags[tag] || []
-
-                if (result.indexOf(post) < 0) result.push(post)
-            })
-        })
-    }
-
-    function getTag(tag) {
-        if (tags == null) initTags()
-        if (!validateTag(tag)) return []
-
-        var ret = []
-        var cache = Object.create(null)
-
-        // Remove the duplicates. The URL is the key for the posts, since they
-        // all have unique URLs.
-        splitTag(tag.toLowerCase()).forEach(function (tag) {
-            if (!tags[tag]) return
-            tags[tag].forEach(function (post) {
-                if (!cache[post.url]) {
-                    cache[post.url] = true
-                    ret.push(post)
-                }
-            })
-        })
-
-        return ret
-    }
-
-    var loaded = m.deferred()
-
-    /**
      * Get ./blog.json and parse it accordingly.
      */
-    var blogRequest = m.request({method: "GET", url: "./blog.json"})
-    .then(function (data) { return data.posts })
-    .then(posts)
-    .then(function (posts) {
+    var blogRequest = m.request("./blog.json").then(function (data) {
+        posts = data.posts
+
         // My timezone offset is -5 hours, and I need to display that correctly.
         // This calculates the correct relative offset in milliseconds, which
         // should be 0 if in EST (i.e. offset of -5 hours).
@@ -411,73 +397,45 @@
     /**
      * The entry point.
      */
-    document.addEventListener("DOMContentLoaded", function () {
-        // Show a helpful bit of info if the blog posts are being slow to load
-        // for whatever reason.
-        document.getElementById("blog").innerHTML =
-            "<p>Loading...</p>" +
-            "<p>If this text doesn't disappear within a few seconds, you may " +
-            "have to reload the page, as the blog is loading slowly. If that " +
-            "doesn't help (as in you still see this message after " +
-            "reloading), then <a href='contact.html'>please tell me</a>. As " +
-            "soon as I get the message, I'll try to get it fixed as soon as " +
-            "I can.</p><p>If you happen to use GitHub, you can also tell me " +
-            "<a href='https://github.com/isiahmeadows/website'>here</a>, and " +
-            "if you'd like, feel free to help me fix whatever it is.</p>"
 
-        loaded.resolve()
+    var loaded = new Promise(function (resolve) {
+        document.addEventListener("DOMContentLoaded", function () {
+            resolve()
+            if (posts != null) return
+            // Show a helpful bit of info if the blog posts are being slow to
+            // load for whatever reason.
+            m.render(document.getElementById("blog"), [
+                m("p", "Loading..."),
+                m("p", [
+                    "If this text doesn't disappear within a few seconds, you ",
+                    "may have to reload the page, as the blog is loading ",
+                    "slowly. If that doesn't help (as in you still see this ",
+                    "message after reloading), then ",
+                    m("a[href=contact.html]", "please tell me"), ". As soon ",
+                    "as I get the message, I'll try to get it fixed as soon ",
+                    "as I can.",
+                ]),
+                m("p", [
+                    "If you happen to use GitHub, you can also tell me ",
+                    m("a[href=https://github.com/isiahmeadows/website]", "here"),
+                    ", and if you'd like, feel free to help me fix whatever ",
+                    "it is.",
+                ]),
+            ])
+        })
     })
 
-    var lastIsTags = false
-
-    function sendView(tags) {
-        // Avoid duplicate hits for tag searches.
-        if (lastIsTags) return
-
-        // Don't crash if Google Analytics doesn't load.
-        try {
-            var route = tags ? "/tags" : m.route()
-
-            lastIsTags = !!tags
-            window.ga("send", "pageview", location.pathname + route)
-        } catch (_) {
-            // ignore
-        }
-    }
-
     // Redraw with the actual data once it is loaded.
-    m.sync([blogRequest, loaded.promise]).then(function () {
-        m.route.mode = "hash"
+    Promise.all([blogRequest, loaded]).then(function () {
+        m.route.prefix("#")
         m.route(document.getElementById("blog"), "/", {
-            "/": {
-                controller: function () { sendView(false) },
-                view: function () { return m(summaryView, posts()) },
-            },
-
+            "/": summaryView,
+            "/tags/:tag": summaryView,
             "/posts/:post": {
-                controller: function () {
-                    // `null`/`undefined` post = post not found
-                    // TODO: create pseudo-404 for this case.
-                    if (!{}.hasOwnProperty.call(urls, m.route.param("post"))) {
-                        return m.route("/", null, true)
-                    } else {
-                        return sendView(false)
-                    }
-                },
-                view: function () {
-                    return m(postView, urls[m.route.param("post")])
-                },
-            },
-
-            "/tags/:tag": {
-                controller: function () { sendView(true) },
-                view: function () {
-                    return m(summaryView, getTag(m.route.param("tag")), true)
+                onmatch: function (params) {
+                    return urls[params.post] ? postView : m.route.set("/")
                 },
             },
         })
-
-        // Force an update
-        m.route(m.route())
     })
 })()

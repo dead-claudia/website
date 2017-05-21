@@ -1,120 +1,98 @@
 /* global m */
 
-(function () {
+(function (undefined) { // eslint-disable-line no-shadow-restricted-names
     "use strict"
-
-    var undefined // eslint-disable-line no-shadow-restricted-names
 
     // See https://www.w3.org/TR/html5/forms.html#valid-e-mail-address
     var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/ // eslint-disable-line max-len
 
-    var messages = {
-        name: "A name is required, even if it's a pseudonym.",
-        email: "An email address must be valid if given.",
-        subject: "A subject is required. \"No subject\" is okay.",
-        message: "A message is required. \"See title\" works.",
+    var errorName = "A name is required, even if it's a pseudonym."
+    var errorEmail = "An email address must be valid if given."
+    var errorSubject = "A subject is required. \"No subject\" is okay."
+    var errorMessage = "A message is required. \"See title\" works."
+
+    var form = {
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
     }
 
-    var control = {
-        view: function (_, attrs, text) {
-            return m("label", [
-                m("span", {class: attrs.required ? "required" : ""}, text),
-                m("input", attrs),
-            ])
-        },
+    var locked = false
+    var errors
+
+    /*
+     * Fill in some useful, informative defaults if the user clicked on
+     * the website design request link.
+     */
+    if (/[?&]w/.test(location.search)) {
+        form.subject = "Website design request"
+        // This is intentionally invalid.
+        form.email = "Don't forget to leave me a way to get back to you!"
+    }
+
+    function submit(e) {
+        e = e || event
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (locked) return
+
+        var lines = []
+
+        if (/^\s*$/.test(form.name)) lines.push(errorName)
+        if (form.email && !emailRegex.test(form.email)) lines.push(errorEmail)
+        if (/^\s*$/.test(form.subject)) lines.push(errorSubject)
+        if (/^\s*$/.test(form.message)) lines.push(errorMessage)
+
+        if (lines.length) {
+            errors = lines
+        } else {
+            errors = undefined
+            if (!form.email) form.name = "(Anonymous) " + form.name
+
+            m.request("//formspree.io/me@isiahmeadows.com", {
+                method: "POST",
+                background: true,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                serialize: m.buildQueryString,
+                data: {
+                    name: name,
+                    _subject: "[Personal Site] " + form.subject,
+                    message: form.message,
+                    email: form.email || undefined,
+                },
+            })
+            .then(function () { location.href = "./contact-finish.html" })
+        }
     }
 
     m.mount(document.getElementById("contact"), {
-        controller: function () {
-            this.locked = m.prop(false)
-            this.name = m.prop("")
-            this.email = m.prop("")
-            this.subject = m.prop("")
-            this.message = m.prop("")
-            this.errors = m.prop()
-
-            /*
-             * Fill in some useful, informative defaults if the user clicked on
-             * the website design request link.
-             */
-            if (/[?&]w/.test(location.search)) {
-                this.subject("Website design request")
-                // This is intentionally invalid.
-                this.email("Don't forget to leave me a way to get back to you!")
-            }
-
-            this.onsubmit = function (e) {
-                e = e || event
-                e.preventDefault()
-                e.stopPropagation()
-
-                if (this.locked()) return
-
-                var lines = []
-
-                if (/^\s*$/.test(this.name())) lines.push(messages.name)
-
-                if (this.email() !== "" && !emailRegex.test(this.email())) {
-                    lines.push(messages.email)
-                }
-
-                if (/^\s*$/.test(this.subject())) lines.push(messages.subject)
-                if (/^\s*$/.test(this.message())) lines.push(messages.message)
-
-                if (lines.length) {
-                    this.errors(lines)
-                    return
-                }
-
-                this.errors(undefined)
-                if (!this.email()) this.name("(Anonymous) " + this.name())
-
-                // TODO: create Heroku dyno to POST email json to.
-                m.request({
-                    method: "POST",
-                    url: "//formspree.io/me@isiahmeadows.com",
-                    config: function (xhr) {
-                        xhr.setRequestHeader("Accept", "application/json")
-                        xhr.setRequestHeader("Content-Type",
-                            "application/x-www-form-urlencoded")
-                    },
-                    data: m.route.buildQueryString({
-                        name: this.name(),
-                        _subject: "[Personal Site] " + this.subject(),
-                        message: this.message(),
-                        email: this.email() || undefined,
-                    }),
-                })
-                .then(function () { location.href = "./contact-finish.html" })
-            }
-        },
-
-        view: function (ctrl) {
-            return m("form", {
-                novalidate: "",
-                onchange: function (e) { ctrl[e.target.name](e.target.value) },
-                onsubmit: ctrl.onsubmit.bind(ctrl),
+        view: function () {
+            return m("form[novalidate=]", {
+                onchange: function (e) { form[e.target.name] = e.target.value },
+                onsubmit: submit,
             }, [
                 m("div", [
                     m("p", m("span.required"), " = Required"),
 
-                    m(control, {
-                        name: "name",
-                        required: "required",
-                        autocomplete: "name",
-                    }, "Name:"),
+                    m("label", [
+                        m("span.required", "Name:"),
+                        m("input[name=name][required][autocomplete=name]"),
+                    ]),
 
-                    m(control, {
-                        name: "email",
-                        type: "email",
-                        autocomplete: "email",
-                    }, "Email:"),
+                    m("label", [
+                        m("span", "Email:"),
+                        m("input[name=email][type=email][autocomplete=email]"),
+                    ]),
 
-                    m(control, {
-                        name: "subject",
-                        required: "required",
-                        autocomplete: "off",
-                    }, "Subject:"),
+                    m("label", [
+                        m("span.required", "Subject:"),
+                        m("input[name=subject][required][autocomplete=off]"),
+                    ]),
 
                     m("label.msg", [
                         m("span.required", "Message"),
@@ -126,15 +104,15 @@
                     ]),
 
                     m("input[type=hidden]", {
-                        onchange: ctrl.locked.bind(ctrl, true),
+                        onchange: function () { locked = true },
                     }),
 
-                    !ctrl.errors() ? null : m(".warning", [
+                    !errors ? null : m(".warning", [
                         m("p", [
                             "Could you fix these problems for me before ",
                             "submitting this form?",
                         ]),
-                        m("ul", ctrl.errors().map(function (error) {
+                        m("ul", errors.map(function (error) {
                             return m("li", error)
                         })),
                     ]),
@@ -143,7 +121,7 @@
                         m("input[type=submit][value=Send]"),
                     ]),
 
-                    !ctrl.locked() ? null : m(".warning", [
+                    !locked ? null : m(".warning", [
                         "Hidden field modified. Form locked. (If you are a ",
                         "human, you might want to be careful messing with the ",
                         "source code ",

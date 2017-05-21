@@ -63,7 +63,8 @@ website.get("*.css", stylus.middleware({
 
 function getBlog(route, render) {
     website.get(route, (req, res, next) =>
-        generateBlog().then(data => render(req, res, data)).catch(next))
+        generateBlog().then(data => render(req, res, data)).catch(next)
+    )
 }
 
 getBlog("/blog.atom.xml", (req, res, data) =>
@@ -113,6 +114,10 @@ website.get("*", (req, res, next) => {
 app.use("/website", website)
 
 app.use("*", (req, res) => res.sendStatus(404))
+app.use("*", (err, req, res, next) => {
+    if (err == null || err.code !== "ENOENT") return next(err)
+    return res.sendStatus(404)
+})
 
 app.listen(8080, () =>
     console.log("Server ready at http://localhost:8080/website"))

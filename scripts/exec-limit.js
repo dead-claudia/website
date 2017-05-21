@@ -27,7 +27,7 @@ setInterval(() => {
 
 function format(cmd, args, code, signal) {
     for (const arg of args) {
-        if (/[\x00-\x1F\s\x80-\uFFFF]/.test(arg)) {
+        if (/[^\x20-\x7f\S]/.test(arg)) {
             cmd += ` ${JSON.stringify(arg)}`
         } else {
             cmd += ` ${arg}`

@@ -1,8 +1,10 @@
 include ./page.mixin.pug
 
 link(rel="stylesheet" href="contact.css")
+//- Mithril requires full ES5 + Promise support.
+script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es5,Promise")
 script(src=(
-    "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.3/mithril" +
+    "https://cdnjs.cloudflare.com/ajax/libs/mithril/1.1.1/mithril" +
         (minified ? ".min" : "") + ".js"
 ))
 

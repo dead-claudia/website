@@ -6,9 +6,12 @@ link(rel="alternate" type="application/rss+xml" href="blog.rss.xml" title="RSS f
 
 script(src="https://cdn.jsdelivr.net/highlight.js/9.1.0/highlight.min.js")
 
+//- Mithril requires full ES5 + Promise support.
+script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es5,Promise")
+
 //- Yep, this is a Mithril app.
 script(src=(
-    "https://cdnjs.cloudflare.com/ajax/libs/mithril/0.2.3/mithril" +
+    "https://cdnjs.cloudflare.com/ajax/libs/mithril/1.1.1/mithril" +
         (minified ? ".min" : "") + ".js"
 ))
 
