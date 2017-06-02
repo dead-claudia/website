@@ -3,69 +3,68 @@
  */
 
 desktop()
-    @media screen and (min-width 1000px)
+    @media screen and (min-width: 1000px)
         {block}
 
 tablet()
-    @media screen and (min-width 500px) and (max-width 1000px)
+    @media screen and (min-width: 500px) and (max-width: 1000px)
         {block}
 
 phone()
-    @media screen and (max-width 500px)
+    @media screen and (max-width: 500px)
         {block}
 
 nonphone()
-    @media screen and (min-width 500px)
+    @media screen and (min-width: 500px)
         {block}
 
-main-color = #942a39
-body-background = #faf4ec
-text-color = #2a2329
+$color-main = #942a39
+$color-body-background = #faf4ec
+$color-text = #2a2329
 
-button-color = header-color
-button-border-color = darken(main-color, 30%)
+$color-header = darken($color-main, 30%)
+$color-header-text = #efefea
 
-header-color = darken(main-color, 30%)
-header-text = #efefea
+$color-button = $color-header
+$color-button-border = darken($color-main, 30%)
 
-link-color = mix(#ffc, main-color, 5%)
-link-visited = lighten(link-color, 30%)
+$color-link = mix(#ffc, $color-main, 5%)
+$color-link-visited = lighten($color-link, 30%)
 
-random-colors = #4b6234 #385083 #4e3975 #8b5e48 #755061
-border-color = #666
+$color-border = #666
+
+$nav-colors = #4b6234 #385083 #4e3975 #8b5e48 #755061
+
+$--hidden
+    /* Intentionally no !important, since this is style-internal */
+    display: none
+    visibility: hidden
 
 /**
  * The global mixins.
  */
 
-clearfix()
-    overflow auto
-
-background-notify(color, level)
-    background-color color
+--background-notify($color, $level)
+    background-color: $color
     &:hover
-        background-notify-inner color level
+        --background-notify-inner: $color $level
 
-background-notify-inner(color, level)
-    background-color mix(#ccc, color, level)
+--background-notify-inner($color, $level)
+    background-color: mix(#ccc, $color, $level)
 
-vert(prop, args...)
-    {prop}-top args
-    {prop}-bottom args
-
-width-scale(percent, min, max)
-    min-width min
-    width percent
-    max-width max
+--width-scale($percent, $min, $max)
+    min-width: $min
+    width: $percent
+    max-width: $max
 
 // For smaller screens. This is how I can support screens as small as 240 pixels
 // across, provided they support HTML5 and CSS3 (and run JS if they want to read
 // the blog).
-break-word()
-    word-break break-word
-    word-wrap break-word
+$--break-word
+    word-break: break-word
+    word-wrap: break-word
 
 // Prevent inputs from growing the screen size.
-input-fix()
-    width 100%
-    box-sizing border-box
+$--input-fix
+    width: 100%
+    box-sizing: border-box

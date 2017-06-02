@@ -4,7 +4,7 @@ include ./cc-by-4.mixin.pug
 link(rel="stylesheet" href="music.css")
 
 mixin song(href)
-    li: +a(href)
+    li: a(href=href)
         block
 
 +page("Music", "about.html")
@@ -21,7 +21,7 @@ mixin song(href)
             electronic music, but most of my earlier pieces are closer to modern
             classical with some film influences. Admittedly, these pieces are
             probably not too spectacular, but there here, just in case you're
-            curious. #[img(src="wink.png" alt="winking face")]
+            curious. #[+wink]
 
         p.
             I explained my inspiration and/or relevant background on many of the
@@ -40,7 +40,7 @@ mixin song(href)
 
         //- Little nit
         li
-            +a("https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
+            a(href="https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
                 | Under Pressure
             | #{""} (electronic, download-only)
 

@@ -1,33 +1,62 @@
 include ./page.mixin.pug
 
 link(rel="stylesheet" href="contact.css")
-//- Mithril requires full ES5 + Promise support.
-script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es5,Promise")
-script(src=(
-    "https://cdnjs.cloudflare.com/ajax/libs/mithril/1.1.1/mithril" +
-        (minified ? ".min" : "") + ".js"
-))
+script(src="contact.js")
 
 +page("Contact")
     p.
         You can always email me directly. My email is below (after you put in
         the code). Otherwise, I have a contact form here powered by
-        #[+a("https://formspree.io").new Formspree] for convenience or if, for
+        #[a(href="https://formspree.io") Formspree] for convenience or if, for
         any reason, you would rather remain as anonymous as possible when
         contacting me (Yes, I do understand the power and peace of anonymity).
         If you'd prefer instead, you may also email me directly at
-        #[+a("mailto:me@isiahmeadows.com") me@isiahmeadows.com].
+        #[a(href="mailto:me@isiahmeadows.com") me@isiahmeadows.com].
 
-    .form#contact
-        noscript: p.
-            You need JavaScript enabled for this form to appear. It's dead
-            otherwise. Don't worry ‒ it's not going to record your IP address or
-            do any other crazy snooping when it runs. You can even
-            #[+a("https://github.com/isiahmeadows/website/blob/master/src/contact.js").new verify this yourself]
-            if you feel paranoid enough (and understand JavaScript). I'm not the
-            one to hide evil things like secret trackers in plain sight.
-            #[img(src="wink.png" alt="winking face").wink]
+    noscript: p.
+        You need JavaScript enabled for this form to appear. It's dead
+        otherwise. Don't worry ‒ it's not going to record your IP address or
+        do any other crazy snooping when it runs. You can even
+        #[a(href="https://github.com/isiahmeadows/website/blob/master/src/contact.js") verify this yourself]
+        if you feel paranoid enough (and understand JavaScript). I'm not the
+        one to hide evil things like secret trackers in plain sight. #[+wink]
 
-    //- Cue browsers to preload this, but don't display it.
-    img(src="wink.png").hidden
-    script(src="contact.js")
+    .form#contact: form(novalidate)
+        div
+            p #[span.required] = Required
+
+            label
+                span.required Name:
+                input(name="name" required autocomplete="name")
+
+            label
+                span Email:
+                input(name="email" type="email" autocomplete="email")
+
+            label
+                span.required Subject:
+                input(name="subject" required autocomplete="off")
+
+            label.msg
+                span.required Message:
+                textarea(autocomplete="off" required name="message")
+
+            input(type="hidden")
+
+            #contact-errors.hidden
+                p Could you fix these problems for me before submitting this form?
+                ul
+
+            .submit: input(type="submit" value="Send")
+
+            #contact-locked.hidden
+                Hidden field modified. Form locked. (If you are a human, you
+                might want to be careful messing with the source code #[+wink].
+                And while you're at it, you can always reload the page.)
+
+        small.
+            Legal note: By submitting this form, you agree that it is not
+            confidential, as I cannot guarantee any 100% safety or privacy
+            through the Internet. Even end-to-end HTTPS through
+            #[a(target="_blank" href="https://torproject.org") Tor]
+            and a VPN can't legally guarantee you that. #[+wink]

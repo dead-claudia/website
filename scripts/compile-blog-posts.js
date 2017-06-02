@@ -21,11 +21,13 @@ generate((file, contents, url) => {
     .then(() => pcall(fs.writeFile, md, contents, "utf-8"))
 })
 .then(data => {
+    const js = `posts=${JSON.stringify(data.posts)}`
     const json = JSON.stringify({posts: data.posts})
     const atom = data.feed.render("atom-1.0")
     const rss = data.feed.render("rss-2.0")
 
     return Promise.all([
+        pcall(fs.writeFile, resolve("blog-posts.js"), js, "utf-8"),
         pcall(fs.writeFile, resolve("blog.json"), json, "utf-8"),
         pcall(fs.writeFile, resolve("blog.atom.xml"), atom, "utf-8"),
         pcall(fs.writeFile, resolve("blog.rss.xml"), rss, "utf-8"),

@@ -156,6 +156,8 @@ module.exports = src => {
         index++
     }
 
+    if (hasNext()) str += "..."
+
     // Cue to Node to flatten the string's internal representation
     return str.concat()
 }

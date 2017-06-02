@@ -14,9 +14,10 @@ const outfile = process.argv[3].replace(/\.styl$/, ".css")
 
 pcall(fs.readFile, infile, "utf-8")
 .then(data => pcall(stylus.render, data, {
-    filename: infile,
-    use: [autoprefixer({browsers: ["last 2 versions", "> 5%"]})],
-    define: {url: stylus.resolver()},
+    "filename": infile,
+    "include css": true,
+    "use": [autoprefixer({browsers: ["last 2 versions", "> 5%"]})],
+    "define": {url: stylus.resolver()},
 }))
 .then(res => new Promise(resolve => {
     return new CleanCss({

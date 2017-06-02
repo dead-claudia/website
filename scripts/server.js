@@ -57,6 +57,7 @@ website.get("*.css", stylus.middleware({
     compile(str, path) {
         return stylus(str)
         .set("filename", path)
+        .set("include css", true)
         .use(autoprefixer())
     },
 }))
@@ -74,6 +75,9 @@ getBlog("/blog.rss.xml", (req, res, data) =>
     res.type("xml").send(data.feed.render("rss-2.0")))
 
 getBlog("/blog.json", (req, res, data) => res.send({posts: data.posts}))
+
+getBlog("/blog-posts.js", (req, res, data) =>
+    res.type("js").send(`posts=${JSON.stringify(data.posts)}`))
 
 getBlog("/blog/*.md", (req, res, data) =>
     // Slice off the initial `/blog/` in req.path

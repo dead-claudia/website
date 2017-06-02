@@ -3,34 +3,52 @@ include ./page.mixin.pug
 link(rel="stylesheet" href="index.css")
 
 +page("Home")
-    div: img.pic(src="pic.jpg" alt="picture of Isiah Meadows")
+    div.pic: img(src="pic.jpg" alt="picture of Isiah Meadows")
+
+    p Hi, I'm Isiah Meadows.
 
     p.
-        I'm a full-stack JavaScript developer proficient in creating beautiful,
-        unique, and modern websites such as this one. I enjoy using latest
-        front end technologies such as HTML5, CSS3, and ECMAScript 2015, as well
-        as #[+a("https://nodejs.org").new Node.js], a server-side JavaScript
-        runtime. I am fluent in many of the tools used to create these sites,
-        and I can do so with maximum reliability, flexibility, and efficiency.
-        Where necessary, I can even create these tools myself. If you're
-        interested, #[+a("contact.html?w") please contact me here], and please
-        make sure to leave me with your email, so I can contact you back to
-        start talking.
+        I'm a web consultant and freelancer ready to help you soar. I specialize
+        in full stack web design and development anywhere from help designing a
+        small personal site you were using Wix to create to writing a
+        custom-built web app complete with backend hosting, and anywhere in
+        between. So if you need help anywhere from a simple shop or blog to
+        getting a fancy site to go along with your shiny new startup, I'm who
+        you've been looking for.
+
+    p Here's some of what I can do:
+
+    ul
+        li Assist with site builders like Wix, Weebly, and Squarespace
+        li Create new sites and web apps from scratch
+        li Maintain and support your existing sites or web apps
+        li Work on existing projects as a freelancer
+        li Integrate your site with existing services you already use
+
+    p So what are you waiting for?
+
+    .contact: a(href="contact.html?w") Let's get started!
+
+    h3.featured Featured Site: Grand Cayman Island Vacation Rental
+
+    a.screenshot(href="https://www.grandcaymanislandvacationrental.com")
+        img(src="grandcaymanisland.jpg" alt="screenshot of website")
 
     p.
-        I've loved programming for a very long time, and thus I've created
-        several pet projects on my own. I also enjoy helping people out a lot by
-        creating #[+a("projects.html") useful JavaScript tools] for them, to
-        help them get things done. I'm also a strong believer in open source.
+        This site was created to help promote a client's vacation rental condo
+        located in the Cayman Islands. It links to each site listing her rental,
+        and it is integrated into one of the services, which provides a simple
+        calendar widget.
 
     p.
-        I maintain a #[+a("blog.html") low-traffic blog] that features a nice
-        (if you agree with me) mixture of technical things, ideas, and random
-        ramblings about whatever. Feel free to check it out.
+        It's a fairly simple website with only a few pages, including a gallery
+        for photos of the condo. It was designed to evoke an inviting, relaxing,
+        and aesthetically beautiful feel, the very thing you would probably want
+        to feel while on vacation, to help complement the property and location
+        in general, and to entice visitors to choose #[em it] over other similar
+        properties, to make it seem less cookie cutter.
 
     p.
-        Once upon a time (read: middle and high school), I loved to create
-        music. This mostly predates my coding days, and as much as I wish I
-        could continue creating, I sadly no longer have nearly the time to
-        create and publish as I used to. In case you're curious, you can still
-        find my old songs #[+a("music.html") here].
+        Would you like your site to be featured here next?
+
+    .contact: a(href="contact.html") Let's get started!

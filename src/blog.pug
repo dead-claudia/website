@@ -4,24 +4,74 @@ link(rel="stylesheet" href="blog.css")
 link(rel="alternate" type="application/atom+xml" href="blog.atom.xml" title="Atom feed")
 link(rel="alternate" type="application/rss+xml" href="blog.rss.xml" title="RSS feed")
 
-script(src="https://cdn.jsdelivr.net/highlight.js/9.1.0/highlight.min.js")
+//- Don't block the loading path
+script(
+    src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked" + (
+        minified ? ".min" : "") + ".js"
+)
 
-//- Mithril requires full ES5 + Promise support.
-script(src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es5,Promise")
+//- This is only available minified
+script(src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js")
 
-//- Yep, this is a Mithril app.
-script(src=(
-    "https://cdnjs.cloudflare.com/ajax/libs/mithril/1.1.1/mithril" +
-        (minified ? ".min" : "") + ".js"
-))
-
-//- And, best to pull in Marked this way.
-script(src=(
-    "https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked" +
-        (minified ? ".min" : "") + ".js"
-))
-
-script(src=resolve("blog.js"))
+script(src="blog-posts.js")
+script(src="blog.js")
 
 +page("Blog")
-    #blog You need to be able to run JavaScript for this to work.
+    noscript You need to be able to run JavaScript for this to work.
+    #blog
+        p Loading...
+
+        p.
+            If this text doesn't disappear within a few seconds, you may have to
+            reload the page, as the blog is loading slowly. If that doesn't help
+            (as in you still see this message after reloading), then
+            #[a(href="contact.html") please tell me]. As soon as I get the
+            message, I'll try to get it fixed as soon as I can.
+
+        p.
+            If you happen to use GitHub, you can also tell me
+            #[a(href="https://github.com/isiahmeadows/website") here], and if
+            you'd like, feel free to help me fix whatever it is.
+
+    template#blog-entry
+        a.blog-entry
+            .post-date
+            .post-stub
+                .post-title
+                .post-preview
+
+            .post-tags
+                span Tags:
+
+    template#blog-post
+        .blog-post: .blog-post-wrapper
+            a.post-home(href="#/") Home ►
+            h3.post-title
+            .post-body
+            .post-footer
+                a.post-home(href="#/") Home ►
+                .post-tags
+                    span Tags:
+
+    template#blog-summary
+        .blog-summary
+            p My ramblings about everything (coding, random ideas, etc.)
+
+            .feeds
+                .feed Atom #[a(href="blog.atom.xml"): img.feed-icon(src="feed-icon-16.gif")]
+                .feed RSS #[a(href="blog.rss.xml"): img.feed-icon(src="feed-icon-16.gif")]
+
+            .summary-header
+                .summary-title
+                    .tag-title Posts, sorted by most recent.
+                    a.back.hidden(href="#/") Back to posts ►
+
+                .tag-search
+                    label Search by tag:
+                    input(type="text")
+                    .warning.hidden Tags may only be a comma-separated list of phrases.
+
+            .blog-list
+
+    //- Fire the initial render
+    script onhashchange()

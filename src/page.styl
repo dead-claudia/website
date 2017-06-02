@@ -1,5 +1,6 @@
 @charset "UTF-8"
 
+@import "../node_modules/normalize.css/normalize.css"
 @require "./common.mixin.styl"
 @require "./fonts.mixin.styl"
 
@@ -10,184 +11,185 @@
      * !important required so that these are actually hidden regardless of other
      * settings (so my JS actually works).
      */
-    display none !important
-    visibility hidden !important
+    display: none !important
+    visibility: hidden !important
 
-html, body, #content
-    height 100%
-
-textarea
-    font-family inherit
-    font-size inherit
+img.wink
+    display: inline
+    height: 1em
+    width: 1em
 
 /* Global base styles */
 
+html, body, #content
+    height: 100%
+
+textarea
+    font-family: inherit
+    font-size: inherit
+
 body
-    font-family Verdana, Arial, Helvetica, sans-serif
-    color text-color
+    font-family: Verdana, Arial, Helvetica, sans-serif
+    color: $color-text
 
 p
-    margin-top 1em
-    margin-bottom 1em
+    margin-top: 1em
+    margin-bottom: 1em
 
 ul
-    list-style-type square
+    list-style-type: square
 
 a
-    text-decoration none
-    color link-color
+    text-decoration: none
+    color: $color-link
 
 a:hover
-    text-decoration underline
+    text-decoration: underline
 
 a:visited
-    color link-visited
+    color: $color-link-visited
 
 #header
     nav
-        background-color header-color
+        background-color: $color-header
 
     nav > :first-child a:hover
-        background-notify-inner header-color 45%
+        --background-notify-inner: $color-header 45%
 
     a
-        color header-text
-        text-decoration none
-        font-family "Antonio Light"
-        text-transform uppercase
-        display block
-        margin 0 auto
-        vert padding 0.5em
-        text-align center
-        width 100%
-        height 100%
+        color: $color-header-text
+        text-decoration: none
+        font-family: "Antonio Light"
+        text-transform: uppercase
+        display: block
+        margin: 0 auto
+        padding-top: 0.5em
+        padding-bottom: 0.5em
+        text-align: center
+        width: 100%
+        height: 100%
 
-for x, i in random-colors
+for x, i in $nav-colors
     #header .l{i} a
-        background-notify x 45%
+        --background-notify: x 45%
 
         &.selected
-            background-notify-inner x 45%
+            --background-notify-inner: x 45%
 
     // This has higher specificity, and thus will render correctly.
     #body-wrapper > div > h2.l{i}
-        background-color x
+        background-color: x
 
 #body-wrapper
-    display table-row
-    position relative
-    background-color body-background
+    display: table-row
+    position: relative
+    background-color: $color-body-background
 
     > div > h2
-        font-family "Antonio Light"
-        margin 0
-        padding 0.5em
-        background-color header-color
-        text-transform uppercase
-        color header-text
-        width auto
-        overflow hidden
-        font-weight normal
+        font-family: "Antonio Light"
+        margin: 0
+        padding: 0.5em
+        background-color: $color-header
+        text-transform: uppercase
+        color: $color-header-text
+        width: auto
+        overflow: hidden
+        font-weight: normal
 
 #body
-    padding 1.5em
+    padding: 1.5em
+    // To ensure the element's height expands to the height of all its children.
+    overflow: auto
 
 #license
-    position relative
-    display table-row
-    background-color header-color
+    position: relative
+    display: table-row
+    background-color: $color-header
 
     a
-        color header-text
-        // Since fonts, not CSS, control underline placement
-        padding-bottom 0.05em
-        border-bottom 1px solid white
-
-        // In case the viewport is sufficiently small, don't let the custom
-        // underline run into the text. This can only realistically happen on
-        // mobile unless a user stylesheet increases the size of an em. But it's
-        // here just in case.
-        line-height 1.5
+        color: $color-header-text
+        text-decoration: underline
 
     a:hover
-        text-decoration none
+        text-decoration: none
 
     div
-        color header-text
+        color: $color-header-text
 
     footer
-        margin 1em auto
-        padding-left 1em
-        padding-right 1em
-        text-align center
+        margin: 1em auto
+        padding-left: 1em
+        padding-right: 1em
+        text-align: center
 
-header-size(size)
+--header-size($size)
     #header a
-        font-size size
+        font-size: $size
 
     #body-wrapper > div > h2
-        font-size size
+        font-size: $size
 
 +phone()
     body
-        font-size 1.2em
+        font-size: 1.2em
 
-    header-size 1.75em
+    --header-size: 1.75em
 
     #content
-        display table
+        display: table
 
     #header
-        position relative
-        display table-row
+        position: relative
+        display: table-row
 
         .link
-            display inline-block
-            width 50%
+            display: inline-block
+            width: 50%
 
 +nonphone()
     body
-        font-size 1em
+        font-size: 1em
 
     #header
-        position fixed
-        left 0
-        top 0
-        height 100%
-        background-color header-color
-        color header-text
+        position: fixed
+        left: 0
+        top: 0
+        height: 100%
+        background-color: $color-header
+        color: $color-header-text
 
         a
-            letter-spacing 0.025em
+            letter-spacing: 0.025em
 
         .link
-            display block
+            display: block
+            width: 100%
 
     #content-body
-        position absolute
-        display table
-        right 0
-        top 0
-        height 100%
+        position: absolute
+        display: table
+        right: 0
+        top: 0
+        height: 100%
 
     #body-wrapper
-        height 100%
+        height: 100%
 
-nav-width(size)
+--nav-width($size)
     #header
-        width size
+        width: $size
 
     #content-body
-        width (100% - size)
+        width: (100% - $size)
 
 +tablet()
-    header-size 1.5em
-    nav-width 30%
+    --header-size: 1.5em
+    --nav-width: 30%
 
 +desktop()
-    header-size 1.75em
-    nav-width 15%
+    --header-size: 1.75em
+    --nav-width: 15%
 
 // My name should never wrap.
-@media screen and (min-width 1000px) and (max-width 1200px)
-    nav-width 20%
+@media screen and (min-width: 1000px) and (max-width: 1200px)
+    --nav-width: 20%

@@ -1,0 +1,45 @@
+include ./page.mixin.pug
+
+link(rel="stylesheet" href="showcase.css")
+
+mixin screenshot
+    .screenshot: a(href=attributes.href)
+        img(src=attributes.src alt=attributes.alt)
+
++page("Showcase")
+    p.
+        Here's some of my favorite work, if you're curious what I can do.
+
+    //- Contains screenshots + their associated websites.
+    //- Note: this *must* contain a hole if the last element isn't filled.
+    .display
+        div
+            .item
+                +screenshot(
+                    href="https://www.grandcaymanislandvacationrental.com"
+                    src="grandcaymanisland.jpg" alt="screenshot of website"
+                )
+                h3 Grand Cayman Island Vacation Rental
+
+            .item
+                +screenshot(
+                    href="open-source.html"
+                    src="open-source-logos.jpg" alt="Git and GitHub logos"
+                )
+                h3 Open Source
+
+        div
+            .item
+                +screenshot(
+                    href="contact.html?w"
+                    src="new-website.jpg" alt="new website impression"
+                )
+                h3 Your next website
+
+            .item.hole
+                div
+
+    p.
+        Your website could be here, featured with the best of my others! If
+        you're interested, click that image and send me a message, and we can
+        get started right away.

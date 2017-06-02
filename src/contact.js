@@ -1,145 +1,95 @@
-/* global m */
-
-(function (undefined) { // eslint-disable-line no-shadow-restricted-names
+document.addEventListener("DOMContentLoaded", function () {
     "use strict"
 
     // See https://www.w3.org/TR/html5/forms.html#valid-e-mail-address
-    var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/ // eslint-disable-line max-len
-
-    var errorName = "A name is required, even if it's a pseudonym."
-    var errorEmail = "An email address must be valid if given."
-    var errorSubject = "A subject is required. \"No subject\" is okay."
-    var errorMessage = "A message is required. \"See title\" works."
-
-    var form = {
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-    }
-
-    var locked = false
-    var errors
+    var regexp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/ // eslint-disable-line max-len
+    var form = document.querySelector("#contact > form")
 
     /*
      * Fill in some useful, informative defaults if the user clicked on
      * the website design request link.
      */
     if (/[?&]w/.test(location.search)) {
-        form.subject = "Website design request"
+        form.elements.subject.value = "Website design request"
         // This is intentionally invalid.
-        form.email = "Don't forget to leave me a way to get back to you!"
+        form.elements.email.value =
+            "Don't forget to leave me a way to get back to you!"
     }
 
-    function submit(e) {
-        e = e || event
-        e.preventDefault()
+    form.onchange = function (e) {
         e.stopPropagation()
-
-        if (locked) return
-
-        var lines = []
-
-        if (/^\s*$/.test(form.name)) lines.push(errorName)
-        if (form.email && !emailRegex.test(form.email)) lines.push(errorEmail)
-        if (/^\s*$/.test(form.subject)) lines.push(errorSubject)
-        if (/^\s*$/.test(form.message)) lines.push(errorMessage)
-
-        if (lines.length) {
-            errors = lines
-        } else {
-            errors = undefined
-            if (!form.email) form.name = "(Anonymous) " + form.name
-
-            m.request("//formspree.io/me@isiahmeadows.com", {
-                method: "POST",
-                background: true,
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                serialize: m.buildQueryString,
-                data: {
-                    name: name,
-                    _subject: "[Personal Site] " + form.subject,
-                    message: form.message,
-                    email: form.email || undefined,
-                },
-            })
-            .then(function () { location.href = "./contact-finish.html" })
+        if (regexp != null && e.target.type === "hidden") {
+            regexp = undefined
+            document.getElementById("contact-locked").classList.remove("hidden")
         }
     }
 
-    m.mount(document.getElementById("contact"), {
-        view: function () {
-            return m("form[novalidate=]", {
-                onchange: function (e) { form[e.target.name] = e.target.value },
-                onsubmit: submit,
-            }, [
-                m("div", [
-                    m("p", m("span.required"), " = Required"),
+    form.onsubmit = function (e) { // eslint-disable-line max-statements
+        e.preventDefault()
+        e.stopPropagation()
+        if (regexp == null) return
+        var lines = []
 
-                    m("label", [
-                        m("span.required", "Name:"),
-                        m("input[name=name][required][autocomplete=name]"),
-                    ]),
+        if (/^\s*$/.test(this.elements.name.value)) {
+            lines.push("A name is required, even if it's a pseudonym.")
+        }
 
-                    m("label", [
-                        m("span", "Email:"),
-                        m("input[name=email][type=email][autocomplete=email]"),
-                    ]),
+        if (this.elements.email.value &&
+                !regexp.test(this.elements.email.value)) {
+            lines.push("An email address must be valid if given.")
+        }
 
-                    m("label", [
-                        m("span.required", "Subject:"),
-                        m("input[name=subject][required][autocomplete=off]"),
-                    ]),
+        if (/^\s*$/.test(this.elements.subject.value)) {
+            lines.push("A subject is required.")
+        }
 
-                    m("label.msg", [
-                        m("span.required", "Message"),
-                        m("textarea", {
-                            autocomplete: "off",
-                            required: "required",
-                            name: "message",
-                        }),
-                    ]),
+        if (/^\s*$/.test(this.elements.message.value)) {
+            lines.push("A message is required. \"See title\" works.")
+        }
 
-                    m("input[type=hidden]", {
-                        onchange: function () { locked = true },
-                    }),
+        var errors = document.getElementById("contact-errors")
 
-                    !errors ? null : m(".warning", [
-                        m("p", [
-                            "Could you fix these problems for me before ",
-                            "submitting this form?",
-                        ]),
-                        m("ul", errors.map(function (error) {
-                            return m("li", error)
-                        })),
-                    ]),
+        if (lines.length) {
+            errors.classList.remove("hidden")
+            var items = errors.querySelector("ul")
 
-                    m(".submit", [
-                        m("input[type=submit][value=Send]"),
-                    ]),
+            while (items.firstChild != null) {
+                items.removeChild(items.firstChild)
+            }
 
-                    !locked ? null : m(".warning", [
-                        "Hidden field modified. Form locked. (If you are a ",
-                        "human, you might want to be careful messing with the ",
-                        "source code ",
-                        m("img.wink[src=wink.png][alt='winking face']"),
-                        ". And while you are at it, you can always reload the ",
-                        "page.)",
-                    ]),
-                ]),
-                m("small", [
-                    "Legal note: By submitting this form, you agree that it ",
-                    "is not confidential, as I cannot guarantee any 100% ",
-                    "safety or privacy through the Internet. Even end-to-end ",
-                    "HTTPS through ",
-                    m("a[target=_blank][href=https://torproject.org]", "Tor"),
-                    " and a VPN can't legally guarantee you that.",
-                    m("img.wink[src=wink.png][alt='winking face']"),
-                ]),
-            ])
-        },
-    })
-})()
+            for (var i = 0; i < lines.length; i++) {
+                var li = document.createElement("li")
+
+                li.appendChild(document.createTextNode(lines[i]))
+                items.appendChild(li)
+            }
+        } else {
+            errors.classList.add("hidden")
+            var xhr = new XMLHttpRequest()
+
+            xhr.open("POST", "https://formspree.io/me@isiahmeadows.com")
+            xhr.setRequestHeader("Accept", "application/json")
+            xhr.setRequestHeader("Content-Type", "application/json")
+            xhr.onreadystatechange = function (e) {
+                if (this.readyState !== 4) return
+                if (this.status !== 200) throw e
+                location.href = "./contact-finish.html"
+            }
+
+            if (this.elements.email.value) {
+                xhr.send(JSON.stringify({
+                    name: this.elements.name.value,
+                    _subject: "[Personal Site] " + this.elements.subject.value,
+                    message: this.elements.message.value,
+                    email: this.elements.email.value,
+                }))
+            } else {
+                xhr.send(JSON.stringify({
+                    name: "(Anonymous) " + this.elements.name.value,
+                    _subject: "[Personal Site] " + this.elements.subject.value,
+                    message: this.elements.message.value,
+                }))
+            }
+        }
+    }
+})

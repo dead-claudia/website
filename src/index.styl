@@ -3,28 +3,82 @@
 @require "./common.mixin.styl"
 
 #body
-    img.pic
-        width-scale 100% 150px 250px
-        border 2px solid border-color
+    .pic img
+        --width-scale: 100% 150px 250px
+        border: 2px solid $color-border
 
-@media screen and (max-width 650px)
-    #body div
-        margin 0.5em auto
-        margin-bottom 1em
-        text-align center
+    .featured
+        clear: both
 
-@media screen and (min-width 650px)
-    #body div
-        margin 0.5em
-        margin-right 0
-        float right
+    .contact
+        margin-top: 1em
+        text-align: center
+
+    .contact a
+        display: inline-block
+        text-decoration: none
+        height: auto
+        width: 80%
+        max-width: 10em
+        font-size: 1em
+        padding: 0.5em
+        color: $color-header-text
+        border: 2px solid $color-button-border
+        --background-notify: $color-button 50%
+
+    .screenshot
+        display: block
+        --width-scale: 50% 250px 400px
+
+    .screenshot img
+        display: block
+        width: 100%
+        border: 8px solid lighten($color-border, 30%)
+        border-radius: 15px
+        box-shadow: 0 0 1px 2px $color-border,
+            inset 0 0 1px 2px $color-border
+
+    @media screen and (min-width: 650px)
+        .screenshot
+            float: left
+            margin-right: 0.5em
+            padding-left: 0
+            padding-bottom: 1em
+
+        .screenshot img
+            margin-top: 1.5em
+            transform: perspective(600px) rotateY(30deg)
+
+    @media screen and (min-width: 800px)
+        .screenshot
+            margin-right: 0
+
+    +desktop()
+        .screenshot
+            padding-left: 1em
+            margin-right: -1em
+
+@media screen and (max-width: 650px)
+    #body .pic
+        padding: 0.5em auto
+        padding-bottom: 1em
+        text-align: center
+
+@media screen and (min-width: 650px)
+    #body .pic
+        padding: 0.5em
+        padding-right: 0
+        float: right
+
+    #body .screenshot
+        margin-bottom: 1em
 
 +nonphone()
     #body
         // Work around default stylesheets
         p
-            margin-top 0
-            margin-bottom 1em
+            margin-top: 0
+            margin-bottom: 1em
 
         p ~ p
-            margin-top 1em
+            margin-top: 1em

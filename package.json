@@ -28,6 +28,7 @@
     "marked": "^0.3.5",
     "mkdirp": "^0.5.1",
     "morgan": "^1.6.1",
+    "normalize.css": "^7.0.0",
     "pug": "^2.0.0-beta6",
     "sanitize-html": "^1.11.2",
     "stylus": "^0.53.0",

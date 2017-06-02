@@ -1,0 +1,51 @@
+@charset "UTF-8"
+
+@import "./common.mixin.styl"
+
+#body
+    +nonphone()
+        > :first-child
+            margin: 0.5em
+            margin-top: 0
+
+    ul
+        margin-left: -0.5em
+
+    li
+        font-size: 1.25em
+
+    li p:first-child
+        margin-top: 0
+
+    li p:last-child
+        margin-bottom: 0
+
+    li .title
+        display: inline-block
+        margin-top: 0.5em
+
+        // These need to *not* be overridden by the :hover and :visited
+        // selectors
+        color: $color-header !important
+        text-decoration: none !important
+
+        // Make the div trim to size.
+        &::after
+            display: block
+
+    .logo
+        display: inline-block
+        margin-left: 0.5em
+
+        // Allow the image to scale fuzzily
+        img
+            height: 0.8em
+
+    .body
+        font-size: 0.8em
+        margin-top: 0.5em
+        margin-bottom: 0.5em
+
++phone()
+    #body li > .title
+        @extend $--break-word

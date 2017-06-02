@@ -4,55 +4,57 @@
 
 #body
     img.pic
-        width-scale 100% 150px 250px
-        border 2px solid border-color
+        --width-scale: 100% 150px 250px
+        border: 2px solid $color-border
 
     li
-        vert margin 0.3em
+        margin-top: 0.3em
+        margin-bottom: 0.3em
 
     .github
-        display inline-block
-        margin-bottom -0.1em
-        width 168px
-        height 20px
-        overflow hidden
+        display: inline-block
+        margin-bottom: -0.1em
+        width: 168px
+        height: 20px
+        overflow: hidden
 
     // This is copied from the LinkedIn button's inline styles
     .linkedin
-        text-decoration none
+        text-decoration: none
 
         span
-            font 80% Arial, sans-serif
-            color #0783B6
+            font: 80% Arial, sans-serif
+            color: #0783B6
 
         img
-            vertical-align middle
-            width 20px
-            height 15px
-            border none
+            vertical-align: middle
+            width: 20px
+            height: 15px
+            border: none
 
     // Align the button to be closer to the center
-    .twitter > iframe
-        margin-bottom -0.2em
+    .twitter-follow-button > iframe
+        margin-bottom: -0.2em
 
-@media screen and (max-width 650px)
-    #body div
-        margin 0.5em auto
-        margin-bottom 1em
-        text-align center
+    @media screen and (max-width 650px)
+        div
+            margin-top 0.5em
+            margin-left: auto
+            margin-right: auto
+            margin-bottom: 1em
+            text-align: center
 
-@media screen and (min-width 650px)
-    #body div
-        margin 0.5em
-        margin-right 0
-        float right
+    @media screen and (min-width 650px)
+        div
+            margin: 0.5em
+            margin-right: 0
+            float: right
 
-+nonphone()
-    #body
+    +nonphone()
         // Work around default stylesheets
         p
-            margin-top 0
-            margin-bottom 1em
+            margin-top: 0
+            margin-bottom: 1em
 
         p ~ p
-            margin-top 1em
+            margin-top: 1em

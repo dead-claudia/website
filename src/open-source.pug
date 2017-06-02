@@ -1,0 +1,90 @@
+include ./page.mixin.pug
+
+link(rel="stylesheet" href="open-source.css")
+
+mixin project(name)
+    li
+        .title
+            - var href = "https://github.com/" + attributes.github
+            a(href=attributes.href || href)= name
+            a.logo(href=href)
+                img(src="github.png" alt="GitHub")
+
+            if attributes.npm
+                a.logo(href="https://npmjs.com/package/" + attributes.npm)
+                    //- Capitalized so screen readers are more likely to read it
+                    //- as initials
+                    img(src="npm.png" alt="NPM")
+        .body
+            block
+
++page("Open Source", "showcase.html", "Showcase - Open Source")
+    div.
+        Here's a list of the open source projects I'm most involved in, ones I
+        feel most accomplished for my efforts in:
+
+    ul
+        +project("This Website")(github="isiahmeadows/website")
+            p.
+                This website itself is fully open-source, ready to explore. I
+                love open source! You can see a description of the technologies
+                used to power this website there.
+
+            p.
+                In particular, the website's build system is fairly elaborate in
+                its logic, because it not only is a static site - it also
+                prepares the blog posts (in Markdown) and includes a
+                custom-built development server, among other things.
+
+        +project("Thallium")(github="isiahmeadows/thallium" npm="thallium")
+            p.
+                An experimental JavaScript testing framework I'm currently
+                working on that aims to be very unopinionated, simple to use,
+                and easy to tailor to your needs, no matter how complicated they
+                are. My goal is to make a testing framework that gets out of
+                your way and lets you test how you want, instead of making you
+                conform to its opinions on how your tests should be structured
+                or go through extensive setup and/or boilerplate to start. I
+                want something that is small and simple for the small and simple
+                projects, but I want to still be able to have something very
+                powerful and structured for large applications.
+
+        +project("Mithril")(
+            href="https://mithril.js.org"
+            github="MithrilJS/mithril.js"
+            npm="mithril"
+        )
+            p.
+                A lightweight, simple, and unopinionated front-end framework
+                created by #[a(href="https://twitter.com/leohorie") Leo Horie].
+                I am an active core contributor, but most of my work circles
+                around performance (where this truly shines), stability, and
+                making it easier for people to contribute where they feel best.
+                It's light enough and fast enough that it flies even on mobile,
+                where there's little to no processing power.
+
+        +project("simple-require-loader")(
+            github="isiahmeadows/simple-require-loader"
+            npm="simple-require-loader"
+        )
+            p.
+                A very simple, minimalistic, and flexible module loader that
+                racks up a whopping 528 bytes minified and compressed. It
+                supports many of the features you would expect of a larger,
+                heavier module loader, including worker support, but in a
+                fraction of the size. It is fully tested, and it has a very
+                simple API.
+
+            p.
+                It does not provide any particular facilities for bundling, but
+                it is possible to concatenate all your modules into a single
+                script at the end. And unlike Webpack and similar, if you want
+                to load a bundle remotely, there is a very simple API call to
+                load those.
+
+            p.
+                It was created as an experiment to see how small I could create
+                a functional, usable, module loader that could actually
+                potentially scale beyond a small toy project. I myself don't
+                actively use this yet, but I have already found others
+                interested in it themselves.

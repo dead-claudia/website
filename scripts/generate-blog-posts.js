@@ -26,8 +26,8 @@ const idsJson = require(idsFile)
 function ensureKey(name) {
     name = path.relative(postDir, name)
 
-    if (idsJson.ids.indexOf(name) >= 0) return
-    idsJson.ids.push(name)
+    if (idsJson.posts[name] >= 0) return
+    idsJson.posts[name] = idsJson.current++
     fs.writeFileSync(idsFile, `${JSON.stringify(idsJson, null, 4)}\n`)
 }
 
@@ -104,6 +104,8 @@ module.exports = write => new Promise((resolve, reject) => {
             }
 
             if (!--counter) {
+                // The posts should be sorted by reverse date.
+                posts.sort((a, b) => b.date - a.date)
                 return resolve({posts, compiled, feed})
             }
 
@@ -120,10 +122,19 @@ module.exports = write => new Promise((resolve, reject) => {
                 if (mtimes[file] >= stat.mtime) {
                     const post = cache[file]
 
+                    // My timezone offset is -5 hours, and I need to display
+                    // that correctly. This calculates the correct relative
+                    // offset in milliseconds, which should be 0 if in EST (i.e.
+                    // offset of -5 hours).
+                    const offset = 60 * 1000 *
+                        (new Date().getTimezoneOffset() - 5 * 60)
+
+                    post.date = new Date(Date.parse(post.date) + offset)
+
                     posts.push(post)
                     feed.addItem({
                         title: post.title,
-                        id: idsJson.ids.indexOf(file),
+                        id: idsJson.posts[file],
                         description: post.preview,
                         date: post.date,
                         published: post.date,
@@ -139,7 +150,7 @@ module.exports = write => new Promise((resolve, reject) => {
 
                     feed.addItem({
                         title: split.meta.title,
-                        id: idsJson.ids.indexOf(file),
+                        id: idsJson.posts[file],
                         description: split.preview,
                         date: split.meta.date,
                         published: split.meta.date,

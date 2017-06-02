@@ -4,142 +4,139 @@
 
 #body
     > p
-        margin-top 0
-        margin-bottom 1em
-        padding-bottom 1em
-        border-bottom 2px solid border-color
-
-    img.wink
-        display inline
-        height 1em
-        width 1em
+        margin-top: 0
+        margin-bottom: 1em
+        padding-bottom: 1em
+        border-bottom: 2px solid $color-border
 
 #contact
-    margin 0 auto
+    margin: 0 auto
 
 #contact form
-    width 100%
+    width: 100%
 
     .required::after
-        display inline-block
-        content "*"
-        font-size 1em
-        margin-left 0.25em
-        color red
+        display: inline-block
+        content: "*"
+        font-size: 1em
+        margin-left: 0.25em
+        color: red
 
-    .warning
+    #contact-locked, #contact-errors
         background-color #f88
-        color black
-        border 2px solid #c00
-        padding 1em
-        margin 1em auto
-        white-space normal
+        color: black
+        border: 2px solid #c00
+        padding: 1em
+        margin: 1em auto
+        white-space: normal
 
         li
-            color black
-            text-align left
+            color: black
+            text-align: left
 
     label.msg span
-        vertical-align top
+        vertical-align: top
 
     small
-        display block
-        vert margin 1em
+        display: block
+        margin-top: 1em
+        margin-bottom: 1em
 
     // The winking face should effectively act like a character.
     img
-        height 1em
-        display inline-block
+        height: 1em
+        display: inline-block
 
     textarea
-        margin 0.1em auto
+        margin: 0.1em auto
         resize vertical
-        min-height 10em
-        font-size small
+        min-height: 10em
+        font-size: small
 
     div, label
-        margin 0.5em auto
-        display block
-        white-space nowrap
+        margin: 0.5em auto
+        display: block
+        white-space: nowrap
 
     input, textarea
-        font-size 1em
-        padding 0.5em
-        border 2px solid border-color
+        font-size: 1em
+        padding: 0.5em
+        border: 2px solid $color-border
 
     .submit
-        text-align center
+        text-align: center
 
     input[type=submit]
-        height auto
-        max-width 5em
-        color header-text
-        border-color button-border-color
-        background-notify button-color 50%
+        height: auto
+        max-width: 5em
+        color: $color-header-text
+        border-color: $color-button-border
+        --background-notify: $color-button 50%
 
 // The large form layout doesn't work as well with smaller tablets in portrait
 // mode.
-@media screen and (max-width 700px)
+@media screen and (max-width: 700px)
     #contact
-        width 80%
+        width: 80%
 
     #contact form
         input, textarea
-            input-fix()
+            @extend $--input-fix
 
         label span
-            display block
-            vert margin 0.5em
+            display: block
+            margin-top: 0.5em
+            margin-bottom: 0.5em
 
         input[type=submit]
-            margin-top 0.5em
-            display inline-block
+            margin-top: 0.5em
+            display: inline-block
 
-@media screen and (min-width 700px)
+@media screen and (min-width: 700px)
     #contact
-        text-align center
+        text-align: center
 
     #contact form
-        display inline-block
-        text-align center
+        display: inline-block
+        text-align: center
 
         div, label
-            text-align center
+            text-align: center
 
         input, textarea
-            display inline-block
+            display: inline-block
 
         label span
-            display inline-block
-            padding-top 0.75em
-            vertical-align middle
+            display: inline-block
+            padding-top: 0.75em
+            vertical-align: middle
 
         input
-            vertical-align text-top
+            vertical-align: text-top
 
         input[type=submit]
-            margin-top 1em
-            text-align center
+            margin-top: 1em
+            text-align: center
 
-@media screen and (min-width 700px) and (max-width 1000px)
+@media screen and (min-width: 700px) and (max-width: 1000px)
     #contact
-        width 90%
+        width: 90%
 
     #contact form
         input, textarea
-            width 70%
+            width: 70%
 
         label span
             // constrain to keep the labels from getting squished
-            width-scale 30% 80px 100px
+            --width-scale: 30% 80px 100px
 
 +desktop()
     #contact
-        width 75%
+        width: 75%
 
     #contact form
         input, textarea
-            width 80%
+            width: 80%
 
         label span
-            width 7em
+            width: 7em
