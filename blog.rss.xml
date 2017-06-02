@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>http://isiahmeadows.com/blog.html</link>
-        <lastBuildDate>Sat, 08 Oct 2016 11:38:16 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 02 Jun 2017 14:35:06 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2013-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -12,13 +12,6 @@
         <category>politics</category>
         <category>opinions</category>
         <category>javascript</category>
-        <item>
-            <title><![CDATA[Basis of all our society's problems]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/basis-of-all-our-societys-problems.md</guid>
-            <pubDate>Tue, 27 May 2014 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-14): Minor grammar/typographic/semantic fixes throughout. Also note that this was written in 2014, so it may not reflect current knowledge and events, and it]]></description>
-        </item>
         <item>
             <title><![CDATA[Another content update]]></title>
             <link>http://isiahmeadows.com/blog.html#/posts/content-update-2.md</link>
@@ -60,13 +53,6 @@
             <guid>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</guid>
             <pubDate>Mon, 27 Jul 2015 00:00:00 GMT</pubDate>
             <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></description>
-        </item>
-        <item>
-            <title><![CDATA[Society in a nutshell]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/society-in-nutshell.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/society-in-nutshell.md</guid>
-            <pubDate>Tue, 05 Aug 2014 00:00:00 GMT</pubDate>
-            <description><![CDATA[There are two factions: people who religiously cling to the past, and the people who are disillusioned. These two seemingly endlessly conflict over most things. Then, there]]></description>
         </item>
         <item>
             <title><![CDATA[Tape === awesome]]></title>
