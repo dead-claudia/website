@@ -2,10 +2,7 @@
 
 *Edit (2016-01-16): minor typography/style/bug/etc. fixes.*
 
-[`tape`](http://npm.im/tape) is awesome. Nobody likes writing thousands and
-thousands of lines of unit tests, but I'd have to say that tape makes it easy.
-It takes a lot less time and code to write the tests. Compare these two
-assertions in Mocha and tape:
+[`tape`](http://npm.im/tape) is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape makes it easy. It takes a lot less time and code to write the tests. Compare these two assertions in Mocha and tape:
 
 (I'll shamelessly admit I yanked these from Mocha's website.)
 
@@ -60,10 +57,4 @@ t.test('User', t => {
 })
 ```
 
-The beauty of all of this is that it's so simple. You also don't have any global
-pollution. The tape tests can be run with node test.js. The tape command line
-runner does this very thing; it just runs the directory recursively when given
-one. And as for pretty output,
-[there's a lot of tools out there](https://www.npmjs.com/package/tape#pretty-reporters)
-that only need piped into. If you like the output of a C program that accepts it
-from stdin, you can use that reporter as well. No opinions needed.
+The beauty of all of this is that it's so simple. You also don't have any global pollution. The tape tests can be run with node test.js. The tape command line runner does this very thing; it just runs the directory recursively when given one. And as for pretty output, [there's a lot of tools out there](https://www.npmjs.com/package/tape#pretty-reporters) that only need piped into. If you like the output of a C program that accepts it from stdin, you can use that reporter as well. No opinions needed.

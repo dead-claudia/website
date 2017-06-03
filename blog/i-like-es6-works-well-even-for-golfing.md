@@ -1,13 +1,10 @@
 
 
-*Edit (2016-01-14): Remove license disclaimer, re-license it under site's
-general license. I also fixed typography/grammar/bugs/clarity/etc. throughout.*
+*Edit (2016-01-14): Remove license disclaimer, re-license it under site's general license. I also fixed typography/grammar/bugs/clarity/etc. throughout.*
 
-*Update: updated much of the code, made the JS smaller and the assembly half the
-instruction size. Also fixed the max line length for comments to 80 characters.*
+*Update: updated much of the code, made the JS smaller and the assembly half the instruction size. Also fixed the max line length for comments to 80 characters.*
 
-Most of you all probably already understand basic JavaScript and the factorial
-function. Here's the canonical recursive implementation in JavaScript:
+Most of you all probably already understand basic JavaScript and the factorial function. Here's the canonical recursive implementation in JavaScript:
 
 ```js
 // Function declaration
@@ -23,9 +20,7 @@ function fact(n) {
 let fact = n => n > 0 ? n * fact(n - 1) : 1;
 ```
 
-But, I find this hack fairly cool: it basically ~~abuses~~takes enormous
-advantage of precedence and how logic statements work in ECMAScript. The hack
-assumes integer input.
+But, I find this hack fairly cool: it basically ~~abuses~~takes enormous advantage of precedence and how logic statements work in ECMAScript. The hack assumes integer input.
 
 ```js
 // Function declaration
@@ -37,10 +32,7 @@ function fact(n) {
 let fact = n => +(n < 1) || n * fact(n - 1);
 ```
 
-The hack version also takes advantage of an implicit boolean-to-integer cast,
-which is usually much shorter than a conditional. Code golfing is a little fun
-for these kinds of hacks, so let's compare a golfed C/C++ version to this
-ECMAScript hack unminified (using the ES6 versions):
+The hack version also takes advantage of an implicit boolean-to-integer cast, which is usually much shorter than a conditional. Code golfing is a little fun for these kinds of hacks, so let's compare a golfed C/C++ version to this ECMAScript hack unminified (using the ES6 versions):
 
 ```js
 // Golfed C/C++
@@ -90,8 +82,7 @@ function fact(n) {
 let fact = n => +(n <= 0) || n * fact(n - 1);
 ```
 
-You'll never beat assembly in speed, though... (this is written for x86 using
-NASM syntax)
+You'll never beat assembly in speed, though... (this is written for x86 using NASM syntax)
 
 ```asm
 ; And almost in size...this is surprisingly short. Uses the cdecl calling
