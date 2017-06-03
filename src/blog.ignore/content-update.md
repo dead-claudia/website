@@ -7,8 +7,7 @@ tags:
     - content
 ---
 
-I made a major, sorely needed content update for the website. Here's a quick
-summary of things I added:
+I made a major, sorely needed content update for the website. Here's a quick summary of things I added:
 
 1. Half of the Home page is now in the About page.
 2. I've added links to my LinkedIn/GitHub/Twitter accounts in the About page.
@@ -26,9 +25,6 @@ In case you're wondering, here's what that means:
 - I can get a better idea where all the traffic is going throughout the site.
 - The site is a little more SEO-friendly, particularly with Google.
 
-As for the tracking, it's done anonymously (your IP isn't recorded), and it
-always uses SSL, even if the rest of the site isn't encrypted. And if you're
-still concerned, there's several browser extensions that work great for avoiding
-tracking altogether.
+As for the tracking, it's done anonymously (your IP isn't recorded), and it always uses SSL, even if the rest of the site isn't encrypted. And if you're still concerned, there's several browser extensions that work great for avoiding tracking altogether.
 
 Well, anyways, have fun exploring whatever! ![wink](wink.png =16x16)

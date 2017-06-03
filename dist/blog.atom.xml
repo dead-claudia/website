@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://isiahmeadows.com/blog.html</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2017-06-02T16:35:45Z</updated>
+    <updated>2017-06-03T07:07:07Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -73,6 +73,15 @@
         <updated>2015-07-27T00:00:00Z</updated>
         <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></summary>
         <published>2015-07-27T00:00:00Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Big site renovation]]></title>
+        <id>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/site-renovation.md">
+        </link>
+        <updated>2017-06-03T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></summary>
+        <published>2017-06-03T00:00:00Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[Tape === awesome]]></title>

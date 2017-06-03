@@ -2,12 +2,7 @@
 
 *Edit (2016-01-14): minor typography/style/bug/etc. fixes.*
 
-I recently made my first npm module
-([babel-plugin-proto-to-create](http://npm.im/babel-plugin-proto-to-create)),
-but this just stems from my general frustration with class-based OO. Not saying
-it's a terrible thing at all, or that I can't understand it at all, but there's
-nothing simpler than objects linked to other objects. Nothing more elegant than
-this:
+I recently made my first npm module ([babel-plugin-proto-to-create](http://npm.im/babel-plugin-proto-to-create)), but this just stems from my general frustration with class-based OO. Not saying it's a terrible thing at all, or that I can't understand it at all, but there's nothing simpler than objects linked to other objects. Nothing more elegant than this:
 
 ```js
 const Vehicle = {
@@ -46,8 +41,7 @@ Merely creating an instance is as simple as this:
 let car = Car.new("Nissan", "Ultima")
 ```
 
-I really love the simplicity of this, pure prototypal OO. It's simple, concise,
-and beautiful. Or, if you'd prefer, you could always use ES6 classes:
+I really love the simplicity of this, pure prototypal OO. It's simple, concise, and beautiful. Or, if you'd prefer, you could always use ES6 classes:
 
 ```js
 class Vehicle {
@@ -81,8 +75,7 @@ class Truck extends Vehicle {
 }
 ```
 
-Lot more boilerplate. Extending mixins in ES6 classes are also a little more
-complicated:
+Lot more boilerplate. Extending mixins in ES6 classes are also a little more complicated:
 
 ```js
 function mixin(Class, ...srcs) {
@@ -116,8 +109,7 @@ const Foo = {
 }
 ```
 
-And with ES7's object spread operator, the mixin picture is only going to make
-this nicer:
+And with ES7's object spread operator, the mixin picture is only going to make this nicer:
 
 ```js
 const Type = {
@@ -129,9 +121,7 @@ const Type = {
 }
 ```
 
-Very lightweight mixins that don't need any syntactical support. Not to mention
-you could even define these is-a/has-a relationships conditionally at object
-creation time:
+Very lightweight mixins that don't need any syntactical support. Not to mention you could even define these is-a/has-a relationships conditionally at object creation time:
 
 ```js
 const Type = {

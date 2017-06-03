@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>http://isiahmeadows.com/blog.html</link>
-        <lastBuildDate>Fri, 02 Jun 2017 16:35:45 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 03 Jun 2017 07:07:07 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2013-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -53,6 +53,13 @@
             <guid>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</guid>
             <pubDate>Mon, 27 Jul 2015 00:00:00 GMT</pubDate>
             <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Big site renovation]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</guid>
+            <pubDate>Sat, 03 Jun 2017 00:00:00 GMT</pubDate>
+            <description><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></description>
         </item>
         <item>
             <title><![CDATA[Tape === awesome]]></title>

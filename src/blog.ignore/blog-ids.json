@@ -1,5 +1,5 @@
 {
-    "current": 11,
+    "current": 12,
     "posts": {
         "user-friendliness-and-seo-optimization.md": 1,
         "i-like-es6-works-well-even-for-golfing.md": 2,
@@ -9,6 +9,7 @@
         "welcome-to-my-new-site.md": 7,
         "new-redesign.md": 8,
         "content-update.md": 9,
-        "content-update-2.md": 10
+        "content-update-2.md": 10,
+        "site-renovation.md": 11
     }
 }
