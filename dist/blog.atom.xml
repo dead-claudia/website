@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://isiahmeadows.com/blog.html</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2017-06-09T21:12:10Z</updated>
+    <updated>2017-08-03T10:49:10Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -30,6 +30,15 @@
         <published>2016-07-03T00:00:00Z</published>
     </entry>
     <entry>
+        <title type="html"><![CDATA[ES6 is functional, imperative, and OO]]></title>
+        <id>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md">
+        </link>
+        <updated>2014-11-09T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
+        <published>2014-11-09T00:00:00Z</published>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Major content update]]></title>
         <id>http://isiahmeadows.com/blog.html#/posts/content-update.md</id>
         <link href="http://isiahmeadows.com/blog.html#/posts/content-update.md">
@@ -46,6 +55,15 @@
         <updated>2014-07-28T00:00:00Z</updated>
         <summary type="html"><![CDATA[Edit (2016-01-14): Remove license disclaimer, re-license it under site's general license. I also fixed typography/grammar/bugs/clarity/etc. throughout. Update: updated much of]]></summary>
         <published>2014-07-28T00:00:00Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Tape === awesome]]></title>
+        <id>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/tape-awesome.md">
+        </link>
+        <updated>2015-09-29T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></summary>
+        <published>2015-09-29T00:00:00Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[Site redesign]]></title>
@@ -66,24 +84,6 @@
         <published>2015-07-27T00:00:00Z</published>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Big site renovation]]></title>
-        <id>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/site-renovation.md">
-        </link>
-        <updated>2017-06-03T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></summary>
-        <published>2017-06-03T00:00:00Z</published>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Tape === awesome]]></title>
-        <id>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/tape-awesome.md">
-        </link>
-        <updated>2015-09-29T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></summary>
-        <published>2015-09-29T00:00:00Z</published>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[User friendliness and SEO optimization for clients without JS using <noscript>, <meta>]]></title>
         <id>http://isiahmeadows.com/blog.html#/posts/user-friendliness-and-seo-optimization.md</id>
         <link href="http://isiahmeadows.com/blog.html#/posts/user-friendliness-and-seo-optimization.md">
@@ -102,12 +102,12 @@
         <published>2016-01-16T00:00:00Z</published>
     </entry>
     <entry>
-        <title type="html"><![CDATA[ES6 is functional, imperative, and OO]]></title>
-        <id>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</id>
-        <link href="http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md">
+        <title type="html"><![CDATA[Big site renovation]]></title>
+        <id>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</id>
+        <link href="http://isiahmeadows.com/blog.html#/posts/site-renovation.md">
         </link>
-        <updated>2014-11-09T00:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
-        <published>2014-11-09T00:00:00Z</published>
+        <updated>2017-06-03T00:00:00Z</updated>
+        <summary type="html"><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></summary>
+        <published>2017-06-03T00:00:00Z</published>
     </entry>
 </feed>

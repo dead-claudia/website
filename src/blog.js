@@ -395,17 +395,21 @@
         }
     }
 
-    if (!("content" in document.createElement("template"))) {
-        var templates = document.getElementsByTagName("template")
+    window.render = function () {
+        if (!("content" in document.createElement("template"))) {
+            var templates = document.getElementsByTagName("template")
 
-        for (var k = 0; k < templates.length; k++) {
-            var template = templates[k]
+            for (var k = 0; k < templates.length; k++) {
+                var template = templates[k]
 
-            template.content = document.createDocumentFragment()
-            while (template.firstChild) {
-                template.content.appendChild(template.firstChild)
+                template.content = document.createDocumentFragment()
+                while (template.firstChild) {
+                    template.content.appendChild(template.firstChild)
+                }
             }
         }
+
+        window.onhashchange()
     }
 
     window.onhashchange = function () {

@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>http://isiahmeadows.com/blog.html</link>
-        <lastBuildDate>Fri, 09 Jun 2017 21:12:10 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 03 Aug 2017 10:49:10 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2013-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -18,6 +18,13 @@
             <guid>http://isiahmeadows.com/blog.html#/posts/content-update-2.md</guid>
             <pubDate>Sun, 03 Jul 2016 00:00:00 GMT</pubDate>
             <description><![CDATA[And another content update... Let's just say it's been a while since I've visited the site's content, and so I ended up having to remove a bunch of stale things. First, as]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ES6 is functional, imperative, and OO]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</guid>
+            <pubDate>Sun, 09 Nov 2014 00:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></description>
         </item>
         <item>
             <title><![CDATA[Major content update]]></title>
@@ -34,6 +41,13 @@
             <description><![CDATA[Edit (2016-01-14): Remove license disclaimer, re-license it under site's general license. I also fixed typography/grammar/bugs/clarity/etc. throughout. Update: updated much of]]></description>
         </item>
         <item>
+            <title><![CDATA[Tape === awesome]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</guid>
+            <pubDate>Tue, 29 Sep 2015 00:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></description>
+        </item>
+        <item>
             <title><![CDATA[Site redesign]]></title>
             <link>http://isiahmeadows.com/blog.html#/posts/new-redesign.md</link>
             <guid>http://isiahmeadows.com/blog.html#/posts/new-redesign.md</guid>
@@ -46,20 +60,6 @@
             <guid>http://isiahmeadows.com/blog.html#/posts/objects-linked-to-other-objects.md</guid>
             <pubDate>Mon, 27 Jul 2015 00:00:00 GMT</pubDate>
             <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. I recently made my first npm module (babel-plugin-proto-to-create), but this just stems from my general frustration]]></description>
-        </item>
-        <item>
-            <title><![CDATA[Big site renovation]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</guid>
-            <pubDate>Sat, 03 Jun 2017 00:00:00 GMT</pubDate>
-            <description><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></description>
-        </item>
-        <item>
-            <title><![CDATA[Tape === awesome]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/tape-awesome.md</guid>
-            <pubDate>Tue, 29 Sep 2015 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-16): minor typography/style/bug/etc. fixes. tape is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I'd have to say that tape]]></description>
         </item>
         <item>
             <title><![CDATA[User friendliness and SEO optimization for clients without JS using <noscript>, <meta>]]></title>
@@ -76,11 +76,11 @@
             <description><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></description>
         </item>
         <item>
-            <title><![CDATA[ES6 is functional, imperative, and OO]]></title>
-            <link>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</link>
-            <guid>http://isiahmeadows.com/blog.html#/posts/es6-is-functional-imperative-and-oo.md</guid>
-            <pubDate>Sun, 09 Nov 2014 00:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></description>
+            <title><![CDATA[Big site renovation]]></title>
+            <link>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</link>
+            <guid>http://isiahmeadows.com/blog.html#/posts/site-renovation.md</guid>
+            <pubDate>Sat, 03 Jun 2017 00:00:00 GMT</pubDate>
+            <description><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></description>
         </item>
     </channel>
 </rss>

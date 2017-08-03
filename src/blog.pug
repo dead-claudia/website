@@ -4,7 +4,6 @@ link(rel="stylesheet" href="blog.css")
 link(rel="alternate" type="application/atom+xml" href="blog.atom.xml" title="Atom feed")
 link(rel="alternate" type="application/rss+xml" href="blog.rss.xml" title="RSS feed")
 
-//- Don't block the loading path
 script(
     src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked" + (
         minified ? ".min" : "") + ".js"
@@ -74,4 +73,4 @@ script(src="blog.js")
             .blog-list
 
     //- Fire the initial render
-    script onhashchange()
+    script render()
