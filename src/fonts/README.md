@@ -1,1 +1,1 @@
-See [../fonts.ignore/README.md](../fonts.ignore/README.md).
+See [original/fonts/README.md](../../original/fonts/README.md).

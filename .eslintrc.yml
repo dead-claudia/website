@@ -1,0 +1,13 @@
+root: true
+extends:
+    - isiahmeadows/node-4
+    - isiahmeadows/es6
+
+parserOptions:
+    sourceType: script
+    ecmaVersion: 9
+    ecmaFeatures:
+        impliedStrict: false
+
+rules:
+    no-restricted-modules: off

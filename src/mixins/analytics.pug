@@ -1,0 +1,32 @@
+//- Set the function to a noop and don't load GA if we're running this locally.
+//- This also does a better job of minifying the result than the snippet
+//- provided by Google, and it also tracks all exceptions.
+//-
+//- Unobfuscated:
+//- script.
+//-     function gtag() { dataLayer.push(arguments) }
+//-     dataLayer = [
+//-         ["js", new Date()],
+//-         ["config", "UA-38960675-5", {anonymize_ip: 1}]
+//-     ]
+//-     onerror = function (message, source, lineno, colno) {
+//-         var elem = document.createElement("a")
+//-         elem.href = source
+//-         var eventLabel = (
+//-             source + " at line: " + lineno +
+//-             (colno ? " column: " + colno : "")
+//-         ).trim()
+//-         gtag("event", message, {
+//-             event_category: elem.hostname === location.hostname ||
+//-                 !elem.hostname ? "error" : "external error",
+//-             event_label: eventLabel,
+//-             non_interaction: 1
+//-         })
+//-         gtag("event", "exception", {
+//-             description: eventLabel + ": " + message.trim(),
+//-         })
+//-     }
+
+if minified
+    script(async src="https://www.googletagmanager.com/gtag/js?id=UA-38960675-5")
+    script function gtag(){dataLayer.push(arguments)}dataLayer=[["js",new Date],["config","UA-38960675-5",{anonymize_ip:1}]];onerror=function(a,b,c,d){d=(b+" at line: "+c+(d?" column: "+d:"")).trim();c=document.createElement("a");c.href=b;dataLayer.push(["event",a,{event_label:d,event_category:c.hostname!=location.hostname&&c.hostname?"external error":"error",non_interaction:1}],["event","exception",{description:d+": "+a.trim()}])}

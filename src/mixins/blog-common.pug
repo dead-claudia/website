@@ -1,0 +1,8 @@
+link(rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Atom feed")
+link(rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="RSS feed")
+
+mixin blog-post-tags(post)
+    .post-tags
+        span Tags:
+        each tag in post.tags
+            a.post-tag(data-tag=tag href="/blog/#" + encodeURIComponent(tag))= tag

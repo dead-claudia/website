@@ -4,49 +4,67 @@
 // binary or JS (which is already checked by ESLint). If a line break is needed
 // in Markdown-land, use `<br>`, not an extra space.
 
-const fs = require("fs")
+const {promises: fs} = require("fs")
 const path = require("path")
 
-const pcall = require("./promise.js")
-const walk = require("./walk.js")
+const walk = require("./walk")
 
-// This only can check files.
-function ignore(file) {
-    // These directories should be wholly ignored.
-    if (file === "node_modules" || file === "dist") return true
-    if (/^\.git/.test(file)) return true
+function getLineData(contents, pos, start) {
+    let line = 1
+    let column = 0
 
-    // Keep this list in sync with that in `/.gitattributes`. Note that JS is
-    // also ignored because ESLint already checks for it.
-    return /\.(js|png|jpg|jpeg|svg|ttf|eot|woff2?)$/i.test(file)
+    for (let i = start; i !== pos; i++) {
+        switch (contents.charCodeAt(i)) {
+        case 0x0A: // \r
+            if (i + 1 !== pos && contents.charCodeAt(i + 1) === 0x0D) i++
+            // falls through
+
+        case 0x0D: // \n
+            line++
+            column = 0
+            break
+
+        default:
+            column++
+        }
+    }
+
+    return {line, column}
 }
 
-function check(code, file, item, re) {
-    if (re.test(file.contents)) {
-        const name = path.relative(path.dirname(__dirname), file.name)
+function check(file, contents, item, re) {
+    while (true) {
+        const result = re.exec(contents)
 
-        console.error(`WARNING: Trailing ${item} in ${name}.`)
-        return 1
-    } else {
-        return code
+        if (result == null) break
+        const name = path.relative(path.dirname(__dirname), file)
+        const {line, column} = getLineData(result.index, re.lastIndex)
+
+        console.error(
+            `WARNING (line ${line}, column ${column}): ` +
+            `Trailing ${item} in ${name}.`
+        )
+        process.exitCode = 1
     }
 }
 
-walk(path.dirname(__dirname), ignore)
-.then(files => Promise.all(files.map(name =>
-    pcall(fs.readFile, name, "utf-8").then(contents => ({name, contents})))))
-.then(files => files.reduce((code, file) => {
+walk("**", {
+    cwd: path.dirname(__dirname),
+    // These directories should be wholly ignored.
+    ignore: ["!../node_modules/**", "!../dist/**"].concat(
+        // Keep this list in sync with that in `/.gitattributes`. Note that JS
+        // is also ignored to not duplicate ESLint's check.
+        "js,png,jpg,jpeg,svg,ttf,eot,woff,woff2".split(",")
+            .map(ext => `!**/*.${ext}`)
+    ),
+    nodir: true,
+}, async file => {
+    const contents = await fs.readFile(file, "utf-8")
+
     // Test for any non-line-break whitespace that precedes a line-break
     // whitespace and reject it.
-    code = check(code, file, "whitespace found", /[^\r\n\S][\r\n]/)
+    check(file, contents, "whitespace found", /[^\r\n\S][\r\n]/g)
 
     // Test for *one* trailing line break.
-    code = check(code, file, "newline missing", /[^\r\n\S]$|(\r\n|\r|\n){2,}$/)
-
-    return code
-}, 0))
-.then(process.exit)
-.catch(e => {
-    console.error(e.stack)
-    return process.exit(1) // eslint-disable-line no-process-exit
+    check(file, contents, "newline missing", /[^\r\n\S]$|(\r\n|\r|\n){2,}$/g)
 })

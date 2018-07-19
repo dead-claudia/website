@@ -1,0 +1,43 @@
+include ./page.pug
+include ./blog-common.pug
+
++page("Blog")
+    #blog
+        .blog-summary
+            p My ramblings about everything (coding, random ideas, etc.)
+
+            .feeds
+                .feed Atom #[a(href="/blog/atom.xml"): img.feed-icon(src="/images/feed-icon-16.gif")]
+                .feed RSS #[a(href="/blog/rss.xml"): img.feed-icon(src="/images/feed-icon-16.gif")]
+
+            .summary-header
+                .summary-title
+                    .tag-title Posts, sorted by most recent.
+                    a.back.hidden(href="#") Back to posts ►
+
+                .tag-search.disabled
+                    label Search by tag: (disabled)
+                    input(type="text" disabled)
+                    .warning.hidden Tags may only be a comma-separated list of phrases.
+
+            .blog-list
+                each post in posts
+                    -
+                        var date = post.date.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+
+                    .blog-entry(data-tags="," + post.tags.join(",").toLowerCase() + ",")
+                        //- Nested links are illegal, so we have to do the next
+                        //- best thing.
+                        a.blog-entry-link(href=post.url)
+                        .post-date= date
+                        .post-stub
+                            .post-title= post.title
+                            .post-preview= post.preview
+
+                        +blog-post-tags(post)
+
+script(src="/blog/index.js")

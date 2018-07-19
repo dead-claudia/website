@@ -1,0 +1,12 @@
+include ./page.pug
+include ./blog-common.pug
+
++page("Blog", post.title).prefer-name
+    #blog
+        .blog-post: .blog-post-wrapper
+            a.post-home(href="/blog/") Home ►
+            h3.post-title= post.title
+            .post-body!= post.raw
+            .post-footer
+                a.post-home(href="/blog/") Home ►
+                +blog-post-tags(post)

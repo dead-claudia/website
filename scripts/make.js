@@ -1,10 +1,11 @@
 "use strict"
 
+const {promises: fs} = require("fs")
 const path = require("path")
 const os = require("os")
-const mkdirp = require("mkdirp")
+const util = require("util")
+const mkdirp = util.promisify(require("mkdirp"))
 
-const pcall = require("./promise.js")
 const exec = require("./exec-limit.js")
 const walk = require("./walk.js")
 
@@ -23,46 +24,44 @@ const makeCompiler = (verb, script) => (src, dist, name) =>
 
 const compileStylus = makeCompiler("Compiling", r("compile-stylus.js"))
 const compilePug = makeCompiler("Compiling", r("compile-pug.js"))
-const copyFile = makeCompiler("Copying", r("copy.js"))
-
-// The directory separator never appears in fs.readdir listings
-const ignore = file => /^\.|^README\.md$|\.ignore(\.[^\.]+)?$/.test(file)
 
 require("./run.js")({
     "clean": () => exec(["node", r("rm-dist.js")]),
 
-    "compile:copy": () => walk(r("../dist-tmpl"))
-    .then(srcs => Promise.all(srcs.map(src => {
+    "compile:copy": () => walk(r("../dist-tmpl/**"), async src => {
         const name = path.relative(r("../dist-tmpl"), src)
         const dist = path.join(r("../dist"), name)
 
-        return pcall(mkdirp, path.dirname(dist)).then(() => {
-            return exec(["node", r("copy.js"), src, dist], () => {
-                console.log(`Copying file: ${path.join("dist-tmpl", name)}`)
-            })
-        })
-    }))),
+        await mkdirp(path.dirname(dist))
+        console.log(`Copying file: ${path.join("dist-tmpl", name)}`)
+        await fs.copyFile(src, dist)
+    }),
 
     "compile:blog": () => exec(["node", r("compile-blog-posts.js")], () => {
         console.log("Compiling blog posts...")
     }),
 
-    "compile:rest": () => walk(r("../src"), ignore)
-    .then(srcs => Promise.all(srcs.map(src => {
-        // Don't create the parent directory for these files.
-        if (/^license(\.[^\.]*)$/.test(src)) return Promise.resolve()
-        if (/\.mixin\.[^\\\/\.]+$/.test(src)) return Promise.resolve()
-
+    "compile:rest": () => walk(r("../src/**"), {
+        // Don't iterate any of these files.
+        ignore: [
+            "**/README.md", "**/*.ignore/**", "**/*.ignore.*",
+            "**/license.*", "**/mixins/**",
+        ],
+    }, async src => {
         const name = path.relative(r("../src"), src)
         const dist = path.join(r("../dist"), name)
 
-        return pcall(mkdirp, path.dirname(dist)).then(() => {
-            if (/\.js$/.test(src)) return minifyJs(src, dist, name)
-            if (/\.styl$/.test(src)) return compileStylus(src, dist, name)
-            if (/\.pug$/.test(src)) return compilePug(src, dist, name)
-            return copyFile(src, dist, name)
-        })
-    }))),
+        await mkdirp(path.dirname(dist))
+
+        switch (path.extname(src)) {
+        case ".js": await minifyJs(src, dist, name); break
+        case ".styl": await compileStylus(src, dist, name); break
+        case ".pug": await compilePug(src, dist, name); break
+        default:
+            console.log(`Copying file: ${path.join("src", name)}`)
+            await fs.copyFile(src, dist)
+        }
+    }),
 
     "compile": t => t.clean().then(() => Promise.all([
         t["compile:copy"](),

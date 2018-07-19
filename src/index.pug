@@ -1,20 +1,17 @@
-include ./page.mixin.pug
-
-link(rel="stylesheet" href="index.css")
+include ./mixins/page.pug
 
 +page("Home")
-    div.pic: img(src="pic.jpg" alt="picture of Isiah Meadows")
+    div.pic: img(src="/images/pic.jpg" alt="picture of Isiah Meadows")
 
     p Hi, I'm Isiah Meadows.
 
     p.
-        I'm a web consultant and freelancer ready to help you soar. I specialize
-        in full stack web design and development anywhere from help designing a
-        small personal site you were using Wix to create to writing a
-        custom-built web app complete with backend hosting, and anywhere in
-        between. So if you need help anywhere from a simple shop or blog to
-        getting a fancy site to go along with your shiny new startup, I'm who
-        you've been looking for.
+        I'm a web consultant ready to help you soar. I specialize in full stack
+        web design and development, and I can do anything from help designing a
+        small personal site you're working on in Wix to creating a new site for
+        your hot startup to even writing a custom-built web app from scratch,
+        complete with backend hosting. So if you need that magic sauce, I'm just
+        the one you need.
 
     p Here's some of what I can do:
 
@@ -22,17 +19,15 @@ link(rel="stylesheet" href="index.css")
         li Assist with site builders like Wix, Weebly, and Squarespace
         li Create new sites and web apps from scratch
         li Maintain and support your existing sites or web apps
-        li Work on existing projects as a freelancer
-        li Integrate your site with existing services you already use
+        li Work on existing Node.js, Ruby, and Wordpress/Drupal projects
+        li Integrate your site with third-party services
 
-    p So what are you waiting for?
-
-    .contact: a(href="contact.html?w") Let's get started!
+    .contact: a(href="/contact/?w") Sounds perfect to me!
 
     h3.featured Featured Site: Grand Cayman Island Vacation Rental
 
     a.screenshot(href="https://www.grandcaymanislandvacationrental.com")
-        img(src="grandcaymanisland.jpg" alt="screenshot of website")
+        img(src="/images/grandcaymanisland.jpg" alt="screenshot of website")
 
     p.
         This site was created to help promote a client's vacation rental condo
@@ -51,4 +46,4 @@ link(rel="stylesheet" href="index.css")
     p.
         Would you like your site to be featured here next?
 
-    .contact: a(href="contact.html") Let's get started!
+    .contact: a(href="/contact/") Let's get started!

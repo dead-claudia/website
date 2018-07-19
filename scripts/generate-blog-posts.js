@@ -4,194 +4,150 @@ if (require.main === module) {
     throw new Error("This isn't a runnable script!")
 }
 
-// This isn't the cleanest refactoring, but I don't know of any cleaner way to
-// separate this from ./compile-blog-posts.js
-
-// This does incorporate several elements from
-// https://github.com/j201/meta-marked, but it doesn't actually *render* the
-// markdown into HTML, as that's deferred to the browser.
-
-const fs = require("fs")
+const {promises: fs} = require("fs")
 const path = require("path")
 const yaml = require("js-yaml")
 const Feed = require("feed")
 
+const compileMarkdown = require("./compile-markdown")
 const compilePreview = require("./compile-markdown-preview.js")
+const generatePug = require("./generate-pug")
+const walk = require("./walk")
 
-const postDir = path.resolve(__dirname, "../src/blog.ignore")
+const postDir = path.resolve(__dirname, "../blog")
+const postTemplate = path.resolve(__dirname, "../src/mixins/blog-template.pug")
 
-const idsFile = path.resolve(postDir, "blog-ids.json")
-const idsJson = require(idsFile)
-
-function ensureKey(name) {
-    name = path.relative(postDir, name)
-
-    if (idsJson.posts[name] >= 0) return
-    idsJson.posts[name] = idsJson.current++
-    fs.writeFileSync(idsFile, `${JSON.stringify(idsJson, null, 4)}\n`)
-}
+const idsFile = path.resolve(postDir, "blog-ids.yml")
+const idsList = yaml.safeLoad(require("fs").readFileSync(idsFile, "utf-8"), {
+    filename: idsFile,
+})
+const fileIdCache = new Map(Object.keys(idsList).map(id => [idsList[id], +id]))
+let nextId = Math.max(fileIdCache.values()) + 1
 
 // Splits the given string into a meta section and a markdown section.
-function splitInput(file, reject, resolve) {
-    return fs.readFile(file, "utf-8", (err, str) => {
-        if (err != null) return reject(err)
-        if (str.slice(0, 3) === "---") {
-            const matcher = /\n(\.\.\.|---)/g
-            const metaEnd = matcher.exec(str)
+async function splitInput(file) {
+    const markdown = await fs.readFile(file, "utf-8")
 
-            if (metaEnd != null) {
-                const raw = str.slice(matcher.lastIndex)
-                let meta
+    if (markdown.slice(0, 3) === "---") {
+        const matcher = /\n(\.\.\.|---)/g
+        const metaEnd = matcher.exec(markdown)
 
-                try {
-                    meta = yaml.safeLoad(str.slice(0, metaEnd.index), {
-                        filename: file,
-                    })
-                } catch (e) {
-                    return reject(e)
-                }
+        if (metaEnd != null) {
+            const raw = markdown.slice(matcher.lastIndex)
+            const meta = yaml.safeLoad(markdown.slice(0, metaEnd.index), {
+                filename: file,
+            })
 
-                return resolve({file, meta, raw, preview: compilePreview(raw)})
+            // My timezone offset is -5 hours, and I need to display
+            // that correctly. This calculates the correct relative
+            // offset in milliseconds, which should be 0 if in EST (i.e.
+            // offset of -5 hours).
+            const offset = 60 * 1000 *
+                (new Date().getTimezoneOffset() - 5 * 60)
+
+            meta.date = new Date(Date.parse(meta.date) + offset)
+
+            return {
+                file, meta,
+                preview: compilePreview(raw),
+                raw: compileMarkdown(path.posix.relative(postDir, file), raw),
             }
         }
+    }
 
-        return reject(new Error(`${file}: Missing required metadata block!`))
-    })
+    throw new Error(`${file}: Missing required metadata block!`)
 }
 
-// Cache this, so the server isn't recompiling every file on every JSON read or
-// post get. Only what's changed + the JSON file (which shouldn't be large).
-const mtimes = {}
-const cache = {}
-const compiled = {}
+// Cache this, so the server isn't recompiling every file on every request. Only
+// what's changed.
+const cache = new Map()
 
 // Important item of note: the `write` function is used for output, and may
 // return a promise. This method is also used to keep the I/O more async.
 //
 // (This would be much easier to do correctly with an observable...)
-module.exports = write => new Promise((resolve, reject) => {
-    return fs.readdir(postDir, (err, files) => {
-        if (err != null) return reject(err)
-        if (files.length === 0) return resolve([])
-
-        const feed = new Feed({
-            title: "Isiah Meadows' blog",
-            description: "My personal blog",
-            id: "http://isiahmeadows.com/blog.html",
-            link: "http://isiahmeadows.com/blog.html",
-            copyright: "Some rights reserved 2013-present, Isiah Meadows.",
-            author: {
-                name: "Isiah Meadows",
-                email: "me@isiahmeadows.com",
-                link: "http://isiahmeadows.com/",
-            },
-        })
-
-        feed.addCategory("technology")
-        feed.addCategory("politics")
-        feed.addCategory("opinions")
-        feed.addCategory("javascript")
-
-        const posts = []
-        let counter = files.length
-
-        function done(err) {
-            if (!counter) return undefined
-
-            if (err != null) {
-                counter = 0
-                return reject(err)
-            }
-
-            if (!--counter) {
-                // The posts should be sorted by reverse date.
-                posts.sort((a, b) => b.date - a.date)
-                return resolve({posts, compiled, feed})
-            }
-
-            return undefined
-        }
-
-        function handleStat(file) {
-            return (err, stat) => {
-                if (err != null) return done(err)
-                if (!stat.isFile()) return done()
-
-                ensureKey(file)
-
-                if (mtimes[file] >= stat.mtime) {
-                    const post = cache[file]
-
-                    // My timezone offset is -5 hours, and I need to display
-                    // that correctly. This calculates the correct relative
-                    // offset in milliseconds, which should be 0 if in EST (i.e.
-                    // offset of -5 hours).
-                    const offset = 60 * 1000 *
-                        (new Date().getTimezoneOffset() - 5 * 60)
-
-                    post.date = new Date(Date.parse(post.date) + offset)
-
-                    posts.push(post)
-                    feed.addItem({
-                        title: post.title,
-                        id: idsJson.posts[file],
-                        description: post.preview,
-                        date: post.date,
-                        published: post.date,
-                        link: `http://isiahmeadows.com/blog.html#/posts/${post.url}`,
-                    })
-
-                    return done()
-                }
-                return splitInput(file, reject, split => {
-                    const url = path.posix.relative(postDir, file)
-
-                    mtimes[file] = stat.mtime
-
-                    feed.addItem({
-                        title: split.meta.title,
-                        id: idsJson.posts[file],
-                        description: split.preview,
-                        date: split.meta.date,
-                        published: split.meta.date,
-                        link: `http://isiahmeadows.com/blog.html#/posts/${url}`,
-                    })
-
-                    posts.push(cache[file] = {
-                        date: split.meta.date,
-                        title: split.meta.title,
-                        preview: split.preview,
-                        url,
-                        tags: split.meta.tags || [],
-                    })
-
-                    cache[file].tags.forEach(tag => {
-                        /^[\w ,\-]+$/.test(tag)
-                    })
-
-                    compiled[url] = split.raw
-
-                    if (write) {
-                        return Promise.resolve(write(file, split.raw, url))
-                        .then(() => done(), done)
-                    } else {
-                        return done()
-                    }
-                })
-            }
-        }
-
-        for (const file of files) {
-            if (file !== "README.md" && file.slice(-3) === ".md") {
-                const resolved = path.join(postDir, file)
-
-                fs.stat(resolved, handleStat(resolved))
-            } else {
-                // If it's not a markdown file, skip it.
-                done() // eslint-disable-line callback-return
-            }
-        }
-
-        return undefined
+module.exports = async (minified, write) => {
+    const feed = new Feed({
+        title: "Isiah Meadows' blog",
+        description: "My personal blog",
+        id: "http://isiahmeadows.com/blog/",
+        link: "http://isiahmeadows.com/blog/",
+        copyright: "Some rights reserved 2013-present, Isiah Meadows.",
+        author: {
+            name: "Isiah Meadows",
+            email: "me@isiahmeadows.com",
+            link: "http://isiahmeadows.com/",
+        },
     })
-})
+
+    feed.addCategory("technology")
+    feed.addCategory("politics")
+    feed.addCategory("opinions")
+    feed.addCategory("javascript")
+
+    const posts = []
+
+    await walk("**/*.md", {
+        cwd: postDir,
+        root: postDir,
+        ignore: ["**/README.md"],
+        stat: true,
+    }, async (name, stat) => {
+        const file = path.resolve(postDir, name)
+        const url = `/blog/${name.replace(/\.md$/, ".html")}`
+
+        if (!fileIdCache.has(name)) {
+            fileIdCache.set(name, nextId)
+            await fs.appendFile(idsFile, `${nextId++}: ${name}\n`)
+        }
+
+        let entry = cache.get(url)
+
+        if (entry == null) {
+            entry = {
+                mtime: 0,
+                post: undefined,
+                compiled: undefined,
+                rendered: undefined,
+            }
+            cache.set(url, entry)
+        }
+
+        let post
+
+        if (entry.mtime !== 0 && entry.mtime <= stat.mtime) {
+            post = entry.post
+        } else {
+            const {raw, meta, preview} = await splitInput(file)
+
+            post = {
+                date: meta.date,
+                title: meta.title,
+                preview, raw, url,
+                tags: meta.tags || [],
+            }
+
+            const html = generatePug(postTemplate, url, minified, {post})
+
+            entry.post = post
+            entry.compiled = raw
+            entry.rendered = html
+            entry.mtime = stat.mtime
+            if (write) await write(file, post, html)
+        }
+
+        posts.push(post)
+        feed.addItem({
+            title: post.title,
+            id: fileIdCache.get(file),
+            description: post.preview,
+            date: post.date,
+            published: post.date,
+            link: `http://isiahmeadows.com${url}`,
+        })
+    })
+
+    // The posts should be sorted by reverse date.
+    posts.sort((a, b) => b.date - a.date)
+    return {posts, cache, feed}
+}

@@ -4,36 +4,38 @@
 // Asynchrony is only useful in terms of not waiting for I/O (which is in
 // practice not much slower than the parsing).
 
-const fs = require("fs")
+const {promises: fs} = require("fs")
 const path = require("path")
-const mkdirp = require("mkdirp")
+const util = require("util")
+const mkdirp = util.promisify(require("mkdirp"))
 
-const pcall = require("./promise.js")
 const generate = require("./generate-blog-posts.js")
+const generatePug = require("./generate-pug")
 
 const dist = path.resolve(__dirname, "../dist")
 const resolve = path.resolve.bind(null, dist)
 
-generate((file, contents, url) => {
-    const md = resolve("blog", url)
+;(async () => {
+    const {posts, feed} = await generate(true, async (file, post, page) => {
+        const html = resolve(post.url.slice(1)).replace(/\.md$/, ".html")
 
-    return pcall(mkdirp, path.dirname(md))
-    .then(() => pcall(fs.writeFile, md, contents, "utf-8"))
-})
-.then(data => {
-    const js = `posts=${JSON.stringify(data.posts)}`
-    const json = JSON.stringify({posts: data.posts})
-    const atom = data.feed.render("atom-1.0")
-    const rss = data.feed.render("rss-2.0")
+        await mkdirp(path.dirname(html))
+        await fs.writeFile(html, page, "utf-8")
+    })
 
-    return Promise.all([
-        pcall(fs.writeFile, resolve("blog-posts.js"), js, "utf-8"),
-        pcall(fs.writeFile, resolve("blog.json"), json, "utf-8"),
-        pcall(fs.writeFile, resolve("blog.atom.xml"), atom, "utf-8"),
-        pcall(fs.writeFile, resolve("blog.rss.xml"), rss, "utf-8"),
+    const atom = feed.render("atom-1.0")
+    const rss = feed.render("rss-2.0")
+    const html = generatePug(
+        path.resolve(__dirname, "../src/mixins/blog.pug"),
+        "/blog/index.html", true, {posts}
+    )
+
+    await Promise.all([
+        fs.writeFile(resolve("blog/index.html"), html, "utf-8"),
+        fs.writeFile(resolve("blog/atom.xml"), atom, "utf-8"),
+        fs.writeFile(resolve("blog/rss.xml"), rss, "utf-8"),
     ])
-})
-.catch(err => {
+})().catch(err => {
     console.error(err.stack)
     process.exit(1) // eslint-disable-line no-process-exit
 })

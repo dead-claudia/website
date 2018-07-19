@@ -5,8 +5,10 @@ const path = require("path")
 const express = require("express")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
+const {pipeline} = require("stream")
 
 const pugLocals = require("./pug-locals.js")
+const generatePug = require("./generate-pug.js")
 const generateBlog = require("./generate-blog-posts.js")
 
 const app = express()
@@ -34,54 +36,52 @@ app.use((req, res, next) => {
     return next()
 })
 
-const website = new express.Router({
-    strict: app.get("strict routing"),
-})
+// README.md, /mixins/, /*.ignore/, *.pug, .ignore.*
+app.get(
+    /\/README\.md|^\/mixins\/|\.pug|\.ignore[\/\.]/,
+    (req, res) => res.sendStatus(404))
 
-// /license.*, .mixin.{html,css}, .pug, .ignore.*
-website.get(
-    /^\/license[\/\.]|\.(mixin\.(html|css)|pug|ignore(\.[^\.]+))$/,
-    (req, res, next) => next({code: "ENOENT"}))
+function withBlog(render) {
+    return (req, res, next) =>
+        generateBlog(false).then(data => render(req, res, data)).catch(next)
+}
 
-website.get("*.html", (req, res) => {
-    const file = req.path.slice(1)
+const renderBlog = withBlog((req, res, data) =>
+    res.type("html").send(generatePug(
+        path.resolve(__dirname, "../src/mixins/blog.pug"),
+        req.path, false, {posts: data.posts}
+    ))
+)
 
-    return res.render(file.replace(/\.html$/, ".pug"), pugLocals(file, false))
-})
+app.get("/blog/atom.xml", withBlog((req, res, data) =>
+    res.type("xml").send(data.feed.render("atom-1.0"))))
 
-website.get("*.css", stylus.middleware({
+app.get("/blog/rss.xml", withBlog((req, res, data) =>
+    res.type("xml").send(data.feed.render("rss-2.0"))))
+
+app.get("/blog/index.html", renderBlog)
+
+app.get("/blog/*.html", withBlog((req, res, data) =>
+    // Slice off the initial `/blog/` in req.path
+    res.send(data.cache.get(req.path).rendered)))
+
+app.get("*.html", (req, res) => res.render(
+    req.path.replace(/\.html$/, ".pug").slice(1),
+    pugLocals(req.path, false)
+))
+
+app.get("*.css", stylus.middleware({
     src: path.resolve(__dirname, "../src"),
     // This'll be cleared when doing a full compilation, anyways.
     dest: path.resolve(__dirname, "../dist"),
     force: true,
     compile(str, path) {
         return stylus(str)
-        .set("filename", path)
-        .set("include css", true)
-        .use(autoprefixer())
+            .set("filename", path)
+            .set("include css", true)
+            .use(autoprefixer())
     },
 }))
-
-function getBlog(route, render) {
-    website.get(route, (req, res, next) =>
-        generateBlog().then(data => render(req, res, data)).catch(next)
-    )
-}
-
-getBlog("/blog.atom.xml", (req, res, data) =>
-    res.type("xml").send(data.feed.render("atom-1.0")))
-
-getBlog("/blog.rss.xml", (req, res, data) =>
-    res.type("xml").send(data.feed.render("rss-2.0")))
-
-getBlog("/blog.json", (req, res, data) => res.send({posts: data.posts}))
-
-getBlog("/blog-posts.js", (req, res, data) =>
-    res.type("js").send(`posts=${JSON.stringify(data.posts)}`))
-
-getBlog("/blog/*.md", (req, res, data) =>
-    // Slice off the initial `/blog/` in req.path
-    res.send(data.compiled[req.path.slice(6)]))
 
 const base = path.resolve(__dirname, "../src")
 
@@ -91,37 +91,45 @@ const read = root => (req, res, next) => {
     return fs.stat(file, (err, stat) => {
         if (err != null) return next(err)
         if (!stat.isFile()) return res.redirect(`${req.baseUrl}${req.path}/`)
-        return fs.createReadStream(file)
-        .on("error", next)
-        .pipe(res.type(path.basename(file)).status(200))
+        return pipeline(
+            fs.createReadStream(file),
+            res.type(path.basename(file)).status(200)
+        )
     })
 }
 
-website.get("*.css", read(path.resolve(__dirname, "../dist")))
-website.get("*.*", read(base))
+app.get("*.css", read(path.resolve(__dirname, "../dist")))
+app.get("*.*", read(base))
 
-website.get("/", (req, res) =>
-    res.render("index.pug", pugLocals("index.html", false)))
+// Wait until *after* everything is parsed before addressing the default route.
+app.get("/blog/", renderBlog)
 
-website.get("*", (req, res, next) => {
-    const file = path.resolve(base, req.path.slice(1))
+app.get("/", (req, res) =>
+    res.render("index.pug", pugLocals("/index.html", false)))
+
+app.get("*/", (req, res, next) => {
+    const name = req.path.replace(/\/{2,}/g, "/").slice(0, -1)
+    const file = path.resolve(base, name.slice(1))
 
     return fs.stat(file, (err, stat) => {
         if (err != null) return next(err)
         if (stat.isFile()) return next({code: "ENOENT"})
-        const file = `${req.baseUrl}${req.path}/index`
 
-        return res.render(`${file}.jade`, pugLocals(`${file}.html`, false))
+        return res.render(
+            `${name.slice(1)}/index.pug`,
+            pugLocals(`${name}/index.html`, false)
+        )
     })
 })
 
-app.use("/website", website)
-
 app.use("*", (req, res) => res.sendStatus(404))
 app.use("*", (err, req, res, next) => {
-    if (err == null || err.code !== "ENOENT") return next(err)
-    return res.sendStatus(404)
+    if (err != null && (err.code === "ENOENT" || err.view != null)) {
+        return res.sendStatus(404)
+    } else {
+        return next(err)
+    }
 })
 
 app.listen(8080, () =>
-    console.log("Server ready at http://localhost:8080/website"))
+    console.log("Server ready at http://localhost:8080"))

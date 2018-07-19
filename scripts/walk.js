@@ -4,20 +4,39 @@ if (require.main === module) {
     throw new Error("This isn't a runnable script!")
 }
 
-const fs = require("fs")
-const path = require("path")
-const pcall = require("./promise.js")
+const {Glob} = require("glob")
 
-module.exports = function walk(dir, ignore) {
-    return pcall(fs.readdir, dir)
-    .then(files => files.filter(file => !ignore || !ignore(file)))
-    .then(files => files.map(file => path.join(dir, file)))
-    .then(files => Promise.all(files.map(file => {
-        return pcall(fs.stat, file).then(stat => {
-            if (stat.isDirectory()) return walk(file, ignore)
-            if (stat.isFile()) return [file]
-            return []
+module.exports = (glob, opts, func) => {
+    if (typeof opts === "function") {
+        func = opts
+        opts = undefined
+    }
+    if (opts == null) opts = {}
+    opts.nodir = true
+
+    return new Promise((resolve, reject) => {
+        const inst = new Glob(glob, opts)
+        let active = 1
+
+        function advance() {
+            if (active === 0) return
+            active--
+            if (active === 0) resolve()
+        }
+
+        function fail(e) {
+            if (active === 0) return
+            active = 0
+            reject(e)
+            inst.abort()
+        }
+
+        inst.on(opts.stat ? "stat" : "match", (...args) => {
+            active++
+            new Promise(resolve => resolve(func(...args))).then(advance, fail)
         })
-    })))
-    .then(files => [].concat.apply([], files))
+
+        inst.on("error", fail)
+        inst.on("end", advance)
+    })
 }
