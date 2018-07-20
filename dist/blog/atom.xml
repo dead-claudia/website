@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://isiahmeadows.com/blog/</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2018-07-20T10:41:19Z</updated>
+    <updated>2018-07-20T10:53:51Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -75,6 +75,15 @@
         <published>2017-06-02T23:00:00Z</published>
     </entry>
     <entry>
+        <title type="html"><![CDATA[ES6 is functional, imperative, and OO]]></title>
+        <id>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</id>
+        <link href="http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html">
+        </link>
+        <updated>2014-11-08T23:00:00Z</updated>
+        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
+        <published>2014-11-08T23:00:00Z</published>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[Tape === awesome]]></title>
         <id>http://isiahmeadows.com/blog/tape-awesome.html</id>
         <link href="http://isiahmeadows.com/blog/tape-awesome.html">
@@ -100,14 +109,5 @@
         <updated>2016-01-15T23:00:00Z</updated>
         <summary type="html"><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></summary>
         <published>2016-01-15T23:00:00Z</published>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[ES6 is functional, imperative, and OO]]></title>
-        <id>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</id>
-        <link href="http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html">
-        </link>
-        <updated>2014-11-08T23:00:00Z</updated>
-        <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
-        <published>2014-11-08T23:00:00Z</published>
     </entry>
 </feed>

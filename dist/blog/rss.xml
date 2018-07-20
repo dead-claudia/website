@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>http://isiahmeadows.com/blog/</link>
-        <lastBuildDate>Fri, 20 Jul 2018 10:41:19 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 20 Jul 2018 10:53:51 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2013-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -55,6 +55,13 @@
             <description><![CDATA[Considering my site really needed some work (going into independent consulting), I've complete redone about a third of the content here. For one, my open source showcase is]]></description>
         </item>
         <item>
+            <title><![CDATA[ES6 is functional, imperative, and OO]]></title>
+            <link>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</link>
+            <guid>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</guid>
+            <pubDate>Sat, 08 Nov 2014 23:00:00 GMT</pubDate>
+            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></description>
+        </item>
+        <item>
             <title><![CDATA[Tape === awesome]]></title>
             <link>http://isiahmeadows.com/blog/tape-awesome.html</link>
             <guid>http://isiahmeadows.com/blog/tape-awesome.html</guid>
@@ -74,13 +81,6 @@
             <guid>http://isiahmeadows.com/blog/welcome-to-my-new-site.html</guid>
             <pubDate>Fri, 15 Jan 2016 23:00:00 GMT</pubDate>
             <description><![CDATA[Welcome to my new site! Yes, I've finally got my own domain as well as website running. Things new that didn't exist a month ago: 1. I have a website that's more than merely a]]></description>
-        </item>
-        <item>
-            <title><![CDATA[ES6 is functional, imperative, and OO]]></title>
-            <link>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</link>
-            <guid>http://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</guid>
-            <pubDate>Sat, 08 Nov 2014 23:00:00 GMT</pubDate>
-            <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></description>
         </item>
     </channel>
 </rss>
