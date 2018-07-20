@@ -1,40 +1,39 @@
 include ../mixins/page.pug
 include ../mixins/cc-by-4.pug
 
-mixin song(href)
-    li: a(href="/music/songs/" + href)
-        block
-
 +page("Music")
     .intro
         p.
-            Although I don't have as much time to create music as I used to, I
-            have always enjoyed both playing music and creating it. My
-            compositions range from very classically inspired pieces I created
-            as far back as late middle school to darker modern classical piano
-            solos and a single electronic song created very early college. I
-            still enjoy improvising on my piano on frequent occasion, even
-            though I sadly don't have as much time to compose. Most of what my
-            more recent creations now are a mixture of piano solos and
-            electronic music, but most of my earlier pieces are closer to modern
-            classical with some film influences. Admittedly, these pieces are
-            probably not too spectacular, but they're here, just in case you're
-            curious. #[img.wink(src="/images/wink.png" alt="winking face")]
+            I don't have nearly the time to devote to creating music that I used
+            to, thanks to college and then work. But when I did, my compositions
+            varied anywhere from classically inspired to electronic to more
+            contemporary. All these pieces below were created from late middle
+            school to very early college, which is about when I stopped. The
+            songs started out a bit lighter, but got more dramatic and darker as
+            I matured both as a person and as a composer. I still occasionally
+            enjoy improvising on the keyboard, but even that time is becoming
+            limited. But just as a heads up, these pieces are probably not the
+            best in the world, so do keep that in mind - I created most of them
+            in middle and high school, after all. I also don't have recordings
+            of any of my sheet music, just computer-generated audio for some of
+            them. (I was always skittish about being recorded while playing
+            keyboard, but some of them are broader than even that.)
 
         p.
-            I explained my inspiration and/or relevant background on many of the
-            pieces I created, for your reading pleasure, and to give an idea why
-            it may seem a certain way or have a certain mood.
+            In some of the pieces, I detailed my inspiration for writing them,
+            for your reading pleasure and to explain why some of them might have
+            certain moods.
 
         p.
-            Please note that some programs erroneously associate artwork with my
-            pieces. That is purely the work of those programs, not me, so you
-            can feel free to ignore it.
+            Oh, and one last thing: some music programs like to associate
+            artwork with some of my songs - that's not my fault, it's a bug in
+            your music player. I didn't assign artwork to any of them, so feel
+            free to just ignore them.
 
     .license: +cc-by-4
 
     ul
-        +song("funeral-of-stress.html") Funeral of Stress
+        li: a(href="/music/songs/funeral-of-stress.html") Funeral of Stress
 
         //- Little nit
         li
@@ -44,18 +43,18 @@ mixin song(href)
 
         li.divider
 
-        +song("a-day-at-the-theme-park.html") A Day at the Theme Park
-        +song("a-normal-day.html") A Normal Day
-        +song("a-tribute-to-hymns.html") A Tribute to Hymns
-        +song("aurora.html") Aurora
-        +song("hunger-games-symphony.html") Hunger Games Symphony
-        +song("journey.html") Journey
-        +song("rebellion.html") Rebellion
-        +song("servants-lament.html") Servant's Lament
-        +song("sweet-dreams.html") Sweet Dreams
-        +song("the-lost.html") The Lost
-        +song("the-time-is-coming.html") The Time is Coming
-        +song("untitled-piece-for-vibes.html") Untitled Piece for Vibes
-        +song("wants-of-life.html") Wants of Life
-        +song("water.html") Water
-        +song("wizard-battle.html") Wizard Battle
+        li: a(href="/music/songs/a-day-at-the-theme-park.html") A Day at the Theme Park
+        li: a(href="/music/songs/a-normal-day.html") A Normal Day
+        li: a(href="/music/songs/a-tribute-to-hymns.html") A Tribute to Hymns
+        li: a(href="/music/songs/aurora.html") Aurora
+        li: a(href="/music/songs/hunger-games-symphony.html") Hunger Games Symphony
+        li: a(href="/music/songs/journey.html") Journey
+        li: a(href="/music/songs/rebellion.html") Rebellion
+        li: a(href="/music/songs/servants-lament.html") Servant's Lament
+        li: a(href="/music/songs/sweet-dreams.html") Sweet Dreams
+        li: a(href="/music/songs/the-lost.html") The Lost
+        li: a(href="/music/songs/the-time-is-coming.html") The Time is Coming
+        li: a(href="/music/songs/untitled-piece-for-vibes.html") Untitled Piece for Vibes
+        li: a(href="/music/songs/wants-of-life.html") Wants of Life
+        li: a(href="/music/songs/water.html") Water
+        li: a(href="/music/songs/wizard-battle.html") Wizard Battle
