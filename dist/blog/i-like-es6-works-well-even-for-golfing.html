@@ -11,8 +11,7 @@
 }
 
 <span class=hljs-comment>// ES6 arrow function</span>
-<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> n &gt; <span class=hljs-number>0</span> ? n * fact(n - <span class=hljs-number>1</span>) : <span class=hljs-number>1</span>;
-</code></pre>
+<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> n &gt; <span class=hljs-number>0</span> ? n * fact(n - <span class=hljs-number>1</span>) : <span class=hljs-number>1</span>;</code></pre>
 <p>But, I find this hack fairly cool: it basically <del>abuses</del>takes enormous advantage of precedence and how logic statements work in ECMAScript. The hack assumes integer input.</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// Function declaration</span>
 <span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>fact</span>(<span class=hljs-params>n</span>) </span>{
@@ -20,8 +19,7 @@
 }
 
 <span class=hljs-comment>// ES6 arrow function</span>
-<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> +(n &lt; <span class=hljs-number>1</span>) || n * fact(n - <span class=hljs-number>1</span>);
-</code></pre>
+<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> +(n &lt; <span class=hljs-number>1</span>) || n * fact(n - <span class=hljs-number>1</span>);</code></pre>
 <p>The hack version also takes advantage of an implicit boolean-to-integer cast, which is usually much shorter than a conditional. Code golfing is a little fun for these kinds of hacks, so let&#39;s compare a golfed C/C++ version to this ECMAScript hack unminified (using the ES6 versions):</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// Golfed C/C++</span>
 int f(int n){int r=<span class=hljs-number>1</span>;<span class=hljs-keyword>while</span>(n--)r*=n;<span class=hljs-keyword>return</span> r;}
@@ -30,8 +28,7 @@ int f(int n){int r=<span class=hljs-number>1</span>;<span class=hljs-keyword>whi
 <span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> +(n &lt; <span class=hljs-number>1</span>) || n * fact(n - <span class=hljs-number>1</span>);
 
 <span class=hljs-comment>// Unminified function declaration</span>
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>fact</span>(<span class=hljs-params>n</span>) </span>{ <span class=hljs-keyword>return</span> +(n &lt; <span class=hljs-number>1</span>) || n * fact(n - <span class=hljs-number>1</span>); }
-</code></pre>
+<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>fact</span>(<span class=hljs-params>n</span>) </span>{ <span class=hljs-keyword>return</span> +(n &lt; <span class=hljs-number>1</span>) || n * fact(n - <span class=hljs-number>1</span>); }</code></pre>
 <p>And minified:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// C/C++</span>
 int f(int n){int r=<span class=hljs-number>1</span>;<span class=hljs-keyword>while</span>(n--)r*=n;<span class=hljs-keyword>return</span> r;}
@@ -40,8 +37,7 @@ int f(int n){int r=<span class=hljs-number>1</span>;<span class=hljs-keyword>whi
 <span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>f</span>(<span class=hljs-params>n</span>)</span>{<span class=hljs-keyword>return</span> +(n&lt;=<span class=hljs-number>0</span>)||n*f(n<span class=hljs-number>-1</span>)}
 
 <span class=hljs-comment>// Minified ES6</span>
-<span class=hljs-keyword>let</span> f=<span class=hljs-function><span class=hljs-params>n</span>=&gt;</span>+(n&lt;<span class=hljs-number>1</span>)||n*f(n<span class=hljs-number>-1</span>);
-</code></pre>
+<span class=hljs-keyword>let</span> f=<span class=hljs-function><span class=hljs-params>n</span>=&gt;</span>+(n&lt;<span class=hljs-number>1</span>)||n*f(n<span class=hljs-number>-1</span>);</code></pre>
 <p>Here&#39;s an explanation of the hack, comments inline:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// This would probably work in Netscape.</span>
 <span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>fact</span>(<span class=hljs-params>n</span>) </span>{
@@ -50,15 +46,13 @@ int f(int n){int r=<span class=hljs-number>1</span>;<span class=hljs-keyword>whi
                     <span class=hljs-comment>// the right side.</span>
             ||      <span class=hljs-comment>// If falsy, evaluate and return the next part.</span>
             n * fact(n - <span class=hljs-number>1</span>); <span class=hljs-comment>// Standard recursion</span>
-}
-</code></pre>
+}</code></pre>
 <p>Here&#39;s the function without comments again:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>fact</span>(<span class=hljs-params>n</span>) </span>{
     <span class=hljs-keyword>return</span> +(n &lt;= <span class=hljs-number>0</span>) || n * fact(n - <span class=hljs-number>1</span>);
 }
 
-<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> +(n &lt;= <span class=hljs-number>0</span>) || n * fact(n - <span class=hljs-number>1</span>);
-</code></pre>
+<span class=hljs-keyword>let</span> fact = <span class=hljs-function><span class=hljs-params>n</span> =&gt;</span> +(n &lt;= <span class=hljs-number>0</span>) || n * fact(n - <span class=hljs-number>1</span>);</code></pre>
 <p>You&#39;ll never beat assembly in speed, though... (this is written for x86 using NASM syntax)</p>
 <pre><code class="hljs hljs-x86asm"><span class=hljs-comment>; And almost in size...this is surprisingly short. Uses the cdecl calling</span>
 <span class=hljs-comment>; convention.</span>
@@ -68,8 +62,7 @@ fact
 <span class=hljs-symbol>.fact:</span>
     <span class=hljs-keyword>mul</span> <span class=hljs-built_in>ecx</span>
     <span class=hljs-keyword>loop</span> .fact
-    <span class=hljs-keyword>ret</span>
-</code></pre>
+    <span class=hljs-keyword>ret</span></code></pre>
 </div><div class=post-footer><a class=post-home href=/blog/ >Home ►</a><div class=post-tags><span>Tags:</span><a class=post-tag data-tag=javascript href=/blog/#javascript>javascript</a><a class=post-tag data-tag=entertainment href=/blog/#entertainment>entertainment</a></div></div></div></div></div></div></div></div><div id=license><div><footer><small><p>This site does use Google Analytics for basic tracking (IP addresses anonymized), and a few third parties collect a few cookies their own, like GitHub and some of the creators of the widgets in the <a href=/about/ >About</a>
 page's widgets. If you don't consent to these, either stop using this site or just block them in some way, like with a firewall or with a blocker like
 <a href=https://adblockplus.org/ >Adblock Plus</a>,

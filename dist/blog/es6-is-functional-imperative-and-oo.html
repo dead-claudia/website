@@ -9,15 +9,13 @@
 <span class=hljs-keyword>let</span> f3 = <span class=hljs-function><span class=hljs-params>()</span> =&gt;</span> doSomething();
 
 <span class=hljs-keyword>let</span> identity = <span class=hljs-function><span class=hljs-params>x</span> =&gt;</span> x;
-<span class=hljs-keyword>let</span> noop = <span class=hljs-function><span class=hljs-params>()</span> =&gt;</span> {};
-</code></pre>
+<span class=hljs-keyword>let</span> noop = <span class=hljs-function><span class=hljs-params>()</span> =&gt;</span> {};</code></pre>
 <p>This is generally considered functional, but combine it with <code>Array.prototype.map</code> or <code>Array.prototype.reduce</code>, and it&#39;ll start really looking more functional:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// generically</span>
 <span class=hljs-keyword>let</span> doubleGeneric = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> <span class=hljs-built_in>Array</span>.prototype.map.call(xs, x =&gt; x*<span class=hljs-number>2</span>);
 <span class=hljs-keyword>let</span> doubleArray = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> xs.map(<span class=hljs-function><span class=hljs-params>x</span> =&gt;</span> x*<span class=hljs-number>2</span>);
 
-<span class=hljs-keyword>let</span> sum = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> xs.reduce(<span class=hljs-function>(<span class=hljs-params>x, y</span>) =&gt;</span> x+y);
-</code></pre>
+<span class=hljs-keyword>let</span> sum = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> xs.reduce(<span class=hljs-function>(<span class=hljs-params>x, y</span>) =&gt;</span> x+y);</code></pre>
 <p>As you might have already noticed in the above examples, some of the <code>Array.prototype</code> methods are more generic as well.</p>
 <p>Also, the two Underscore methods map and each could become a lot simpler to write:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span>* <span class=hljs-title>range</span>(<span class=hljs-params>n</span>) </span>{
@@ -36,12 +34,10 @@
     <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> i <span class=hljs-keyword>of</span> range(x)) {
         fn(xs[i], i);
     }
-};
-</code></pre>
+};</code></pre>
 <p>You could always use Array.from in each of these cases as well, making them far smaller and a little more functional (albeit a little slower):</p>
 <pre><code class="hljs hljs-js"><span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> map = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> <span class=hljs-built_in>Array</span>.from(xs).map(fn);
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> each = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> <span class=hljs-built_in>Array</span>.from(xs).each(fn);
-</code></pre>
+<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> each = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> <span class=hljs-built_in>Array</span>.from(xs).each(fn);</code></pre>
 <p>There are also Promises, already known to be monads, and they&#39;re now in the standard library. It is easy to make a promisifying function for Node-style callbacks:</p>
 <pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>promisify</span>(<span class=hljs-params>fn</span>) </span>{
     <span class=hljs-keyword>return</span> <span class=hljs-function>(<span class=hljs-params>...args</span>) =&gt;</span> <span class=hljs-keyword>new</span> <span class=hljs-built_in>Promise</span>(<span class=hljs-function>(<span class=hljs-params>resolve, reject</span>) =&gt;</span>
@@ -57,8 +53,7 @@
 
 readFile(<span class=hljs-string>'foo.txt'</span>)
     .then(<span class=hljs-function><span class=hljs-params>data</span> =&gt;</span> doSomething(data))
-    .catch(<span class=hljs-function><span class=hljs-params>err</span> =&gt;</span> <span class=hljs-built_in>console</span>.error(err));
-</code></pre>
+    .catch(<span class=hljs-function><span class=hljs-params>err</span> =&gt;</span> <span class=hljs-built_in>console</span>.error(err));</code></pre>
 <p>There are also generators, which are lazy, while Arrays are eager. You can write equivalents to most Array.prototype methods easily for generators.</p>
 <pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span>* <span class=hljs-title>map</span>(<span class=hljs-params>gen, fn</span>) </span>{
     <span class=hljs-keyword>let</span> i = <span class=hljs-number>0</span>;
@@ -98,13 +93,11 @@ readFile(<span class=hljs-string>'foo.txt'</span>)
     }
 }
 
-<span class=hljs-comment>// etc...</span>
-</code></pre>
+<span class=hljs-comment>// etc...</span></code></pre>
 <p>I can&#39;t end this section properly without at least mentioning the new Array methods:</p>
 <ul>
 <li><p><code>[].copyWithin(target, start, end = this.length)</code> ‒ Copies entries in-place from the range <code>start</code> to <code>end</code> to the range of same length starting at <code>target</code>. Example:</p>
-<pre><code class="hljs hljs-js">[<span class=hljs-number>1</span>, <span class=hljs-number>2</span>, <span class=hljs-number>3</span>, <span class=hljs-number>4</span>, <span class=hljs-number>5</span>].copyWithin(<span class=hljs-number>0</span>, <span class=hljs-number>3</span>) <span class=hljs-comment>//=&gt; [4, 5, 1, 2, 3]</span>
-</code></pre>
+<pre><code class="hljs hljs-js">[<span class=hljs-number>1</span>, <span class=hljs-number>2</span>, <span class=hljs-number>3</span>, <span class=hljs-number>4</span>, <span class=hljs-number>5</span>].copyWithin(<span class=hljs-number>0</span>, <span class=hljs-number>3</span>) <span class=hljs-comment>//=&gt; [4, 5, 1, 2, 3]</span></code></pre>
 </li>
 <li><p><code>[].entries()</code> ‒ Returns an iterator (like a generator) for the array.</p>
 </li>
@@ -140,8 +133,7 @@ readFile(<span class=hljs-string>'foo.txt'</span>)
 
 <span class=hljs-keyword>let</span> bar = <span class=hljs-keyword>new</span> Bar(<span class=hljs-number>1</span>, <span class=hljs-number>3</span>);
 bar.sayBar(); <span class=hljs-comment>// prints '3' to console</span>
-bar.x; <span class=hljs-comment>// 1</span>
-</code></pre>
+bar.x; <span class=hljs-comment>// 1</span></code></pre>
 <p>But, the new syntax also builds on JavaScript&#39;s object-oriented nature substantially. Now, there are also static methods you can add to classes, and it is easier to extend classes (like above), so ES6 classes are a lot more declarative, clear, and concise. You can even subclass builtins now.</p>
 <pre><code class="hljs hljs-js"><span class=hljs-class><span class=hljs-keyword>class</span> <span class=hljs-title>Baz</span> <span class=hljs-keyword>extends</span> <span class=hljs-title>Foo</span> </span>{
     <span class=hljs-keyword>static</span> <span class=hljs-keyword>from</span>(obj) {
@@ -155,8 +147,7 @@ bar.x; <span class=hljs-comment>// 1</span>
         <span class=hljs-keyword>super</span>(...args);
         <span class=hljs-keyword>this</span>.prop = prop;
     }
-}
-</code></pre>
+}</code></pre>
 <h2 id=conclusion>Conclusion</h2>
 <p>ES6 will add to the confusion of what JavaScript really is, albeit in an awesome way. There are three primary categories people typically try to lump JavaScript into, and they&#39;re all (mostly) right:</p>
 <ul>

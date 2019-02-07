@@ -22,8 +22,7 @@ t.test(<span class=hljs-string>'Array'</span>, t =&gt; {
         t.equal(<span class=hljs-number>-1</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>5</span>), <span class=hljs-string>'returns -1 when the value is not present'</span>)
         t.equal(<span class=hljs-number>2</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>3</span>), <span class=hljs-string>'returns the index when the value is present'</span>)
     })
-})
-</code></pre>
+})</code></pre>
 <p>Also, if you&#39;re dealing with asynchronous code, it&#39;s just as easy.</p>
 <pre><code class="hljs hljs-js"><span class=hljs-comment>// Mocha</span>
 describe(<span class=hljs-string>'User'</span>, () =&gt; {
@@ -45,8 +44,7 @@ t.test(<span class=hljs-string>'User'</span>, t =&gt; {
             user.save(<span class=hljs-function><span class=hljs-params>err</span> =&gt;</span> t.end(err))
         })
     })
-})
-</code></pre>
+})</code></pre>
 <p>The beauty of all of this is that it&#39;s so simple. You also don&#39;t have any global pollution. The tape tests can be run with node test.js. The tape command line runner does this very thing; it just runs the directory recursively when given one. And as for pretty output, <a href=https://www.npmjs.com/package/tape#pretty-reporters>there&#39;s a lot of tools out there</a> that only need piped into. If you like the output of a C program that accepts it from stdin, you can use that reporter as well. No opinions needed.</p>
 </div><div class=post-footer><a class=post-home href=/blog/ >Home ►</a><div class=post-tags><span>Tags:</span><a class=post-tag data-tag=tape href=/blog/#tape>tape</a><a class=post-tag data-tag=testing href=/blog/#testing>testing</a><a class=post-tag data-tag=javascript href=/blog/#javascript>javascript</a></div></div></div></div></div></div></div></div><div id=license><div><footer><small><p>This site does use Google Analytics for basic tracking (IP addresses anonymized), and a few third parties collect a few cookies their own, like GitHub and some of the creators of the widgets in the <a href=/about/ >About</a>
 page's widgets. If you don't consent to these, either stop using this site or just block them in some way, like with a firewall or with a blocker like

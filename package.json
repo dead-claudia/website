@@ -5,7 +5,7 @@
   "description": "My personal website",
   "main": "index.js",
   "scripts": {
-    "compile": "node make",
+    "build": "node make",
     "server": "node server"
   },
   "repository": {
@@ -26,7 +26,7 @@
     "highlight.js": "^9.12.0",
     "html-minifier": "^1.1.1",
     "js-yaml": "^3.5.1",
-    "marked": "^0.3.5",
+    "marked": "^0.6.0",
     "mkdirp": "^0.5.1",
     "morgan": "^1.6.1",
     "normalize.css": "^7.0.0",
