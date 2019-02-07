@@ -22,6 +22,10 @@ These are all the client files. And a simple guide to my code structure:
 
   This contains the stylesheet for code run through [Highlight.js][hljs].
 
+- templates/
+
+  These are the templates used for various programmatically generated pages that require extra data specific to the page to generate. Currently, this includes my songs and my blog.
+
 - *page-name*.pug, *page-name*.styl, *page-name*.js
 
   The rest of the site is separated into components like these. Not all pages have all of these (e.g. most do not use a single line of JavaScript apart from tracking), but this is merely for consistency and ease of knowing where to look when problems come up.

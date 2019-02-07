@@ -19,12 +19,10 @@ const outfile = process.argv[3].replace(/\.styl$/, ".css")
         "use": [autoprefixer({browsers: ["last 2 versions", "> 5%"]})],
         "define": {url: stylus.resolver()},
     })
-    const output = await new Promise(resolve => {
-        return new CleanCss({
-            processImport: false,
-            roundingPrecision: -1,
-        }).minify(res, (_, output) => resolve(output))
-    })
+    const output = await new CleanCss({
+        compatibility: "ie9",
+        returnPromise: true,
+    }).minify(res)
 
     output.errors.forEach(message => {
         console.error(`\x1B[31mERROR\x1B[39m: ${message}`)

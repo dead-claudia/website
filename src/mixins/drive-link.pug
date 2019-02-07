@@ -1,0 +1,4 @@
+mixin drive-link(id)
+    - var url = `https://drive.google.com/uc?id=${id}`
+    - if (/\bdownload\b/.test(attributes.class)) url += "&export=download"
+    a(href=url): block

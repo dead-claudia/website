@@ -9,7 +9,7 @@ const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.pug$/, ".html")
 const name = process.argv[4]
 
-const generatePug = require("./generate-pug")
+const generatePug = require("../generators/pug")
 
 const FILE = `/${
     name

@@ -9,13 +9,14 @@ const path = require("path")
 const yaml = require("js-yaml")
 const Feed = require("feed")
 
-const compileMarkdown = require("./compile-markdown")
-const compilePreview = require("./compile-markdown-preview.js")
-const generatePug = require("./generate-pug")
-const walk = require("./walk")
+const compileMarkdown = require("../compile-markdown")
+const generatePug = require("./pug")
+const util = require("../util")
 
-const postDir = path.resolve(__dirname, "../blog")
-const postTemplate = path.resolve(__dirname, "../src/mixins/blog-template.pug")
+const postDir = path.resolve(__dirname, "../../blog")
+const postTemplate = path.resolve(
+    __dirname, "../../src/templates/blog-post.pug"
+)
 
 const idsFile = path.resolve(postDir, "blog-ids.yml")
 const idsList = yaml.safeLoad(require("fs").readFileSync(idsFile, "utf-8"), {
@@ -25,7 +26,8 @@ const fileIdCache = new Map(Object.keys(idsList).map(id => [idsList[id], +id]))
 let nextId = Math.max(fileIdCache.values()) + 1
 
 // Splits the given string into a meta section and a markdown section.
-async function splitInput(file) {
+async function splitInput(name) {
+    const file = path.resolve(postDir, name)
     const markdown = await fs.readFile(file, "utf-8")
 
     if (markdown.slice(0, 3) === "---") {
@@ -49,8 +51,10 @@ async function splitInput(file) {
 
             return {
                 file, meta,
-                preview: compilePreview(raw),
-                raw: compileMarkdown(path.posix.relative(postDir, file), raw),
+                preview: compileMarkdown.preview(raw),
+                raw: compileMarkdown.html(
+                    path.posix.relative(postDir, file), raw
+                ),
             }
         }
     }
@@ -70,13 +74,13 @@ module.exports = async (minified, write) => {
     const feed = new Feed({
         title: "Isiah Meadows' blog",
         description: "My personal blog",
-        id: "http://isiahmeadows.com/blog/",
-        link: "http://isiahmeadows.com/blog/",
+        id: "https://isiahmeadows.com/blog/",
+        link: "https://isiahmeadows.com/blog/",
         copyright: "Some rights reserved 2013-present, Isiah Meadows.",
         author: {
             name: "Isiah Meadows",
             email: "me@isiahmeadows.com",
-            link: "http://isiahmeadows.com/",
+            link: "https://isiahmeadows.com/",
         },
     })
 
@@ -87,13 +91,12 @@ module.exports = async (minified, write) => {
 
     const posts = []
 
-    await walk("**/*.md", {
+    await util.walk("**/*.md", {
         cwd: postDir,
         root: postDir,
-        ignore: ["**/README.md"],
+        ignore: ["**/README.md", "**/_drafts/**"],
         stat: true,
     }, async (name, stat) => {
-        const file = path.resolve(postDir, name)
         const url = `/blog/${name.replace(/\.md$/, ".html")}`
 
         if (!fileIdCache.has(name)) {
@@ -118,7 +121,7 @@ module.exports = async (minified, write) => {
         if (entry.mtime !== 0 && entry.mtime <= stat.mtime) {
             post = entry.post
         } else {
-            const {raw, meta, preview} = await splitInput(file)
+            const {raw, meta, preview} = await splitInput(name)
 
             post = {
                 date: meta.date,
@@ -133,17 +136,17 @@ module.exports = async (minified, write) => {
             entry.compiled = raw
             entry.rendered = html
             entry.mtime = stat.mtime
-            if (write) await write(file, post, html)
+            if (write) await write(post, html)
         }
 
         posts.push(post)
         feed.addItem({
             title: post.title,
-            id: fileIdCache.get(file),
+            id: fileIdCache.get(name),
             description: post.preview,
             date: post.date,
             published: post.date,
-            link: `http://isiahmeadows.com${url}`,
+            link: `https://isiahmeadows.com${url}`,
         })
     })
 

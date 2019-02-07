@@ -1,0 +1,147 @@
+# Song properties:
+# page-name:
+#   title: "name of song"
+#   download: "<download-id>"
+#   audio: "<audio-id>"
+#   preview: "<preview-id>"
+#   license: "by-nc/4.0"
+#   recording: true # if the audio is an actual recording
+#
+# Notes:
+# - Share URLs are of the following format:
+#   https://drive.google.com/file/d/<file-id>/edit?usp=sharing
+#
+# - Export URLs are of the following format:
+#   https://drive.google.com/uc?export=download&id=<file-id>
+#
+# This accepts the `file-id` of each, and you provide *that*, not the share
+# URL.
+# Of all of these, only `title`, `download`, and `preview` are required
+
+a-day-at-the-theme-park:
+    title: "A Day at the Theme Park"
+    download: "0B02h60r9WvJrcUk4U1pxaHF6aWs"
+    audio: "0B02h60r9WvJrNTdOQmI3UEJBSnM"
+    preview: "0B02h60r9WvJrbWNtbWlIVVkyQlk"
+    license: "by-nc/3.0/us"
+    description: >
+        This was one of the first pieces I ever made. I created this back in
+        middle school, although I have personally never played either part in
+        its entirety. When I first wrote this duet, both parts of it were just
+        barely within my technical ability.
+
+        My inspiration was from my memories from going to
+        [Cedar Point](https://www.cedarpoint.com/) as a young child, when I was
+        about 7-9 years old. I missed going there then, and I still wish I could
+        get a chance to go now, just to relive some of the best parts of my
+        childhood.
+
+a-normal-day:
+    title: "A Normal Day"
+    download: "0B02h60r9WvJrMUc3Qjh4ajJlXzA"
+    audio: "0B02h60r9WvJrbUpKaG9KaUo1S2s"
+    preview: "0B02h60r9WvJrYmZVRG0yZHdWemc"
+    license: "by-nc/3.0/us"
+
+a-tribute-to-hymns:
+    title: "A Tribute to Hymns"
+    download: "0B02h60r9WvJrVHN4UHNtaGtvVVk"
+    preview: "0B02h60r9WvJrSWZqTkpqMEVIN1E"
+    license: "by-nc/3.0/us"
+
+aurora:
+    title: "Aurora"
+    download: "0B02h60r9WvJrcXdEM0toOHc0N28"
+    preview: "0B02h60r9WvJrVUlkNTlxUmNSdlU"
+    license: "by-nc/3.0/us"
+
+funeral-of-stress:
+    title: "Funeral of Stress"
+    download: "0B02h60r9WvJrR1o3Q3RkOFVILTQ"
+    preview: "0B02h60r9WvJrdm5QUUF5Mi0wMVE"
+    license: "by-sa/4.0"
+    description: >
+        I wrote this piece during my senior year of high school, in a time where
+        I was having trouble coping with the stress. I had myself taken off my
+        medication, but I increasingly had issues coping with everything going
+        on around me, effectively regressing to how I was before I was put on
+        it. This piece came from how I felt in that stage of my life.
+
+hunger-games-symphony:
+    title: "Hunger Games Symphony"
+    download: "0B02h60r9WvJrN3ZSRGU5V00wVDQ"
+    audio: "0B02h60r9WvJrWUN3bHM4UjBTbjQ"
+    preview: "0B02h60r9WvJrWmdDRXRkcWRPOTQ"
+    license: "by-nc/3.0/us"
+    description: >
+        This is a 3-part instrumental symphony, inspired by the Hunger Games
+        book series. This was actually written well before the movies came out,
+        as part of a creative class assignment. (There were other options as
+        well, but I couldn't resist *writing music* for a school assignment.)
+
+journey:
+    title: "Journey"
+    download: "0B02h60r9WvJrN2dXRE9jOU9BWG8"
+    audio: "0B02h60r9WvJrcmREV0dGYmlCdVE"
+    preview: "0B02h60r9WvJraGpXb09qb0wyVWc"
+    license: "by-nc/3.0/us"
+
+rebellion:
+    title: "Rebellion"
+    download: "0B02h60r9WvJra20wLVh6QjhINTA"
+    audio: "0B02h60r9WvJrTnZEX3QtNzIydHM"
+    preview: "0B02h60r9WvJrS292QnlqTFpUWUU"
+    license: "by-nc/3.0/us"
+
+servants-lament:
+    title: "Servant's Lament"
+    download: "0B02h60r9WvJrZ1RrM2lSbEpGTGc"
+    audio: "0B02h60r9WvJrN2JCMTRCdldFcjA"
+    preview: "0B02h60r9WvJrYmFUTmhiVDlZT3c"
+    license: "by-nc/3.0/us"
+
+sweet-dreams:
+    title: "Sweet Dreams"
+    download: "0B02h60r9WvJrUjJMdnQyTDBzUHc"
+    preview: "0B02h60r9WvJrUXEwSWwxM2thdlU"
+    license: "by-nc/3.0/us"
+
+the-lost:
+    title: "The Lost"
+    download: "0B02h60r9WvJrck5DY2NRLVlQNGM"
+    audio: "0B02h60r9WvJrNTVKdV9FdVE5Q2s"
+    preview: "0B02h60r9WvJrTUtPcUFVa21ZUU0"
+    license: "by-nc/3.0/us"
+
+the-time-is-coming:
+    title: "The Time is Coming"
+    download: "0B02h60r9WvJrSGxNYVVqeGp4ZzQ"
+    preview: "0B02h60r9WvJrcjBId3Q1YldvV00"
+    license: "by-nc/3.0/us"
+
+untitled-piece-for-vibes:
+    title: "Untitled Piece for Vibes"
+    download: "0B02h60r9WvJrbDNaMWtJYjZDNFE"
+    preview: "0B02h60r9WvJrTjZRRFRaNGxXbDA"
+    license: "by-nc/3.0/us"
+
+wants-of-life:
+    title: "Wants of Life"
+    download: "0B02h60r9WvJrUTFyRmZXaEtxNHc"
+    audio: "0B02h60r9WvJrUnZPSFY1eUFfTUk"
+    preview: "0B02h60r9WvJrTFFaYlB1c0ZzZ2M"
+    license: "by-nc/3.0/us"
+
+water:
+    title: "Water"
+    download: "0B02h60r9WvJrZklOWkJaQ3ptRFE"
+    audio: "0B02h60r9WvJrdzV6THJScFNSbGM"
+    preview: "0B02h60r9WvJrb09KT3k0SGRpZ0U"
+    license: "by-nc/3.0/us"
+
+wizard-battle:
+    title: "Wizard Battle"
+    download: "0B02h60r9WvJrZHBpUEJyNlpIdFk"
+    audio: "0B02h60r9WvJrekdYcTZWUF85bDA"
+    preview: "0B02h60r9WvJrTXlkR2JBei0xTjA"
+    license: "by-nc/3.0/us"

@@ -1,6 +1,6 @@
 "use strict"
 
-const pugLocals = require("./pug-locals.js")
+const pugLocals = require("../pug-locals.js")
 const pug = require("pug")
 const HTMLMinifier = require("html-minifier")
 

@@ -1,7 +1,7 @@
-include ./page.pug
-include ./blog-common.pug
+include ../mixins/page.pug
+include ../mixins/blog-common.pug
 
-+page("Blog", post.title).prefer-name
++page("Blog", post.title).prefer-name(back="/blog/")
     #blog
         .blog-post: .blog-post-wrapper
             a.post-home(href="/blog/") Home ►

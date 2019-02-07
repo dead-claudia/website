@@ -35,5 +35,50 @@ module.exports = (FILE, minified, extra = {}) => {
             if (ErrorType == null) ErrorType = Error
             if (!cond) throw new ErrorType(message)
         },
+
+        // I actually parse the CC license so I don't have to hardcode
+        // everything.
+        parseCCLicense(name) {
+            const url = `https://creativecommons.org/licenses/${name}/`
+            const icon = `https://i.creativecommons.org/l/${name}/88x31.png`
+            const [license, version, port] = name.split(/\//g)
+            let title = "Creative Commons "
+
+            switch (license) {
+            case "by":
+                title += "Attribution"
+                break
+
+            case "by-sa":
+                title += "Attribution-ShareAlike"
+                break
+
+            case "by-nd":
+                title += "Attribution-NoDerivs"
+                break
+
+            case "by-nc":
+                title += "Attribution-NonCommercial"
+                break
+
+            case "by-nc-sa":
+                title += "Attribution-NonCommercial-ShareAlike"
+                break
+
+            case "by-nc-nd":
+                title += "Attribution-NonCommercial-NoDerivs"
+                break
+
+            default: throw new Error(`Unknown license descriptor: ${name}`)
+            }
+            title += ` ${version} `
+            switch (port) {
+            case undefined: title += "International"; break
+            case "us": title += "United States"; break
+            default: throw new Error(`Unknown license port: ${name}`)
+            }
+            title += "License"
+            return {url, icon, title}
+        },
     }
 }

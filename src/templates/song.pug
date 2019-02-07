@@ -1,0 +1,45 @@
+//- Song properties:
+//- title: "name of song"
+//- download: "<download-id>"
+//- audio: "<audio-id>"
+//- preview: "<preview-id>"
+//- recording: true (if the audio is an actual recording)
+//-
+//- Notes:
+//- - Share URLs are of the following format:
+//-   https://drive.google.com/file/d/<file-id>/edit?usp=sharing
+//-
+//- - Export URLs are of the following format:
+//-   https://drive.google.com/uc?export=download&id=<file-id>
+//-
+//- This accepts the `file-id` of each, and you provide *that*, not the share
+//- URL.
+
+include ../mixins/page.pug
+include ../mixins/cc-license.pug
+include ../mixins/drive-link.pug
+
++page("Music", song.title).prefer-name(back="/music/"): .wrapper
+    h3= song.title
+
+    if song.license
+        +cc-license(song.license)
+
+    if song.description
+        .description!= song.description
+
+    .link
+        +drive-link(song.download).download Download
+        if song.audio
+            span.separator
+            +drive-link(song.audio).download
+                | Audio
+                //- Future-proofing
+                unless song.recording
+                    | #{""} (computer generated)
+
+    div Preview (first page)
+    img(
+        alt="preview"
+        src=`https://drive.google.com/uc?id=${song.preview}`
+    )

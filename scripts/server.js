@@ -7,9 +7,10 @@ const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 const {pipeline} = require("stream")
 
-const pugLocals = require("./pug-locals.js")
-const generatePug = require("./generate-pug.js")
-const generateBlog = require("./generate-blog-posts.js")
+const pugLocals = require("./pug-locals")
+const generatePug = require("./generators/pug")
+const generateBlog = require("./generators/blog-posts")
+const generateSongs = require("./generators/songs")
 
 const app = express()
 
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
 
 // README.md, /mixins/, /*.ignore/, *.pug, .ignore.*
 app.get(
-    /\/README\.md|^\/mixins\/|\.pug|\.ignore[\/\.]/,
+    /\/README\.md|^\/mixins\/|^\/templates\/|\.pug|\.ignore[\/\.]/,
     (req, res) => res.sendStatus(404))
 
 function withBlog(render) {
@@ -48,9 +49,15 @@ function withBlog(render) {
 
 const renderBlog = withBlog((req, res, data) =>
     res.type("html").send(generatePug(
-        path.resolve(__dirname, "../src/mixins/blog.pug"),
+        path.resolve(__dirname, "../src/templates/blog.pug"),
         req.path, false, {posts: data.posts}
     ))
+)
+
+app.get(/^\/music\/songs\/.*\.html$/, (req, res, next) =>
+    generateSongs(false).then(cache => cache.get(req.path)).then(contents =>
+        contents ? res.type("html").send(contents) : res.sendStatus(404)
+    ).catch(next)
 )
 
 app.get("/blog/atom.xml", withBlog((req, res, data) =>
@@ -61,7 +68,7 @@ app.get("/blog/rss.xml", withBlog((req, res, data) =>
 
 app.get("/blog/index.html", renderBlog)
 
-app.get("/blog/*.html", withBlog((req, res, data) =>
+app.get(/^\/blog\/.*\.html$/, withBlog((req, res, data) =>
     // Slice off the initial `/blog/` in req.path
     res.send(data.cache.get(req.path).rendered)))
 
@@ -124,6 +131,7 @@ app.get("*/", (req, res, next) => {
 
 app.use("*", (req, res) => res.sendStatus(404))
 app.use("*", (err, req, res, next) => {
+    console.log(err)
     if (err != null && (err.code === "ENOENT" || err.view != null)) {
         return res.sendStatus(404)
     } else {
@@ -131,5 +139,6 @@ app.use("*", (err, req, res, next) => {
     }
 })
 
-app.listen(8080, () =>
-    console.log("Server ready at http://localhost:8080"))
+app.listen(8080, () => {
+    console.log("Server ready at http://localhost:8080")
+})

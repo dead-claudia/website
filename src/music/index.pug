@@ -1,5 +1,6 @@
 include ../mixins/page.pug
-include ../mixins/cc-by-4.pug
+include ../mixins/cc-license.pug
+include ../mixins/drive-link.pug
 
 +page("Music")
     .intro
@@ -30,14 +31,12 @@ include ../mixins/cc-by-4.pug
             your music player. I didn't assign artwork to any of them, so feel
             free to just ignore them.
 
-    .license: +cc-by-4
-
     ul
         li: a(href="/music/songs/funeral-of-stress.html") Funeral of Stress
 
         //- Little nit
         li
-            a(href="https://docs.google.com/uc?id=0B02h60r9WvJrM0xiYnIzX0NHOFU&export=download")
+            +drive-link("0B02h60r9WvJrM0xiYnIzX0NHOFU")
                 | Under Pressure
             | #{""} (electronic, download-only)
 

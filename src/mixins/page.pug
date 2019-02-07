@@ -32,7 +32,11 @@ mixin page(name, title)
         //- Hack for 2-column layout
         #content-body
             #body-wrapper: div
-                h2(class=pageColor)= header
+                h2(class=pageColor)
+                    if attributes.back
+                        a(href=attributes.back)= header
+                    else
+                        | #{header}
                 #body: block
 
             #license: div

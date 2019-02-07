@@ -9,14 +9,14 @@ const path = require("path")
 const util = require("util")
 const mkdirp = util.promisify(require("mkdirp"))
 
-const generate = require("./generate-blog-posts.js")
-const generatePug = require("./generate-pug")
+const generate = require("../generators/blog-posts")
+const generatePug = require("../generators/pug")
 
-const dist = path.resolve(__dirname, "../dist")
+const dist = path.resolve(__dirname, "../../dist")
 const resolve = path.resolve.bind(null, dist)
 
 ;(async () => {
-    const {posts, feed} = await generate(true, async (file, post, page) => {
+    const {posts, feed} = await generate(true, async (post, page) => {
         const html = resolve(post.url.slice(1)).replace(/\.md$/, ".html")
 
         await mkdirp(path.dirname(html))
@@ -26,7 +26,7 @@ const resolve = path.resolve.bind(null, dist)
     const atom = feed.render("atom-1.0")
     const rss = feed.render("rss-2.0")
     const html = generatePug(
-        path.resolve(__dirname, "../src/mixins/blog.pug"),
+        path.resolve(__dirname, "../../src/templates/blog.pug"),
         "/blog/index.html", true, {posts}
     )
 

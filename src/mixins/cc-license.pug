@@ -1,0 +1,15 @@
+//- Arguments:
+//- name!="by/4.0", "by-nc/3.0/us", etc.
+mixin cc-license(name)
+    - const {url, icon, title} = parseCCLicense(name)
+    .cc-license
+        a(href=url rel="license"): img(alt=title src=icon)
+        small
+            if /\bindex\b/.test(attributes.class)
+                | These works are licensed under a !{""}
+                a(href=url rel="license")= title
+                | !{""} unless otherwise specified.
+            else
+                | This work is licensed under a !{""}
+                a(href=url rel="license")= title
+                | !{suffix}.

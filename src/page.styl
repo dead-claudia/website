@@ -1,6 +1,6 @@
 @charset "UTF-8"
 
-@import "../node_modules/normalize.css/normalize.css"
+@require "../node_modules/normalize.css/normalize.css"
 @require "./mixins/common.styl"
 @require "./mixins/fonts.styl"
 
@@ -96,6 +96,9 @@ for x, i in $nav-colors
         width: auto
         overflow: hidden
         font-weight: normal
+
+    > div > h2 > a
+        color: inherit
 
 #body
     padding: 1.5em
