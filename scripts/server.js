@@ -7,10 +7,11 @@ const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 const {pipeline} = require("stream")
 
-const pugLocals = require("./pug-locals")
+const PugGenerator = require("./generators/pug")
 const BlogGenerator = require("./generators/blog-posts")
 const SongGenerator = require("./generators/songs")
 
+const pug = new PugGenerator({minified: false})
 const blog = new BlogGenerator({minified: false})
 const songs = new SongGenerator({minified: false})
 const app = express()
@@ -22,8 +23,6 @@ function nocache(res) {
     res.setHeader("Expires", 0)
 }
 
-app.set("views", "src")
-app.set("view engine", "pug")
 app.set("strict routing", true)
 app.use((req, res, next) => {
     nocache(res)
@@ -41,7 +40,8 @@ app.use((req, res, next) => {
 // README.md, /mixins/, /*.ignore/, *.pug, .ignore.*
 app.get(
     /\/README\.md|^\/mixins\/|^\/templates\/|\.pug|\.ignore[\/\.]/,
-    (req, res) => res.sendStatus(404))
+    (req, res) => res.sendStatus(404)
+)
 
 const renderBlog = (req, res, next) =>
     blog.renderPosts()
@@ -74,10 +74,10 @@ app.get(/^\/blog\/.*\.html$/, (req, res, next) =>
         .catch(next)
 )
 
-app.get("*.html", (req, res) => res.render(
-    req.path.replace(/\.html$/, ".pug").slice(1),
-    pugLocals(req.path, false)
-))
+app.get("*.html", (req, res) => res.type("html").send(pug.generate(
+    path.resolve(__dirname, "../src", req.path.replace(/\.html$/, ".pug")),
+    req.path
+)))
 
 app.get("*.css", stylus.middleware({
     src: path.resolve(__dirname, "../src"),
@@ -113,8 +113,10 @@ app.get("*.*", read(base))
 // Wait until *after* everything is parsed before addressing the default route.
 app.get("/blog/", renderBlog)
 
-app.get("/", (req, res) =>
-    res.render("index.pug", pugLocals("/index.html", false)))
+app.get("/", (req, res) => res.type("html").send(pug.generate(
+    path.resolve(__dirname, "../src/index.pug"),
+    "/index.html"
+)))
 
 app.get("*/", (req, res, next) => {
     const name = req.path.replace(/\/{2,}/g, "/").slice(0, -1)
@@ -124,10 +126,10 @@ app.get("*/", (req, res, next) => {
         if (err != null) return next(err)
         if (stat.isFile()) return next({code: "ENOENT"})
 
-        return res.render(
-            `${name.slice(1)}/index.pug`,
-            pugLocals(`${name}/index.html`, false)
-        )
+        return res.type("html").send(pug.generate(
+            path.resolve(__dirname, "../src", name.slice(1), "/index.pug"),
+            `${name}/index.html`
+        ))
     })
 })
 

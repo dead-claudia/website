@@ -1,6 +1,6 @@
 "use strict"
 
-const pugLocals = require("../pug-locals.js")
+const pugLocals = require("./_pug-locals.js")
 const pug = require("pug")
 const HTMLMinifier = require("html-minifier")
 
@@ -26,9 +26,9 @@ const minifierOpts = {
 
 module.exports = class PugGenerator {
     constructor({minified} = {}) { this._minified = !!minified }
-    generate(target, name, extras) {
+    generate(target, name, extra) {
         let result = pug.compileFile(target, {filename: target})(
-            pugLocals(name, this._minified, extras)
+            pugLocals(name, this._minified, extra)
         )
 
         if (this._minified) result = HTMLMinifier.minify(result, minifierOpts)
