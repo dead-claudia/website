@@ -5,6 +5,7 @@
 const fs = require("fs")
 const path = require("path")
 const spawn = require("child_process").spawnSync
+const ghpages = require("gh-pages")
 
 function exec(cmd, use) {
     cmd = cmd.split(/\s+/g)
@@ -36,9 +37,8 @@ if (ret.stdout.toString("utf-8").trim() !== "refs/heads/master") {
     bail("Current branch must be `master` to deploy!")
 }
 
-if (exec("git show-ref -q --verify refs/heads/gh-pages").status > 0) {
-    bail("`gh-pages` branch must exist!")
-}
-
-if (exec("git subtree split --prefix dist -b gh-pages").status > 0) bail()
-if (exec("git push -f origin gh-pages:gh-pages").status > 0) bail()
+ghpages.publish(path.resolve(__dirname, "../../dist"), {
+    dotfiles: true,
+}, err => {
+    if (err) bail(err.message)
+})
