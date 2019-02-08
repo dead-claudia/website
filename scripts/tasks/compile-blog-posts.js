@@ -4,38 +4,31 @@
 // Asynchrony is only useful in terms of not waiting for I/O (which is in
 // practice not much slower than the parsing).
 
-const {promises: fs} = require("fs")
+const fs = require("fs")
 const path = require("path")
 const util = require("util")
 const mkdirp = util.promisify(require("mkdirp"))
 
-const generate = require("../generators/blog-posts")
-const generatePug = require("../generators/pug")
+const BlogGenerator = require("../generators/blog-posts")
+const {pcall} = require("../util")
 
 const dist = path.resolve(__dirname, "../../dist")
-const resolve = path.resolve.bind(null, dist)
+const emit = (file, data) => pcall(cb =>
+    fs.writeFile(path.resolve(dist, file), data, "utf-8", cb)
+)
 
-;(async () => {
-    const {posts, feed} = await generate(true, async (post, page) => {
-        const html = resolve(post.url.slice(1)).replace(/\.md$/, ".html")
+const blog = new BlogGenerator({minified: true, once: true})
 
-        await mkdirp(path.dirname(html))
-        await fs.writeFile(html, page, "utf-8")
-    })
+Promise.all([
+    blog.renderPosts().then(data => emit("blog/index.html", data)),
+    blog.renderFeed("atom-1.0").then(data => emit("blog/atom.xml", data)),
+    blog.renderFeed("rss-2.0").then(data => emit("blog/rss.xml", data)),
+])
+    .then(() => blog.each(async (url, contents) => {
+        const target = path.resolve(dist, url.slice(1))
 
-    const atom = feed.render("atom-1.0")
-    const rss = feed.render("rss-2.0")
-    const html = generatePug(
-        path.resolve(__dirname, "../../src/templates/blog.pug"),
-        "/blog/index.html", true, {posts}
-    )
-
-    await Promise.all([
-        fs.writeFile(resolve("blog/index.html"), html, "utf-8"),
-        fs.writeFile(resolve("blog/atom.xml"), atom, "utf-8"),
-        fs.writeFile(resolve("blog/rss.xml"), rss, "utf-8"),
-    ])
-})().catch(err => {
-    console.error(err.stack)
-    process.exit(1) // eslint-disable-line no-process-exit
-})
+        await mkdirp(path.dirname(target))
+        await pcall(cb => fs.writeFile(target, contents, "utf-8", cb))
+    }))
+    .catch(err => { console.error(err.stack); return 1 })
+    .then(process.exit)

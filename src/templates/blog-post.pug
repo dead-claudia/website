@@ -6,7 +6,7 @@ include ../mixins/blog-common.pug
         .blog-post: .blog-post-wrapper
             a.post-home(href="/blog/") Home ►
             h3.post-title= post.title
-            .post-body!= post.raw
+            .post-body!= post.body
             .post-footer
                 a.post-home(href="/blog/") Home ►
                 +blog-post-tags(post)

@@ -10,7 +10,7 @@ function exec(cmd, use) {
     cmd = cmd.split(/\s+/g)
     return spawn(cmd[0], cmd.slice(1), {
         // Make the current working directory the parent root.
-        cwd: path.dirname(__dirname),
+        cwd: path.resolve(__dirname, "../.."),
         stdio: use ? ["inherit", "pipe", "inherit"] : "inherit",
     })
 }
@@ -21,7 +21,7 @@ function bail(message) {
 }
 
 try {
-    if (!fs.statSync(path.resolve(__dirname, "../dist")).isDirectory()) {
+    if (!fs.statSync(path.resolve(__dirname, "../../dist")).isDirectory()) {
         bail("`dist` must be a directory!")
     }
 } catch (e) {

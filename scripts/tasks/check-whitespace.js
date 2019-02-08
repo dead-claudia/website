@@ -4,10 +4,10 @@
 // binary or JS (which is already checked by ESLint). If a line break is needed
 // in Markdown-land, use `<br>`, not an extra space.
 
-const {promises: fs} = require("fs")
+const fs = require("fs")
 const path = require("path")
 
-const walk = require("./walk")
+const {pcall, walk} = require("../util")
 
 function getLineData(contents, pos, start) {
     let line = 1
@@ -59,7 +59,7 @@ walk("**", {
     ),
     nodir: true,
 }, async file => {
-    const contents = await fs.readFile(file, "utf-8")
+    const contents = await pcall(cb => fs.readFile(file, "utf-8", cb))
 
     // Test for any non-line-break whitespace that precedes a line-break
     // whitespace and reject it.

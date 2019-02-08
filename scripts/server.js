@@ -8,10 +8,11 @@ const autoprefixer = require("autoprefixer-stylus")
 const {pipeline} = require("stream")
 
 const pugLocals = require("./pug-locals")
-const generatePug = require("./generators/pug")
-const generateBlog = require("./generators/blog-posts")
-const generateSongs = require("./generators/songs")
+const BlogGenerator = require("./generators/blog-posts")
+const SongGenerator = require("./generators/songs")
 
+const blog = new BlogGenerator({minified: false})
+const songs = new SongGenerator({minified: false})
 const app = express()
 
 function nocache(res) {
@@ -42,35 +43,36 @@ app.get(
     /\/README\.md|^\/mixins\/|^\/templates\/|\.pug|\.ignore[\/\.]/,
     (req, res) => res.sendStatus(404))
 
-function withBlog(render) {
-    return (req, res, next) =>
-        generateBlog(false).then(data => render(req, res, data)).catch(next)
-}
-
-const renderBlog = withBlog((req, res, data) =>
-    res.type("html").send(generatePug(
-        path.resolve(__dirname, "../src/templates/blog.pug"),
-        req.path, false, {posts: data.posts}
-    ))
-)
+const renderBlog = (req, res, next) =>
+    blog.renderPosts()
+        .then(data => res.type("html").send(data))
+        .catch(next)
 
 app.get(/^\/music\/songs\/.*\.html$/, (req, res, next) =>
-    generateSongs(false).then(cache => cache.get(req.path)).then(contents =>
-        contents ? res.type("html").send(contents) : res.sendStatus(404)
-    ).catch(next)
+    songs.renderURL(req.path)
+        .then(data => res.type("html").send(data))
+        .catch(next)
 )
 
-app.get("/blog/atom.xml", withBlog((req, res, data) =>
-    res.type("xml").send(data.feed.render("atom-1.0"))))
+app.get("/blog/atom.xml", (req, res, next) =>
+    blog.renderFeed("atom-1.0")
+        .then(data => res.type("xml").send(data))
+        .catch(next)
+)
 
-app.get("/blog/rss.xml", withBlog((req, res, data) =>
-    res.type("xml").send(data.feed.render("rss-2.0"))))
+app.get("/blog/rss.xml", (req, res, next) =>
+    blog.renderFeed("rss-2.0")
+        .then(data => res.type("xml").send(data))
+        .catch(next)
+)
 
 app.get("/blog/index.html", renderBlog)
 
-app.get(/^\/blog\/.*\.html$/, withBlog((req, res, data) =>
-    // Slice off the initial `/blog/` in req.path
-    res.send(data.cache.get(req.path).rendered)))
+app.get(/^\/blog\/.*\.html$/, (req, res, next) =>
+    blog.renderURL(req.path)
+        .then(data => res.type("html").send(data))
+        .catch(next)
+)
 
 app.get("*.html", (req, res) => res.render(
     req.path.replace(/\.html$/, ".pug").slice(1),

@@ -4,22 +4,22 @@
 // Asynchrony is only useful in terms of not waiting for I/O (which is in
 // practice not much slower than the parsing).
 
-const {promises: fs} = require("fs")
+const fs = require("fs")
 const path = require("path")
 const util = require("util")
 const mkdirp = util.promisify(require("mkdirp"))
 
-const generate = require("../generators/songs")
+const SongGenerator = require("../generators/songs")
+const {pcall} = require("../util")
 
+const songs = new SongGenerator({minified: true, once: true})
 const dist = path.resolve(__dirname, "../../dist")
-const resolve = path.resolve.bind(null, dist)
 
-generate(true, async (song, page) => {
-    const html = resolve(song.slice(1))
+songs.each(async (url, contents) => {
+    const target = path.resolve(dist, url.slice(1))
 
-    await mkdirp(path.dirname(html))
-    await fs.writeFile(html, page, "utf-8")
-}).catch(err => {
-    console.error(err.stack)
-    process.exit(1) // eslint-disable-line no-process-exit
+    await mkdirp(path.dirname(target))
+    await pcall(cb => fs.writeFile(target, contents, "utf-8", cb))
 })
+    .catch(err => { console.error(err.stack); return 1 })
+    .then(process.exit)

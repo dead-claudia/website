@@ -4,153 +4,166 @@ if (require.main === module) {
     throw new Error("This isn't a runnable script!")
 }
 
-const {promises: fs} = require("fs")
+const fs = require("fs")
 const path = require("path")
 const yaml = require("js-yaml")
 const Feed = require("feed")
 
+const WatchingGenerator = require("./_watching")
 const compileMarkdown = require("../compile-markdown")
-const generatePug = require("./pug")
-const util = require("../util")
+const {pcall, template} = require("../util")
 
 const postDir = path.resolve(__dirname, "../../blog")
-const postTemplate = path.resolve(
-    __dirname, "../../src/templates/blog-post.pug"
-)
 
-const idsFile = path.resolve(postDir, "blog-ids.yml")
-const idsList = yaml.safeLoad(require("fs").readFileSync(idsFile, "utf-8"), {
-    filename: idsFile,
-})
-const fileIdCache = new Map(Object.keys(idsList).map(id => [idsList[id], +id]))
-let nextId = Math.max(fileIdCache.values()) + 1
+const fileIdsReady = (async () => {
+    const idsFile = path.resolve(postDir, "blog-ids.yml")
+    const idsList = yaml.safeLoad(
+        await pcall(cb => fs.readFile(idsFile, "utf-8", cb)),
+        {filename: idsFile}
+    )
+    const fileIdCache = new Map(
+        Object.keys(idsList).map(id => [idsList[id], +id])
+    )
 
-// Splits the given string into a meta section and a markdown section.
-async function splitInput(name) {
-    const file = path.resolve(postDir, name)
-    const markdown = await fs.readFile(file, "utf-8")
+    return {
+        map: fileIdCache, file: idsFile,
+        current: Math.max(...fileIdCache.values()) + 1,
+    }
+})()
 
-    if (markdown.slice(0, 3) === "---") {
-        const matcher = /\n(\.\.\.|---)/g
-        const metaEnd = matcher.exec(markdown)
+module.exports = class BlogGenerator extends WatchingGenerator {
+    constructor(opts = {}) {
+        super({
+            ...opts,
+            glob: "**/*.md",
+            template: "blog-post.pug",
+            cwd: postDir,
+            root: postDir,
+            ignored: ["**/README.md", "**/_drafts/**"],
+            on: {
+                add: file => {
+                    console.log(`Post added: ${file}`)
+                    return this._compilePost(file)
+                },
 
-        if (metaEnd != null) {
-            const raw = markdown.slice(matcher.lastIndex)
-            const meta = yaml.safeLoad(markdown.slice(0, metaEnd.index), {
-                filename: file,
-            })
+                change: file => {
+                    console.log(`Post changed: ${file}`)
+                    return this._compilePost(file)
+                },
 
-            // My timezone offset is -5 hours, and I need to display
-            // that correctly. This calculates the correct relative
-            // offset in milliseconds, which should be 0 if in EST (i.e.
-            // offset of -5 hours).
-            const offset = 60 * 1000 *
-                (new Date().getTimezoneOffset() - 5 * 60)
+                unlink: file => {
+                    console.log(`Post deleted: ${file}`)
+                    this._map.delete(file)
+                },
+            },
+        })
 
-            meta.date = new Date(Date.parse(meta.date) + offset)
-
-            return {
-                file, meta,
-                preview: compileMarkdown.preview(raw),
-                raw: compileMarkdown.html(
-                    path.posix.relative(postDir, file), raw
-                ),
-            }
-        }
+        this._feedItems = new Map()
+        this._feed = undefined
+        this._list = undefined
     }
 
-    throw new Error(`${file}: Missing required metadata block!`)
-}
+    _renderOpts(post) {
+        return {post}
+    }
 
-// Cache this, so the server isn't recompiling every file on every request. Only
-// what's changed.
-const cache = new Map()
+    async _compilePost(name) {
+        const idCache = await fileIdsReady
+        let id = idCache.map.get(name)
 
-// Important item of note: the `write` function is used for output, and may
-// return a promise. This method is also used to keep the I/O more async.
-//
-// (This would be much easier to do correctly with an observable...)
-module.exports = async (minified, write) => {
-    const feed = new Feed({
-        title: "Isiah Meadows' blog",
-        description: "My personal blog",
-        id: "https://isiahmeadows.com/blog/",
-        link: "https://isiahmeadows.com/blog/",
-        copyright: "Some rights reserved 2013-present, Isiah Meadows.",
-        author: {
-            name: "Isiah Meadows",
-            email: "me@isiahmeadows.com",
-            link: "https://isiahmeadows.com/",
-        },
-    })
+        if (id == null) {
+            idCache.map.set(name, id = idCache.current++)
+            await pcall(cb =>
+                fs.appendFile(idCache.file, `${id}: ${name}\n`, cb)
+            )
+        }
 
-    feed.addCategory("technology")
-    feed.addCategory("politics")
-    feed.addCategory("opinions")
-    feed.addCategory("javascript")
-
-    const posts = []
-
-    await util.walk("**/*.md", {
-        cwd: postDir,
-        root: postDir,
-        ignore: ["**/README.md", "**/_drafts/**"],
-        stat: true,
-    }, async (name, stat) => {
         const url = `/blog/${name.replace(/\.md$/, ".html")}`
+        const file = path.resolve(postDir, name)
+        const markdown = await pcall(cb => fs.readFile(file, "utf-8", cb))
 
-        if (!fileIdCache.has(name)) {
-            fileIdCache.set(name, nextId)
-            await fs.appendFile(idsFile, `${nextId++}: ${name}\n`)
-        }
+        if (markdown.slice(0, 3) === "---") {
+            const matcher = /\n(\.\.\.|---)/g
+            const metaEnd = matcher.exec(markdown)
 
-        let entry = cache.get(url)
+            if (metaEnd != null) {
+                const raw = markdown.slice(matcher.lastIndex)
+                const meta = yaml.safeLoad(markdown.slice(0, metaEnd.index), {
+                    filename: file,
+                })
 
-        if (entry == null) {
-            entry = {
-                mtime: 0,
-                post: undefined,
-                compiled: undefined,
-                rendered: undefined,
+                // My timezone offset is -5 hours, and I need to display that
+                // correctly. This calculates the correct relative offset in
+                // milliseconds, which should be 0 if in EST (i.e. offset of
+                // -5 hours).
+                const offset = 60 * 1000 *
+                    (new Date().getTimezoneOffset() - 5 * 60)
+
+                const date = new Date(Date.parse(meta.date) + offset)
+                const preview = compileMarkdown.preview(raw)
+                const body = compileMarkdown.html(
+                    path.posix.relative(postDir, file), raw
+                )
+
+                const post = {
+                    date, preview, body, url,
+                    title: meta.title,
+                    tags: meta.tags || [],
+                }
+
+                this._renderCache.delete(url)
+                this._map.set(url, post)
+                this._feedItems.set(url, {
+                    id, date, published: date,
+                    title: meta.title,
+                    description: preview,
+                    link: `https://isiahmeadows.com${url}`,
+                })
+                return
             }
-            cache.set(url, entry)
         }
 
-        let post
+        throw new Error(`${file}: Missing required metadata block!`)
+    }
 
-        if (entry.mtime !== 0 && entry.mtime <= stat.mtime) {
-            post = entry.post
-        } else {
-            const {raw, meta, preview} = await splitInput(name)
-
-            post = {
-                date: meta.date,
-                title: meta.title,
-                preview, raw, url,
-                tags: meta.tags || [],
-            }
-
-            const html = generatePug(postTemplate, url, minified, {post})
-
-            entry.post = post
-            entry.compiled = raw
-            entry.rendered = html
-            entry.mtime = stat.mtime
-            if (write) await write(post, html)
-        }
-
-        posts.push(post)
-        feed.addItem({
-            title: post.title,
-            id: fileIdCache.get(name),
-            description: post.preview,
-            date: post.date,
-            published: post.date,
-            link: `https://isiahmeadows.com${url}`,
+    async renderFeed(type) {
+        if (this._feed != null) return this._feed.render(type)
+        await this._ready
+        if (this._feed != null) return this._feed.render(type)
+        this._feed = new Feed({
+            title: "Isiah Meadows' blog",
+            description: "My personal blog",
+            id: "https://isiahmeadows.com/blog/",
+            link: "https://isiahmeadows.com/blog/",
+            copyright: "Some rights reserved 2019-present, Isiah Meadows.",
+            author: {
+                name: "Isiah Meadows",
+                email: "me@isiahmeadows.com",
+                link: "https://isiahmeadows.com/",
+            },
         })
-    })
 
-    // The posts should be sorted by reverse date.
-    posts.sort((a, b) => b.date - a.date)
-    return {posts, cache, feed}
+        this._feed.addCategory("technology")
+        this._feed.addCategory("opinions")
+        this._feed.addCategory("javascript")
+
+        for (const item of this._feedItems.values()) this._feed.addItem(item)
+        return this._feed.render(type)
+    }
+
+    async renderPosts() {
+        if (this._posts == null) {
+            await this._ready
+            if (this._posts == null) {
+                // The posts should be sorted by reverse date.
+                this._posts = [...this._map.values()]
+                this._posts.sort((a, b) => b.date - a.date)
+            }
+        }
+
+        return this._pug.generate(
+            template("blog.pug"), "/blog/index.html",
+            {posts: this._posts}
+        )
+    }
 }

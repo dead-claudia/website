@@ -24,11 +24,14 @@ const minifierOpts = {
     minifyUrls: true,
 }
 
-module.exports = (target, name, minified, extras) => {
-    let result = pug.compileFile(target, {filename: target})(
-        pugLocals(name, minified, extras)
-    )
+module.exports = class PugGenerator {
+    constructor({minified} = {}) { this._minified = !!minified }
+    generate(target, name, extras) {
+        let result = pug.compileFile(target, {filename: target})(
+            pugLocals(name, this._minified, extras)
+        )
 
-    if (minified) result = HTMLMinifier.minify(result, minifierOpts)
-    return result
+        if (this._minified) result = HTMLMinifier.minify(result, minifierOpts)
+        return result
+    }
 }

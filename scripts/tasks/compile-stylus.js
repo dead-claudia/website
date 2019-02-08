@@ -2,17 +2,18 @@
 
 // Pulled out into a separate file for parallelization.
 
-const {promises: fs} = require("fs")
+const fs = require("fs")
 const util = require("util")
 const stylus = require("stylus")
 const autoprefixer = require("autoprefixer-stylus")
 const CleanCss = require("clean-css")
+const {pcall} = require("../util")
 
 const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.styl$/, ".css")
 
 ;(async () => {
-    const data = await fs.readFile(infile, "utf-8")
+    const data = await pcall(cb => fs.readFile(infile, "utf-8", cb))
     const res = await util.promisify(stylus.render)(data, {
         "filename": infile,
         "include css": true,
@@ -34,7 +35,7 @@ const outfile = process.argv[3].replace(/\.styl$/, ".css")
 
     // eslint-disable-next-line no-process-exit
     if (output.errors.length) process.exit(1)
-    await fs.writeFile(outfile, output.styles, "utf-8")
+    await pcall(cb => fs.writeFile(outfile, output.styles, "utf-8", cb))
 })().catch(err => {
     console.error(err.message)
     if (err.stack) console.error(err.stack)

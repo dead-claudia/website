@@ -9,7 +9,8 @@ const infile = process.argv[2]
 const outfile = process.argv[3].replace(/\.pug$/, ".html")
 const name = process.argv[4]
 
-const generatePug = require("../generators/pug")
+const PugGenerator = require("../generators/pug")
+const pug = new PugGenerator({minified: true})
 
 const FILE = `/${
     name
@@ -17,4 +18,4 @@ const FILE = `/${
         .replace(/^src(?:\/)|\.pug$/g, "")
 }.html`
 
-fs.writeFileSync(outfile, generatePug(infile, FILE, true), "utf-8")
+fs.writeFileSync(outfile, pug.generate(infile, FILE), "utf-8")

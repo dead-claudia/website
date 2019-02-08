@@ -6,12 +6,19 @@ if (require.main === module) {
 
 const {spawn} = require("child_process")
 const os = require("os")
+const path = require("path")
 const {Glob} = require("glob")
+
+exports.template = name => path.resolve(__dirname, "../src/templates", name)
+
+exports.pcall = cb => new Promise((resolve, reject) => {
+    cb((err, data) => err != null ? reject(err) : resolve(data))
+})
 
 exports.once = (emitter, event, opts) => {
     if (typeof event !== "symbol") event += ""
     return new Promise((resolve, reject) => {
-        const onEvent = opts.returnArray
+        const onEvent = opts && opts.returnArray
             ? (...args) => emitValue(args)
             : emitValue
 
@@ -47,7 +54,17 @@ exports.once = (emitter, event, opts) => {
 exports.walk = (glob, opts, func) => {
     if (typeof opts === "function") { func = opts; opts = undefined }
     return new Promise((resolve, reject) => {
-        const inst = new Glob(glob, {...opts, nodir: true})
+        const realOpts = {nodir: true}
+
+        // Thank you Glob, for being too stupid to consider value set to
+        // `undefined` as equivalent to omitting the property altogether...
+        if (opts != null) {
+            for (const [key, value] of Object.entries(opts)) {
+                if (value != null) realOpts[key] = value
+            }
+        }
+
+        const inst = new Glob(glob, realOpts)
         let active = 1
 
         function advance() {

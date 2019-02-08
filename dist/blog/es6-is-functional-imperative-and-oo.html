@@ -1,103 +1,103 @@
-<!DOCTYPE html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=google-site-verification content=uV7Lko0q31ot2kgRjnMeU4sN5Fx4Whld80ItNCYYkA4><meta name=theme-color content=#942a39><link rel=license href=https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE><link rel=stylesheet href=/page.css><link rel=stylesheet href=/blog/index.css><link rel="shortcut icon" href=/favicon.ico><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="Atom feed"><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RSS feed"><title>Isiah Meadows - Blog - ES6 is functional, imperative, and OO</title><div id=content><div id=header><nav><div><a href=/ >Isiah Meadows</a></div><div><div class="link l1"><a href=/about/ >About</a></div><div class="link l2"><a href=/showcase/ >Showcase</a></div><div class="link l3"><a class=selected href=/blog/ >Blog</a></div><div class="link l4"><a href=/contact/ >Contact</a></div></div></nav></div><div id=content-body><div id=body-wrapper><div><h2 class=l3><a href=/blog/ >Blog</a></h2><div id=body><div id=blog><div class=blog-post><div class=blog-post-wrapper><a class=post-home href=/blog/ >Home ►</a><h3 class=post-title>ES6 is functional, imperative, and OO</h3><div class=post-body><p><em>Edit (2016-01-14): minor typography/style/bug/etc. fixes.</em></p>
+<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-site-verification" content="uV7Lko0q31ot2kgRjnMeU4sN5Fx4Whld80ItNCYYkA4"><meta name="theme-color" content="#942a39"><link rel="license" href="https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE"><link rel="stylesheet" href="/page.css"><link rel="stylesheet" href="/blog/index.css"><link rel="shortcut icon" href="/favicon.ico"><link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Atom feed"><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="RSS feed"><title>Isiah Meadows - Blog - ES6 is functional, imperative, and OO</title><div id="content"><div id="header"><nav><div><a href="/">Isiah Meadows</a></div><div><div class="link l1"><a href="/about/">About</a></div><div class="link l2"><a href="/showcase/">Showcase</a></div><div class="link l3"><a class="selected" href="/blog/">Blog</a></div><div class="link l4"><a href="/contact/">Contact</a></div></div></nav></div><div id="content-body"><div id="body-wrapper"><div><h2 class="l3"><a href="/blog/">Blog</a></h2><div id="body"><div id="blog"><div class="blog-post"><div class="blog-post-wrapper"><a class="post-home" href="/blog/">Home ►</a><h3 class="post-title">ES6 is functional, imperative, and OO</h3><div class="post-body"><p><em>Edit (2016-01-14): minor typography/style/bug/etc. fixes.</em></p>
 <p>Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting lambdas, people envying those with Haskell/OCaml/etc. experience, and so on. But, in my experience, JavaScript has always been in the grey area. It&#39;s been called functional, imperative, &quot;Lisp in C&#39;s clothing&quot;, object oriented, and so many other things. Yet, none of these actually describe the language, which is, in reality, a mixture of all these things.</p>
 <p>Now, here&#39;s why I believe ES6 to be functional, imperative, and object oriented, all three.</p>
-<h2 id=functional>Functional</h2>
+<h2 id="functional">Functional</h2>
 <hr>
 <p>ES6 has a new arrow function syntax, one most JavaScript programmers who have been keeping up already know pretty well.</p>
-<pre><code class="hljs hljs-js"><span class=hljs-keyword>let</span> f1 = <span class=hljs-function><span class=hljs-params>x</span> =&gt;</span> doSomething(x);
-<span class=hljs-keyword>let</span> f2 = <span class=hljs-function>(<span class=hljs-params>x, y</span>) =&gt;</span> doSomething(x, y);
-<span class=hljs-keyword>let</span> f3 = <span class=hljs-function><span class=hljs-params>()</span> =&gt;</span> doSomething();
+<pre><code class="hljs hljs-js"><span class="hljs-keyword">let</span> f1 = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> doSomething(x);
+<span class="hljs-keyword">let</span> f2 = <span class="hljs-function">(<span class="hljs-params">x, y</span>) =&gt;</span> doSomething(x, y);
+<span class="hljs-keyword">let</span> f3 = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> doSomething();
 
-<span class=hljs-keyword>let</span> identity = <span class=hljs-function><span class=hljs-params>x</span> =&gt;</span> x;
-<span class=hljs-keyword>let</span> noop = <span class=hljs-function><span class=hljs-params>()</span> =&gt;</span> {};</code></pre>
+<span class="hljs-keyword">let</span> identity = <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x;
+<span class="hljs-keyword">let</span> noop = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {};</code></pre>
 <p>This is generally considered functional, but combine it with <code>Array.prototype.map</code> or <code>Array.prototype.reduce</code>, and it&#39;ll start really looking more functional:</p>
-<pre><code class="hljs hljs-js"><span class=hljs-comment>// generically</span>
-<span class=hljs-keyword>let</span> doubleGeneric = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> <span class=hljs-built_in>Array</span>.prototype.map.call(xs, x =&gt; x*<span class=hljs-number>2</span>);
-<span class=hljs-keyword>let</span> doubleArray = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> xs.map(<span class=hljs-function><span class=hljs-params>x</span> =&gt;</span> x*<span class=hljs-number>2</span>);
+<pre><code class="hljs hljs-js"><span class="hljs-comment">// generically</span>
+<span class="hljs-keyword">let</span> doubleGeneric = <span class="hljs-function"><span class="hljs-params">xs</span> =&gt;</span> <span class="hljs-built_in">Array</span>.prototype.map.call(xs, x =&gt; x*<span class="hljs-number">2</span>);
+<span class="hljs-keyword">let</span> doubleArray = <span class="hljs-function"><span class="hljs-params">xs</span> =&gt;</span> xs.map(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x*<span class="hljs-number">2</span>);
 
-<span class=hljs-keyword>let</span> sum = <span class=hljs-function><span class=hljs-params>xs</span> =&gt;</span> xs.reduce(<span class=hljs-function>(<span class=hljs-params>x, y</span>) =&gt;</span> x+y);</code></pre>
+<span class="hljs-keyword">let</span> sum = <span class="hljs-function"><span class="hljs-params">xs</span> =&gt;</span> xs.reduce(<span class="hljs-function">(<span class="hljs-params">x, y</span>) =&gt;</span> x+y);</code></pre>
 <p>As you might have already noticed in the above examples, some of the <code>Array.prototype</code> methods are more generic as well.</p>
 <p>Also, the two Underscore methods map and each could become a lot simpler to write:</p>
-<pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span>* <span class=hljs-title>range</span>(<span class=hljs-params>n</span>) </span>{
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> i = <span class=hljs-number>0</span>; i &lt; n; i++)
-        <span class=hljs-keyword>yield</span> i;
+<pre><code class="hljs hljs-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">range</span>(<span class="hljs-params">n</span>) </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
+        <span class="hljs-keyword">yield</span> i;
 }
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> map = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> {
-    <span class=hljs-keyword>let</span> array = [];
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> i <span class=hljs-keyword>of</span> range(n))
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> map = <span class="hljs-function">(<span class="hljs-params">xs, fn</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> array = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> range(n))
         array.push(fn(xs[i], i));
-    <span class=hljs-keyword>return</span> array;
+    <span class="hljs-keyword">return</span> array;
 };
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> each = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> {
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> i <span class=hljs-keyword>of</span> range(x)) {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> each = <span class="hljs-function">(<span class="hljs-params">xs, fn</span>) =&gt;</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> range(x)) {
         fn(xs[i], i);
     }
 };</code></pre>
 <p>You could always use Array.from in each of these cases as well, making them far smaller and a little more functional (albeit a little slower):</p>
-<pre><code class="hljs hljs-js"><span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> map = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> <span class=hljs-built_in>Array</span>.from(xs).map(fn);
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> each = <span class=hljs-function>(<span class=hljs-params>xs, fn</span>) =&gt;</span> <span class=hljs-built_in>Array</span>.from(xs).each(fn);</code></pre>
+<pre><code class="hljs hljs-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> map = <span class="hljs-function">(<span class="hljs-params">xs, fn</span>) =&gt;</span> <span class="hljs-built_in">Array</span>.from(xs).map(fn);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> each = <span class="hljs-function">(<span class="hljs-params">xs, fn</span>) =&gt;</span> <span class="hljs-built_in">Array</span>.from(xs).each(fn);</code></pre>
 <p>There are also Promises, already known to be monads, and they&#39;re now in the standard library. It is easy to make a promisifying function for Node-style callbacks:</p>
-<pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>promisify</span>(<span class=hljs-params>fn</span>) </span>{
-    <span class=hljs-keyword>return</span> <span class=hljs-function>(<span class=hljs-params>...args</span>) =&gt;</span> <span class=hljs-keyword>new</span> <span class=hljs-built_in>Promise</span>(<span class=hljs-function>(<span class=hljs-params>resolve, reject</span>) =&gt;</span>
+<pre><code class="hljs hljs-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">promisify</span>(<span class="hljs-params">fn</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span>
         fn(...args, (err, ...retArgs) =&gt;
-            err != <span class=hljs-literal>null</span> ?
+            err != <span class="hljs-literal">null</span> ?
                 reject(err) :
                 resolve(...retArgs)));
 }
 
-<span class=hljs-comment>// Example</span>
-<span class=hljs-keyword>let</span> fs = <span class=hljs-built_in>require</span>(<span class=hljs-string>'fs'</span>);
-<span class=hljs-keyword>let</span> readFile = promisify(fs.readFile);
+<span class="hljs-comment">// Example</span>
+<span class="hljs-keyword">let</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
+<span class="hljs-keyword">let</span> readFile = promisify(fs.readFile);
 
-readFile(<span class=hljs-string>'foo.txt'</span>)
-    .then(<span class=hljs-function><span class=hljs-params>data</span> =&gt;</span> doSomething(data))
-    .catch(<span class=hljs-function><span class=hljs-params>err</span> =&gt;</span> <span class=hljs-built_in>console</span>.error(err));</code></pre>
+readFile(<span class="hljs-string">'foo.txt'</span>)
+    .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> doSomething(data))
+    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.error(err));</code></pre>
 <p>There are also generators, which are lazy, while Arrays are eager. You can write equivalents to most Array.prototype methods easily for generators.</p>
-<pre><code class="hljs hljs-js"><span class=hljs-function><span class=hljs-keyword>function</span>* <span class=hljs-title>map</span>(<span class=hljs-params>gen, fn</span>) </span>{
-    <span class=hljs-keyword>let</span> i = <span class=hljs-number>0</span>;
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> val <span class=hljs-keyword>of</span> gen)
-        <span class=hljs-keyword>yield</span> fn(val, i++);
+<pre><code class="hljs hljs-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">map</span>(<span class="hljs-params">gen, fn</span>) </span>{
+    <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> val <span class="hljs-keyword">of</span> gen)
+        <span class="hljs-keyword">yield</span> fn(val, i++);
 }
 
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>each</span>(<span class=hljs-params>gen, fn</span>) </span>{
-    <span class=hljs-keyword>let</span> i = <span class=hljs-number>0</span>;
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> val <span class=hljs-keyword>of</span> gen)
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">each</span>(<span class="hljs-params">gen, fn</span>) </span>{
+    <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> val <span class="hljs-keyword">of</span> gen)
         fn(val, i++);
 }
 
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>reduce</span>(<span class=hljs-params>gen, fn</span>) </span>{
-    gen = Generator(gen); <span class=hljs-comment>// shallow copy</span>
-    <span class=hljs-keyword>let</span> last = gen.next().value;
-    <span class=hljs-keyword>let</span> res = last;
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> val <span class=hljs-keyword>of</span> gen)
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reduce</span>(<span class="hljs-params">gen, fn</span>) </span>{
+    gen = Generator(gen); <span class="hljs-comment">// shallow copy</span>
+    <span class="hljs-keyword">let</span> last = gen.next().value;
+    <span class="hljs-keyword">let</span> res = last;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> val <span class="hljs-keyword">of</span> gen)
         [res, last] = [fn(val, last), val];
-    <span class=hljs-keyword>return</span> res;
+    <span class="hljs-keyword">return</span> res;
 }
 
-<span class=hljs-comment>// Array.prototype.contains is ES7-specific</span>
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>contains</span>(<span class=hljs-params>gen, ...vals</span>) </span>{
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> i <span class=hljs-keyword>of</span> gen) {
-        <span class=hljs-keyword>if</span> (vals.contains(i))
-            <span class=hljs-keyword>return</span> <span class=hljs-literal>true</span>;
+<span class="hljs-comment">// Array.prototype.contains is ES7-specific</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">contains</span>(<span class="hljs-params">gen, ...vals</span>) </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> gen) {
+        <span class="hljs-keyword">if</span> (vals.contains(i))
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
-    <span class=hljs-keyword>return</span> <span class=hljs-literal>false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 }
 
-<span class=hljs-function><span class=hljs-keyword>function</span>* <span class=hljs-title>filter</span>(<span class=hljs-params>fn</span>) </span>{
-    <span class=hljs-keyword>let</span> i = <span class=hljs-number>0</span>;
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>let</span> val <span class=hljs-keyword>of</span> gen) {
-        <span class=hljs-keyword>if</span> (fn(val, i))
-            <span class=hljs-keyword>yield</span> val
+<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">filter</span>(<span class="hljs-params">fn</span>) </span>{
+    <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> val <span class="hljs-keyword">of</span> gen) {
+        <span class="hljs-keyword">if</span> (fn(val, i))
+            <span class="hljs-keyword">yield</span> val
     }
 }
 
-<span class=hljs-comment>// etc...</span></code></pre>
+<span class="hljs-comment">// etc...</span></code></pre>
 <p>I can&#39;t end this section properly without at least mentioning the new Array methods:</p>
 <ul>
 <li><p><code>[].copyWithin(target, start, end = this.length)</code> ‒ Copies entries in-place from the range <code>start</code> to <code>end</code> to the range of same length starting at <code>target</code>. Example:</p>
-<pre><code class="hljs hljs-js">[<span class=hljs-number>1</span>, <span class=hljs-number>2</span>, <span class=hljs-number>3</span>, <span class=hljs-number>4</span>, <span class=hljs-number>5</span>].copyWithin(<span class=hljs-number>0</span>, <span class=hljs-number>3</span>) <span class=hljs-comment>//=&gt; [4, 5, 1, 2, 3]</span></code></pre>
+<pre><code class="hljs hljs-js">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].copyWithin(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">//=&gt; [4, 5, 1, 2, 3]</span></code></pre>
 </li>
 <li><p><code>[].entries()</code> ‒ Returns an iterator (like a generator) for the array.</p>
 </li>
@@ -108,47 +108,47 @@ readFile(<span class=hljs-string>'foo.txt'</span>)
 <li><p><code>[].keys()</code>, <code>[].values()</code> ‒ Mainly for consistency with <code>Map.prototype.keys()</code>, <code>Map.prototype.values()</code>, and the <code>Set</code> equivalents.</p>
 </li>
 </ul>
-<h2 id=imperative>Imperative</h2>
+<h2 id="imperative">Imperative</h2>
 <hr>
 <p>It is already pretty well established that JavaScript has its imperative components. There is no reason to cover this in detail; just look at some of the examples above. Sometimes, you have no choice but to split things into separate statements.</p>
-<h2 id=object-oriented>Object-Oriented</h2>
+<h2 id="object-oriented">Object-Oriented</h2>
 <hr>
 <p>Yes, JavaScript has always been object-oriented since its creation, and it is well known that ES6 has its own class syntax.</p>
-<pre><code class="hljs hljs-js"><span class=hljs-class><span class=hljs-keyword>class</span> <span class=hljs-title>Foo</span> </span>{
-    <span class=hljs-keyword>constructor</span>(arg) {
-        <span class=hljs-keyword>this</span>.bar = arg;
+<pre><code class="hljs hljs-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>{
+    <span class="hljs-keyword">constructor</span>(arg) {
+        <span class="hljs-keyword">this</span>.bar = arg;
     }
 
     sayBar() {
-        <span class=hljs-built_in>console</span>.log(<span class=hljs-keyword>this</span>.bar);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.bar);
     }
 }
 
-<span class=hljs-class><span class=hljs-keyword>class</span> <span class=hljs-title>Bar</span> <span class=hljs-keyword>extends</span> <span class=hljs-title>Foo</span> </span>{
-    <span class=hljs-keyword>constructor</span>(x, ...args) {
-        <span class=hljs-keyword>super</span>(...args);
-        <span class=hljs-keyword>this</span>.x = x;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span> </span>{
+    <span class="hljs-keyword">constructor</span>(x, ...args) {
+        <span class="hljs-keyword">super</span>(...args);
+        <span class="hljs-keyword">this</span>.x = x;
     }
 }
 
-<span class=hljs-keyword>let</span> bar = <span class=hljs-keyword>new</span> Bar(<span class=hljs-number>1</span>, <span class=hljs-number>3</span>);
-bar.sayBar(); <span class=hljs-comment>// prints '3' to console</span>
-bar.x; <span class=hljs-comment>// 1</span></code></pre>
+<span class="hljs-keyword">let</span> bar = <span class="hljs-keyword">new</span> Bar(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>);
+bar.sayBar(); <span class="hljs-comment">// prints '3' to console</span>
+bar.x; <span class="hljs-comment">// 1</span></code></pre>
 <p>But, the new syntax also builds on JavaScript&#39;s object-oriented nature substantially. Now, there are also static methods you can add to classes, and it is easier to extend classes (like above), so ES6 classes are a lot more declarative, clear, and concise. You can even subclass builtins now.</p>
-<pre><code class="hljs hljs-js"><span class=hljs-class><span class=hljs-keyword>class</span> <span class=hljs-title>Baz</span> <span class=hljs-keyword>extends</span> <span class=hljs-title>Foo</span> </span>{
-    <span class=hljs-keyword>static</span> <span class=hljs-keyword>from</span>(obj) {
-        <span class=hljs-keyword>return</span> <span class=hljs-keyword>new</span> Baz(obj.bar);
+<pre><code class="hljs hljs-js"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Baz</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span> </span>{
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">from</span>(obj) {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Baz(obj.bar);
     }
 }
 
-<span class=hljs-comment>// Even this is allowed.</span>
-<span class=hljs-class><span class=hljs-keyword>class</span> <span class=hljs-title>MyArray</span> <span class=hljs-keyword>extends</span> <span class=hljs-title>Array</span> </span>{
-    <span class=hljs-keyword>constructor</span>(prop, ...args) {
-        <span class=hljs-keyword>super</span>(...args);
-        <span class=hljs-keyword>this</span>.prop = prop;
+<span class="hljs-comment">// Even this is allowed.</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyArray</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Array</span> </span>{
+    <span class="hljs-keyword">constructor</span>(prop, ...args) {
+        <span class="hljs-keyword">super</span>(...args);
+        <span class="hljs-keyword">this</span>.prop = prop;
     }
 }</code></pre>
-<h2 id=conclusion>Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 <p>ES6 will add to the confusion of what JavaScript really is, albeit in an awesome way. There are three primary categories people typically try to lump JavaScript into, and they&#39;re all (mostly) right:</p>
 <ul>
 <li><p>Functional: arrow functions, more generic Array methods, some new Array methods, lazy generators.</p>
@@ -157,13 +157,22 @@ bar.x; <span class=hljs-comment>// 1</span></code></pre>
 </li>
 <li><p>Object-oriented: simpler class declaration syntax, more deeply integrated with the language, may make more parts of the DOM possible to implement in JavaScript.</p>
 <ul>
-<li>DOM Level 4 will replace HTMLCollections and NodeLists with Elements, an actual ES6-style Array subclass with two additional methods: <code>Elements.prototype.query()</code> (like <code>Element.prototype.querySelector()</code>) and <code>Elements.prototype.queryAll()</code> (like <code>Element.prototype.querySelectorAll()</code>). This will make the DOM even easier to work with and an even better fit for both functional and OO programming.</li>
+<li>DOM Level 4 will replace HTMLCollections and NodeLists with Elements, an
+actual ES6-style Array subclass with two additional methods: <code>Elements.prototype.query()</code> (like <code>Element.prototype.querySelector()</code>) and <code>Elements.prototype.queryAll()</code> (like <code>Element.prototype.querySelectorAll()</code>). This will make the DOM even easier to work with and an even better fit for both functional and OO programming.</li>
 </ul>
 </li>
 </ul>
-</div><div class=post-footer><a class=post-home href=/blog/ >Home ►</a><div class=post-tags><span>Tags:</span><a class=post-tag data-tag=javascript href=/blog/#javascript>javascript</a><a class=post-tag data-tag=es6 href=/blog/#es6>es6</a><a class=post-tag data-tag="object oriented" href=/blog/#object%20oriented>object oriented</a><a class=post-tag data-tag="functional programming" href=/blog/#functional%20programming>functional programming</a><a class=post-tag data-tag=opinions href=/blog/#opinions>opinions</a></div></div></div></div></div></div></div></div><div id=license><div><footer><small><p>This site does use Google Analytics for basic tracking (IP addresses anonymized), and a few third parties collect a few cookies their own, like GitHub and some of the creators of the widgets in the <a href=/about/ >About</a>
-page's widgets. If you don't consent to these, either stop using this site or just block them in some way, like with a firewall or with a blocker like
-<a href=https://adblockplus.org/ >Adblock Plus</a>,
-<a href=https://github.com/gorhill/uBlock>uBlock Origin</a>.
-<p>All content available on this site by Isiah Meadows is licensed under the Creative Commons Attribution 4.0 International License, and all source code is licensed under the ISC License, unless otherwise specified.
-<p><a href=https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE target=_blank rel=license>See here for the text of both of these licenses.</a></small></footer></div></div></div></div><script async src="https://www.googletagmanager.com/gtag/js?id=UA-38960675-5"></script><script>function gtag(){dataLayer.push(arguments)}dataLayer=[["js",new Date],["config","UA-38960675-5",{anonymize_ip:1}]];onerror=function(a,b,c,d){d=(b+" at line: "+c+(d?" column: "+d:"")).trim();c=document.createElement("a");c.href=b;dataLayer.push(["event",a,{event_label:d,event_category:c.hostname!=location.hostname&&c.hostname?"external error":"error",non_interaction:1}],["event","exception",{description:d+": "+a.trim()}])}</script>
+</div><div class="post-footer"><a class="post-home" href="/blog/">Home ►</a><div class="post-tags"><span>Tags:</span><a class="post-tag" data-tag="javascript" href="/blog/#javascript">javascript</a><a class="post-tag" data-tag="es6" href="/blog/#es6">es6</a><a class="post-tag" data-tag="object oriented" href="/blog/#object%20oriented">object oriented</a><a class="post-tag" data-tag="functional programming" href="/blog/#functional%20programming">functional programming</a><a class="post-tag" data-tag="opinions" href="/blog/#opinions">opinions</a></div></div></div></div></div></div></div></div><div id="license"><div><footer><small><p>This site does use Google Analytics for basic tracking
+(IP addresses anonymized), and a few third parties
+collect a few cookies their own, like GitHub and some of
+the creators of the widgets in the <a href="/about/">About</a>
+page's widgets. If you don't consent to these, either
+stop using this site or just block them in some way,
+like with a firewall or with a blocker like
+<a href="https://adblockplus.org/">Adblock Plus</a>,
+<a href="https://github.com/gorhill/uBlock">uBlock Origin</a>.
+</p><p>All content available on this site by Isiah Meadows is
+licensed under the Creative Commons Attribution 4.0
+International License, and all source code is licensed
+under the ISC License, unless otherwise specified.
+</p><p><a href="https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE" target="_blank" rel="license">See here for the text of both of these licenses.</a></p></small></footer></div></div></div></div>
