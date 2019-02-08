@@ -4,7 +4,7 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>https://isiahmeadows.com/blog/</link>
-        <lastBuildDate>Fri, 08 Feb 2019 00:59:59 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 08 Feb 2019 01:08:23 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2019-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
@@ -12,18 +12,18 @@
         <category>opinions</category>
         <category>javascript</category>
         <item>
-            <title><![CDATA[Another content update]]></title>
-            <link>https://isiahmeadows.com/blog/content-update-2.html</link>
-            <guid>https://isiahmeadows.com/blog/content-update-2.html</guid>
-            <pubDate>Sun, 03 Jul 2016 00:00:00 GMT</pubDate>
-            <description><![CDATA[And another content update... Let's just say it's been a while since I've visited the site's content, and so I ended up having to remove a bunch of stale things. First, as]]></description>
-        </item>
-        <item>
             <title><![CDATA[Major content update]]></title>
             <link>https://isiahmeadows.com/blog/content-update.html</link>
             <guid>https://isiahmeadows.com/blog/content-update.html</guid>
             <pubDate>Tue, 12 Apr 2016 00:00:00 GMT</pubDate>
             <description><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Another content update]]></title>
+            <link>https://isiahmeadows.com/blog/content-update-2.html</link>
+            <guid>https://isiahmeadows.com/blog/content-update-2.html</guid>
+            <pubDate>Sun, 03 Jul 2016 00:00:00 GMT</pubDate>
+            <description><![CDATA[And another content update... Let's just say it's been a while since I've visited the site's content, and so I ended up having to remove a bunch of stale things. First, as]]></description>
         </item>
         <item>
             <title><![CDATA[ES6 is functional, imperative, and OO]]></title>

@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://isiahmeadows.com/blog/</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2019-02-08T00:59:59Z</updated>
+    <updated>2019-02-08T01:08:23Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -19,15 +19,6 @@
     <category term="javascript">
     </category>
     <entry>
-        <title type="html"><![CDATA[Another content update]]></title>
-        <id>10</id>
-        <link href="https://isiahmeadows.com/blog/content-update-2.html">
-        </link>
-        <updated>2016-07-03T00:00:00Z</updated>
-        <summary type="html"><![CDATA[And another content update... Let's just say it's been a while since I've visited the site's content, and so I ended up having to remove a bunch of stale things. First, as]]></summary>
-        <published>2016-07-03T00:00:00Z</published>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[Major content update]]></title>
         <id>9</id>
         <link href="https://isiahmeadows.com/blog/content-update.html">
@@ -35,6 +26,15 @@
         <updated>2016-04-12T00:00:00Z</updated>
         <summary type="html"><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></summary>
         <published>2016-04-12T00:00:00Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Another content update]]></title>
+        <id>10</id>
+        <link href="https://isiahmeadows.com/blog/content-update-2.html">
+        </link>
+        <updated>2016-07-03T00:00:00Z</updated>
+        <summary type="html"><![CDATA[And another content update... Let's just say it's been a while since I've visited the site's content, and so I ended up having to remove a bunch of stale things. First, as]]></summary>
+        <published>2016-07-03T00:00:00Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[ES6 is functional, imperative, and OO]]></title>
