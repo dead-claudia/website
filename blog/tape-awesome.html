@@ -1,54 +1,62 @@
-<!DOCTYPE html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=google-site-verification content=uV7Lko0q31ot2kgRjnMeU4sN5Fx4Whld80ItNCYYkA4><meta name=theme-color content=#942a39><link rel=license href=https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE><link rel=stylesheet href=/page.css><link rel=stylesheet href=/blog/index.css><link rel="shortcut icon" href=/favicon.ico><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="Atom feed"><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RSS feed"><title>Isiah Meadows - Blog - Tape === awesome</title><div id=content><div id=header><nav><div><a href=/ >Isiah Meadows</a></div><div><div class="link l1"><a href=/about/ >About</a></div><div class="link l2"><a href=/showcase/ >Showcase</a></div><div class="link l3"><a class=selected href=/blog/ >Blog</a></div><div class="link l4"><a href=/contact/ >Contact</a></div></div></nav></div><div id=content-body><div id=body-wrapper><div><h2 class=l3><a href=/blog/ >Blog</a></h2><div id=body><div id=blog><div class=blog-post><div class=blog-post-wrapper><a class=post-home href=/blog/ >Home ►</a><h3 class=post-title>Tape === awesome</h3><div class=post-body><p><em>Edit (2016-01-16): minor typography/style/bug/etc. fixes.</em></p>
-<p><a href=http://npm.im/tape><code>tape</code></a> is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I&#39;d have to say that tape makes it easy. It takes a lot less time and code to write the tests. Compare these two assertions in Mocha and tape:</p>
+<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-site-verification" content="uV7Lko0q31ot2kgRjnMeU4sN5Fx4Whld80ItNCYYkA4"><meta name="theme-color" content="#942a39"><link rel="license" href="https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE"><link rel="stylesheet" href="/page.css"><link rel="stylesheet" href="/blog/index.css"><link rel="shortcut icon" href="/favicon.ico"><link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Atom feed"><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="RSS feed"><title>Isiah Meadows - Blog - Tape === awesome</title><div id="content"><div id="header"><nav><div><a href="/">Isiah Meadows</a></div><div><div class="link l1"><a href="/about/">About</a></div><div class="link l2"><a href="/showcase/">Showcase</a></div><div class="link l3"><a class="selected" href="/blog/">Blog</a></div><div class="link l4"><a href="/contact/">Contact</a></div></div></nav></div><div id="content-body"><div id="body-wrapper"><div><h2 class="l3"><a href="/blog/">Blog</a></h2><div id="body"><div id="blog"><div class="blog-post"><div class="blog-post-wrapper"><a class="post-home" href="/blog/">Home ►</a><h3 class="post-title">Tape === awesome</h3><div class="post-body"><p><em>Edit (2016-01-16): minor typography/style/bug/etc. fixes.</em></p>
+<p><a href="http://npm.im/tape"><code>tape</code></a> is awesome. Nobody likes writing thousands and thousands of lines of unit tests, but I&#39;d have to say that tape makes it easy. It takes a lot less time and code to write the tests. Compare these two assertions in Mocha and tape:</p>
 <p>(I&#39;ll shamelessly admit I yanked these from Mocha&#39;s website.)</p>
-<pre><code class="hljs hljs-js"><span class=hljs-comment>// Mocha</span>
-<span class=hljs-keyword>var</span> assert = <span class=hljs-built_in>require</span>(<span class=hljs-string>"assert"</span>)
-describe(<span class=hljs-string>'Array'</span>, () =&gt; {
-    describe(<span class=hljs-string>'#indexOf()'</span>, () =&gt; {
-        it(<span class=hljs-string>'returns -1 when the value is not present'</span>, () =&gt; {
-            assert.equal(<span class=hljs-number>-1</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>5</span>))
+<pre><code class="hljs hljs-js"><span class="hljs-comment">// Mocha</span>
+<span class="hljs-keyword">var</span> assert = <span class="hljs-built_in">require</span>(<span class="hljs-string">"assert"</span>)
+describe(<span class="hljs-string">'Array'</span>, () =&gt; {
+    describe(<span class="hljs-string">'#indexOf()'</span>, () =&gt; {
+        it(<span class="hljs-string">'returns -1 when the value is not present'</span>, () =&gt; {
+            assert.equal(<span class="hljs-number">-1</span>, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>].indexOf(<span class="hljs-number">5</span>))
         })
 
-        it(<span class=hljs-string>'returns the index when the value is present'</span>, () =&gt; {
-            assert.equal(<span class=hljs-number>2</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>3</span>))
+        it(<span class="hljs-string">'returns the index when the value is present'</span>, () =&gt; {
+            assert.equal(<span class="hljs-number">2</span>, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>].indexOf(<span class="hljs-number">3</span>))
         })
     })
 })
 
-<span class=hljs-comment>// tape</span>
-<span class=hljs-keyword>var</span> t = <span class=hljs-built_in>require</span>(<span class=hljs-string>'tape'</span>)
-t.test(<span class=hljs-string>'Array'</span>, t =&gt; {
-    t.test(<span class=hljs-string>'#indexOf()'</span>, t =&gt; {
-        t.equal(<span class=hljs-number>-1</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>5</span>), <span class=hljs-string>'returns -1 when the value is not present'</span>)
-        t.equal(<span class=hljs-number>2</span>, [<span class=hljs-number>1</span>,<span class=hljs-number>2</span>,<span class=hljs-number>3</span>].indexOf(<span class=hljs-number>3</span>), <span class=hljs-string>'returns the index when the value is present'</span>)
+<span class="hljs-comment">// tape</span>
+<span class="hljs-keyword">var</span> t = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tape'</span>)
+t.test(<span class="hljs-string">'Array'</span>, t =&gt; {
+    t.test(<span class="hljs-string">'#indexOf()'</span>, t =&gt; {
+        t.equal(<span class="hljs-number">-1</span>, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>].indexOf(<span class="hljs-number">5</span>), <span class="hljs-string">'returns -1 when the value is not present'</span>)
+        t.equal(<span class="hljs-number">2</span>, [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>].indexOf(<span class="hljs-number">3</span>), <span class="hljs-string">'returns the index when the value is present'</span>)
     })
 })</code></pre>
 <p>Also, if you&#39;re dealing with asynchronous code, it&#39;s just as easy.</p>
-<pre><code class="hljs hljs-js"><span class=hljs-comment>// Mocha</span>
-describe(<span class=hljs-string>'User'</span>, () =&gt; {
-    describe(<span class=hljs-string>'#save()'</span>, () =&gt; {
-        it(<span class=hljs-string>'saves without error'</span>, done =&gt; {
-            <span class=hljs-keyword>var</span> user = <span class=hljs-keyword>new</span> User(<span class=hljs-string>'Luna'</span>)
+<pre><code class="hljs hljs-js"><span class="hljs-comment">// Mocha</span>
+describe(<span class="hljs-string">'User'</span>, () =&gt; {
+    describe(<span class="hljs-string">'#save()'</span>, () =&gt; {
+        it(<span class="hljs-string">'saves without error'</span>, done =&gt; {
+            <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">'Luna'</span>)
             user.save(done)
         })
     })
 })
 
-<span class=hljs-comment>// tape</span>
-<span class=hljs-keyword>var</span> t = <span class=hljs-built_in>require</span>(<span class=hljs-string>'tape'</span>)
-t.test(<span class=hljs-string>'User'</span>, t =&gt; {
-    t.test(<span class=hljs-string>'#save()'</span>, t =&gt; {
-        t.test(<span class=hljs-string>'saves without error'</span>, t =&gt; {
-            t.plan(<span class=hljs-number>1</span>)
-            <span class=hljs-keyword>var</span> user = <span class=hljs-keyword>new</span> User(<span class=hljs-string>'Luna'</span>)
-            user.save(<span class=hljs-function><span class=hljs-params>err</span> =&gt;</span> t.end(err))
+<span class="hljs-comment">// tape</span>
+<span class="hljs-keyword">var</span> t = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tape'</span>)
+t.test(<span class="hljs-string">'User'</span>, t =&gt; {
+    t.test(<span class="hljs-string">'#save()'</span>, t =&gt; {
+        t.test(<span class="hljs-string">'saves without error'</span>, t =&gt; {
+            t.plan(<span class="hljs-number">1</span>)
+            <span class="hljs-keyword">var</span> user = <span class="hljs-keyword">new</span> User(<span class="hljs-string">'Luna'</span>)
+            user.save(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> t.end(err))
         })
     })
 })</code></pre>
-<p>The beauty of all of this is that it&#39;s so simple. You also don&#39;t have any global pollution. The tape tests can be run with node test.js. The tape command line runner does this very thing; it just runs the directory recursively when given one. And as for pretty output, <a href=https://www.npmjs.com/package/tape#pretty-reporters>there&#39;s a lot of tools out there</a> that only need piped into. If you like the output of a C program that accepts it from stdin, you can use that reporter as well. No opinions needed.</p>
-</div><div class=post-footer><a class=post-home href=/blog/ >Home ►</a><div class=post-tags><span>Tags:</span><a class=post-tag data-tag=tape href=/blog/#tape>tape</a><a class=post-tag data-tag=testing href=/blog/#testing>testing</a><a class=post-tag data-tag=javascript href=/blog/#javascript>javascript</a></div></div></div></div></div></div></div></div><div id=license><div><footer><small><p>This site does use Google Analytics for basic tracking (IP addresses anonymized), and a few third parties collect a few cookies their own, like GitHub and some of the creators of the widgets in the <a href=/about/ >About</a>
-page's widgets. If you don't consent to these, either stop using this site or just block them in some way, like with a firewall or with a blocker like
-<a href=https://adblockplus.org/ >Adblock Plus</a>,
-<a href=https://github.com/gorhill/uBlock>uBlock Origin</a>.
-<p>All content available on this site by Isiah Meadows is licensed under the Creative Commons Attribution 4.0 International License, and all source code is licensed under the ISC License, unless otherwise specified.
-<p><a href=https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE target=_blank rel=license>See here for the text of both of these licenses.</a></small></footer></div></div></div></div><script async src="https://www.googletagmanager.com/gtag/js?id=UA-38960675-5"></script><script>function gtag(){dataLayer.push(arguments)}dataLayer=[["js",new Date],["config","UA-38960675-5",{anonymize_ip:1}]];onerror=function(a,b,c,d){d=(b+" at line: "+c+(d?" column: "+d:"")).trim();c=document.createElement("a");c.href=b;dataLayer.push(["event",a,{event_label:d,event_category:c.hostname!=location.hostname&&c.hostname?"external error":"error",non_interaction:1}],["event","exception",{description:d+": "+a.trim()}])}</script>
+<p>The beauty of all of this is that it&#39;s so simple. You also don&#39;t have any global pollution. The tape tests can be run with node test.js. The tape command line runner does this very thing; it just runs the directory recursively when given one. And as for pretty output, <a href="https://www.npmjs.com/package/tape#pretty-reporters">there&#39;s a lot of tools out there</a> that only need piped into. If you like the output of a C program that accepts it from stdin, you can use that reporter as well. No opinions needed.</p>
+</div><div class="post-footer"><a class="post-home" href="/blog/">Home ►</a><div class="post-tags"><span>Tags:</span><a class="post-tag" data-tag="tape" href="/blog/#tape">tape</a><a class="post-tag" data-tag="testing" href="/blog/#testing">testing</a><a class="post-tag" data-tag="javascript" href="/blog/#javascript">javascript</a></div></div></div></div></div></div></div></div><div id="license"><div><footer><small><p>This site does use Google Analytics for basic tracking
+(IP addresses anonymized), and a few third parties
+collect a few cookies their own, like GitHub and some of
+the creators of the widgets in the <a href="/about/">About</a>
+page's widgets. If you don't consent to these, either
+stop using this site or just block them in some way,
+like with a firewall or with a blocker like
+<a href="https://adblockplus.org/">Adblock Plus</a>,
+<a href="https://github.com/gorhill/uBlock">uBlock Origin</a>.
+</p><p>All content available on this site by Isiah Meadows is
+licensed under the Creative Commons Attribution 4.0
+International License, and all source code is licensed
+under the ISC License, unless otherwise specified.
+</p><p><a href="https://github.com/isiahmeadows/website/blob/gh-pages/LICENSE" target="_blank" rel="license">See here for the text of both of these licenses.</a></p></small></footer></div></div></div></div>
