@@ -4,20 +4,13 @@
         <title>Isiah Meadows&apos; blog</title>
         <description>My personal blog</description>
         <link>https://isiahmeadows.com/blog/</link>
-        <lastBuildDate>Fri, 08 Feb 2019 01:08:23 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 20 Feb 2019 09:56:20 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <copyright>Some rights reserved 2019-present, Isiah Meadows.</copyright>
         <generator>Feed for Node.js</generator>
         <category>technology</category>
         <category>opinions</category>
         <category>javascript</category>
-        <item>
-            <title><![CDATA[Major content update]]></title>
-            <link>https://isiahmeadows.com/blog/content-update.html</link>
-            <guid>https://isiahmeadows.com/blog/content-update.html</guid>
-            <pubDate>Tue, 12 Apr 2016 00:00:00 GMT</pubDate>
-            <description><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></description>
-        </item>
         <item>
             <title><![CDATA[Another content update]]></title>
             <link>https://isiahmeadows.com/blog/content-update-2.html</link>
@@ -31,6 +24,13 @@
             <guid>https://isiahmeadows.com/blog/es6-is-functional-imperative-and-oo.html</guid>
             <pubDate>Sun, 09 Nov 2014 00:00:00 GMT</pubDate>
             <description><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Major content update]]></title>
+            <link>https://isiahmeadows.com/blog/content-update.html</link>
+            <guid>https://isiahmeadows.com/blog/content-update.html</guid>
+            <pubDate>Tue, 12 Apr 2016 00:00:00 GMT</pubDate>
+            <description><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></description>
         </item>
         <item>
             <title><![CDATA[I like ES6...works well, even for golfing (factorial demo hack)]]></title>

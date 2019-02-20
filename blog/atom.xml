@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://isiahmeadows.com/blog/</id>
     <title>Isiah Meadows&apos; blog</title>
-    <updated>2019-02-08T01:08:23Z</updated>
+    <updated>2019-02-20T09:56:20Z</updated>
     <author>
         <name>Isiah Meadows</name>
         <email>me@isiahmeadows.com</email>
@@ -18,15 +18,6 @@
     </category>
     <category term="javascript">
     </category>
-    <entry>
-        <title type="html"><![CDATA[Major content update]]></title>
-        <id>9</id>
-        <link href="https://isiahmeadows.com/blog/content-update.html">
-        </link>
-        <updated>2016-04-12T00:00:00Z</updated>
-        <summary type="html"><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></summary>
-        <published>2016-04-12T00:00:00Z</published>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Another content update]]></title>
         <id>10</id>
@@ -44,6 +35,15 @@
         <updated>2014-11-09T00:00:00Z</updated>
         <summary type="html"><![CDATA[Edit (2016-01-14): minor typography/style/bug/etc. fixes. Yes, I know that, lately, there has been a fad about functional programming. Examples include C++ and Python getting]]></summary>
         <published>2014-11-09T00:00:00Z</published>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Major content update]]></title>
+        <id>9</id>
+        <link href="https://isiahmeadows.com/blog/content-update.html">
+        </link>
+        <updated>2016-04-12T00:00:00Z</updated>
+        <summary type="html"><![CDATA[I made a major, sorely needed content update for the website. Here's a quick summary of things I added: 1. Half of the Home page is now in the About page. 2. I've added links]]></summary>
+        <published>2016-04-12T00:00:00Z</published>
     </entry>
     <entry>
         <title type="html"><![CDATA[I like ES6...works well, even for golfing (factorial demo hack)]]></title>
