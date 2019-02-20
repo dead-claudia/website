@@ -2,108 +2,114 @@
 
 const fs = require("fs")
 const path = require("path")
-const {promisify} = require("util")
-const mkdirp = promisify(require("mkdirp"))
-const rimraf = promisify(require("rimraf"))
+const mkdirp = require("mkdirp")
+const rimraf = require("rimraf")
 
-const util = require("./util")
+const {pcall, walk, exec, setProcessLimit} = require("./util")
 
-util.setProcessLimit(cpus => cpus * 1.5 + 1)
+setProcessLimit(cpus => cpus * 1.5 + 1)
 
 const r = file => path.resolve(__dirname, file)
 
-async function prepare(file, src, target) {
-    const base = path.relative(src, file)
-    const dist = path.join(target, base)
-    const name = path.join(path.relative(r(".."), src), base)
+async function prepareSrc(file) {
+    const base = path.relative(r("../src/public"), file)
+    const dist = path.join(r("../dist"), base)
+    const name = path.join("src/public", base)
 
-    await mkdirp(path.dirname(dist))
+    await pcall(cb => mkdirp(path.dirname(dist), cb))
     return {src: file, name, dist}
 }
 
-const prepareSrc = file => prepare(file, r("../src"), r("../dist"))
-const prepareTmpl = file => prepare(file, r("../dist-tmpl"), r("../dist"))
-
-async function copyFile(file) {
-    console.log(`Copying file: ${file.name}`)
-    await util.pcall(cb => fs.copyFile(file.src, file.dist, cb))
+function copyFile({src, name, dist}) {
+    console.log(`Copying file: ${name}`)
+    return pcall(cb => fs.copyFile(src, dist, cb))
 }
 
 function run(label, name, args = [], opts = {}) {
-    return util.exec(name, args, {onopen() { console.log(label) }, ...opts})
+    return exec(name, args, {onopen() { console.log(label) }, ...opts})
 }
 
-function task(label, name, args = []) {
-    return run(label, "node", [r(`tasks/${name}.js`), ...args])
+function task(name, ...args) {
+    return exec("node", [r(`tasks/${name}.js`), ...args])
 }
 
-async function minifyJs(file) {
-    const {src, name, dist} = await prepareSrc(file)
+require("./run")({
+    async "clean"() {
+        await pcall(cb => rimraf("dist/**", cb))
+    },
 
-    await run(`Minifying file: ${name}`, "uglifyjs", [src, "-cmo", dist])
-}
+    async "compile:copy"() {
+        await walk(r("../src/public/{.nojekyll,**}"), {
+            ignore: [
+                // Ignore preprocessed files
+                "**/*.pug", "**/*.styl", "**/*.js",
+                // Ignore OS junk
+                ".DS_Store",
+            ],
+        }, async file => {
+            await copyFile(await prepareSrc(file))
+        })
+    },
 
-async function compileStylus(file) {
-    const {src, name, dist} = await prepareSrc(file)
+    async "compile:blog"() {
+        await task("compile", "blog-posts")
+    },
 
-    await task(`Compiling file: ${name}`, "compile-stylus", [src, dist, name])
-}
+    async "compile:songs"() {
+        await task("compile", "songs")
+    },
 
-async function compilePug(file) {
-    const {src, name, dist} = await prepareSrc(file)
+    async "compile:js"() {
+        await walk(r("../src/public/**/*.js"), async file => {
+            const {src, name, dist} = await prepareSrc(file)
 
-    await task(`Compiling file: ${name}`, "compile-pug", [src, dist, name])
-}
+            await run(
+                `Minifying file: ${name}`, "uglifyjs", [src, "-cmo", dist]
+            )
+        })
+    },
 
-require("./run.js")({
-    "clean": () => rimraf("dist/**"),
+    async "compile:pug"() {
+        await walk(r("../src/public/**/*.pug"), async file => {
+            const {src, name, dist} = await prepareSrc(file)
 
-    "compile:copy": () => util.walk(r("../dist-tmpl/**"), async file => {
-        await copyFile(await prepareTmpl(file))
-    }),
+            await task("compile-pug", src, dist, name)
+        })
+    },
 
-    "compile:blog": () => task("Compiling blog posts...", "compile-blog-posts"),
-    "compile:songs": () => task("Compiling songs...", "compile-songs"),
+    async "compile:stylus"() {
+        await task("compile", "stylus")
+    },
 
-    "compile:rest": () => util.walk(r("../src/**"), {
-        // Don't iterate any of these files.
-        ignore: [
-            "**/README.md", "**/*.ignore/**", "**/*.ignore.*",
-            "**/license.*", "**/mixins/**", "**/templates/**",
-        ],
-    }, async file => {
-        switch (path.extname(file)) {
-        case ".js": await minifyJs(file); break
-        case ".styl": await compileStylus(file); break
-        case ".pug": await compilePug(file); break
-        default: await copyFile(await prepareSrc(file))
-        }
-    }),
-
-    "compile": async t => {
+    async "compile"(t) {
         await t("clean")
         await Promise.all([
             t("compile:copy"),
+            t("compile:stylus"),
             t("compile:blog"),
             t("compile:songs"),
-            t("compile:rest"),
+            t("compile:pug"),
         ])
     },
 
-    "lint:check-whitespace": () =>
-        task("Linting whitespace in non-JS files...", "check-whitespace"),
+    async "lint:check-whitespace"() {
+        await task("check-whitespace")
+    },
 
-    "lint:eslint": () =>
-        run("Linting JS...", "eslint", ["."], {cwd: r("..")}),
+    async "lint:eslint"() {
+        await run("Linting JS...", "eslint", ["."], {cwd: r("..")})
+    },
 
-    "lint": async t => {
+    async "lint"(t) {
         await t("lint:eslint")
         await t("lint:check-whitespace")
     },
 
-    "deploy": () => task("Deploying...", "deploy"),
+    async "deploy"() {
+        await exec(r("tasks/deploy.sh"), [], {cwd: r("..")})
+    },
 
-    "default": async t => {
+    async "default"(t) {
         await t("lint")
         await t("compile")
     },

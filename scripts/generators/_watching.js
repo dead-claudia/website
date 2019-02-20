@@ -6,32 +6,27 @@ if (require.main === module) {
 
 const fs = require("fs")
 const chokidar = require("chokidar")
-
 const util = require("../util")
-const PugGenerator = require("./pug")
 
 module.exports = class WatchingGenerator {
-    constructor({
-        glob, minified, template, once,
-        on: events, ...options
-    }) {
-        this._pug = new PugGenerator(minified)
+    constructor({glob, watching, addReceived, ...options}) {
         this._map = new Map()
         this._renderCache = new Map()
-        this._template = util.template(template)
+        this._addReceived = !!addReceived
+        this._watching = watching
 
-        if (once) {
-            if (options.disableGlobbing) {
-                this._ready = util.pcall(cb => fs.access(glob, cb))
-                    .then(() => events.add(glob))
-            } else {
-                this._ready = util.walk(glob, {
-                    ignore: options.ignored,
-                    cwd: options.cwd,
-                    root: options.root,
-                }, events.add)
-            }
-        } else {
+        const add = file => {
+            const url = this._resolve(file)
+
+            const p = new Promise(resolve => resolve(
+                this._receive("change", url, file)
+            ))
+
+            if (this._addReceived) this._map.set(url, p)
+            p.catch(console.error)
+        }
+
+        if (watching) {
             const watcher = chokidar.watch(glob, {
                 awaitWriteFinish: true,
                 ...options,
@@ -40,16 +35,54 @@ module.exports = class WatchingGenerator {
             this._ready = util.once(watcher, "ready")
                 .finally(() => watcher.on("error", console.error))
 
-            for (const [key, listener] of Object.entries(events)) {
-                watcher.on(key, (...args) => {
-                    try {
-                        listener(...args).catch(console.error)
-                    } catch (e) {
-                        console.error(e)
-                    }
-                })
-            }
+            watcher.on("add", add)
+
+            watcher.on("change", file => {
+                const url = this._resolve(file)
+
+                if (this._addReceived) {
+                    this._renderCache.delete(url)
+                    this._map.delete(url)
+                }
+
+                const p = new Promise(resolve => resolve(
+                    this._receive("change", url, file)
+                ))
+
+                if (this._addReceived) this._map.set(url, p)
+                p.catch(console.error)
+            })
+
+            watcher.on("unlink", file => {
+                const url = this._resolve(file)
+
+                if (this._addReceived) {
+                    this._renderCache.delete(url)
+                    this._map.delete(url)
+                }
+
+                new Promise(resolve => resolve(
+                    this._receive("unlink", url, file)
+                )).catch(console.error)
+            })
+        } else if (options.disableGlobbing) {
+            this._ready = util.pcall(cb => fs.access(glob, cb))
+                .then(() => add(glob))
+        } else {
+            this._ready = util.walk(glob, {
+                ignore: options.ignored,
+                cwd: options.cwd,
+                root: options.root,
+            }, add)
         }
+    }
+
+    log(...args) {
+        if (this._watching) console.log(...args)
+    }
+
+    async _receive() {
+        throw new Error("This method is abstract!")
     }
 
     async each(func) {
@@ -59,7 +92,7 @@ module.exports = class WatchingGenerator {
         ))
     }
 
-    _renderOpts() {
+    async _render() {
         throw new Error("This method is abstract!")
     }
 
@@ -69,18 +102,8 @@ module.exports = class WatchingGenerator {
         let rendered = this._renderCache.get(url)
 
         if (rendered == null) {
-            const opts = this._map.get(url)
-
-            if (opts == null) {
-                const err = new Error("ENOENT: no such file or directory")
-
-                err.code = "ENOENT"
-                throw err
-            }
-
-            rendered = this._pug.generate(this._template, url,
-                this._renderOpts(opts)
-            )
+            rendered = new Promise(resolve => resolve(this._render(url)))
+            this._renderCache.set(url, rendered)
         }
 
         return rendered

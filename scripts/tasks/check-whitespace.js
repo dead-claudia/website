@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict"
 
 // Check for trailing newlines and no trailing whitespace in everything not
@@ -9,36 +10,34 @@ const path = require("path")
 
 const {pcall, walk} = require("../util")
 
-function getLineData(contents, pos, start) {
+function check(name, contents, item, re) {
     let line = 1
     let column = 0
+    let index = 0
 
-    for (let i = start; i !== pos; i++) {
-        switch (contents.charCodeAt(i)) {
-        case 0x0A: // \r
-            if (i + 1 !== pos && contents.charCodeAt(i + 1) === 0x0D) i++
-            // falls through
-
-        case 0x0D: // \n
-            line++
-            column = 0
-            break
-
-        default:
-            column++
-        }
-    }
-
-    return {line, column}
-}
-
-function check(file, contents, item, re) {
     while (true) {
-        const result = re.exec(contents)
+        const end = contents.indexOf(re, index)
 
-        if (result == null) break
-        const name = path.relative(path.dirname(__dirname), file)
-        const {line, column} = getLineData(result.index, re.lastIndex)
+        if (end < 0) return
+        while (index !== end) {
+            switch (contents.charCodeAt(index++)) {
+            case 0x0A: // \r
+                if (
+                    index !== end &&
+                    contents.charCodeAt(index) === 0x0D // \n
+                ) index++
+                // falls through
+
+            case 0x0D: // \n
+                line++
+                column = 0
+                break
+
+            default:
+                column++
+            }
+        }
+        index++
 
         console.error(
             `WARNING (line ${line}, column ${column}): ` +
@@ -47,6 +46,8 @@ function check(file, contents, item, re) {
         process.exitCode = 1
     }
 }
+
+console.log("Linting whitespace in non-JS files...")
 
 walk("**", {
     cwd: path.dirname(__dirname),
@@ -60,11 +61,12 @@ walk("**", {
     nodir: true,
 }, async file => {
     const contents = await pcall(cb => fs.readFile(file, "utf-8", cb))
+    const name = path.relative(path.dirname(__dirname), file)
 
     // Test for any non-line-break whitespace that precedes a line-break
     // whitespace and reject it.
-    check(file, contents, "whitespace found", /[^\r\n\S][\r\n]/g)
+    check(name, contents, "whitespace found", /[^\r\n\S][\r\n]/)
 
     // Test for *one* trailing line break.
-    check(file, contents, "newline missing", /[^\r\n\S]$|(\r\n|\r|\n){2,}$/g)
+    check(name, contents, "newline missing", /[^\r\n\S]$|(\r\n|\r|\n){2,}$/)
 })

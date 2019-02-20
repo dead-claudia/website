@@ -8,32 +8,33 @@ const fs = require("fs")
 const path = require("path")
 const yaml = require("js-yaml")
 
-const WatchingGenerator = require("./_watching")
+const WatchingPugGenerator = require("./_watching-pug")
 const compileMarkdown = require("../compile-markdown")
 const {pcall} = require("../util")
 
-const songsFile = path.resolve(__dirname, "../songs.yml")
-
-module.exports = class SongGenerator extends WatchingGenerator {
+module.exports = class SongGenerator extends WatchingPugGenerator {
     constructor(opts = {}) {
         super({
             ...opts,
-            glob: songsFile,
+            glob: path.resolve(__dirname, "../songs.yml"),
             template: "song.pug",
             disableGlobbing: true,
-            on: {
-                add: () => this._compileSongs(),
-                change: () => this._compileSongs(),
-            },
+            addReceived: false,
         })
+    }
+
+    _resolve(name) {
+        return name
     }
 
     _renderOpts(song) {
         return {song}
     }
 
-    async _compileSongs() {
-        const songs = await pcall(cb => fs.readFile(songsFile, "utf-8", cb))
+    async _receive(type, url, file) {
+        if (type === "unlink") return
+        this.log("Recompiling songs")
+        const songs = await pcall(cb => fs.readFile(file, "utf-8", cb))
         const data = yaml.safeLoad(songs)
 
         this._map.clear()
@@ -42,7 +43,7 @@ module.exports = class SongGenerator extends WatchingGenerator {
         for (const [name, song] of Object.entries(data)) {
             if (song.description) {
                 song.description = compileMarkdown.html(
-                    `${name} in ${songsFile}`, song.description
+                    `${name} in ${file}`, song.description
                 )
             }
 

@@ -31,7 +31,7 @@ Everything here except for the server is callable at some point by the build sys
 
   The other is a slightly optimized (to avoid race conditions) directory iterator that caches its compilation results for the server instead of making most of its API awkwardly open.
 
-  These combined are more or less a back-end, with the server, tasks/compile-blog-posts.js, and tasks/compile-songs.js calling it as front-ends.
+  These combined are more or less a back-end, with the server and tasks/compile.js calling it as front-ends.
 
   This could be easily refactored to allow posts in folders and copy other non-markdown files, without requiring any changes to the site itself.
 

@@ -3,18 +3,20 @@
 const fs = require("fs")
 const path = require("path")
 const express = require("express")
-const stylus = require("stylus")
-const autoprefixer = require("autoprefixer-stylus")
 const {pipeline} = require("stream")
 
 const PugGenerator = require("./generators/pug")
 const BlogGenerator = require("./generators/blog-posts")
 const SongGenerator = require("./generators/songs")
+const StylusGenerator = require("./generators/stylus")
 
-const pug = new PugGenerator({minified: false})
-const blog = new BlogGenerator({minified: false})
-const songs = new SongGenerator({minified: false})
+const pug = new PugGenerator({minified: false, watching: true})
+const blog = new BlogGenerator({minified: false, watching: true})
+const songs = new SongGenerator({minified: false, watching: true})
+const stylus = new StylusGenerator({minified: false, watching: true})
 const app = express()
+
+const root = path.resolve(__dirname, "../src/public")
 
 function nocache(res) {
     res.setHeader("Pragma", "no-cache")
@@ -37,9 +39,9 @@ app.use((req, res, next) => {
     return next()
 })
 
-// README.md, /mixins/, /*.ignore/, *.pug, .ignore.*
+// README.md, /mixins/, /*.ignore/, *.pug
 app.get(
-    /\/README\.md|^\/mixins\/|^\/templates\/|\.pug|\.ignore[\/\.]/,
+    /\/README\.md|^\/mixins\/|^\/templates\/|\.pug/,
     (req, res) => res.sendStatus(404)
 )
 
@@ -75,26 +77,17 @@ app.get(/^\/blog\/.*\.html$/, (req, res, next) =>
 )
 
 app.get("*.html", (req, res) => res.type("html").send(pug.generate(
-    path.resolve(__dirname, "../src", req.path.replace(/\.html$/, ".pug")),
+    path.resolve(root, req.path.replace(/\.html$/, ".pug")),
     req.path
 )))
 
-app.get("*.css", stylus.middleware({
-    src: path.resolve(__dirname, "../src"),
-    // This'll be cleared when doing a full compilation, anyways.
-    dest: path.resolve(__dirname, "../dist"),
-    force: true,
-    compile(str, path) {
-        return stylus(str)
-            .set("filename", path)
-            .set("include css", true)
-            .use(autoprefixer())
-    },
-}))
+app.get("*.css", (req, res, next) =>
+    stylus.renderURL(req.path)
+        .then(data => res.type("css").send(data))
+        .catch(next)
+)
 
-const base = path.resolve(__dirname, "../src")
-
-const read = root => (req, res, next) => {
+app.get("*.*", (req, res, next) => {
     const file = path.resolve(root, req.path.slice(1))
 
     return fs.stat(file, (err, stat) => {
@@ -105,29 +98,26 @@ const read = root => (req, res, next) => {
             res.type(path.basename(file)).status(200)
         )
     })
-}
-
-app.get("*.css", read(path.resolve(__dirname, "../dist")))
-app.get("*.*", read(base))
+})
 
 // Wait until *after* everything is parsed before addressing the default route.
 app.get("/blog/", renderBlog)
 
 app.get("/", (req, res) => res.type("html").send(pug.generate(
-    path.resolve(__dirname, "../src/index.pug"),
+    path.resolve(root, "index.pug"),
     "/index.html"
 )))
 
 app.get("*/", (req, res, next) => {
     const name = req.path.replace(/\/{2,}/g, "/").slice(0, -1)
-    const file = path.resolve(base, name.slice(1))
+    const file = path.resolve(root, name.slice(1))
 
     return fs.stat(file, (err, stat) => {
         if (err != null) return next(err)
         if (stat.isFile()) return next({code: "ENOENT"})
 
         return res.type("html").send(pug.generate(
-            path.resolve(__dirname, "../src", name.slice(1), "/index.pug"),
+            path.resolve(root, name.slice(1), "index.pug"),
             `${name}/index.html`
         ))
     })

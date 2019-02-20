@@ -1,0 +1,245 @@
+@charset "UTF-8"
+
+@require "../../mixins/common.styl"
+@require "../../mixins/highlight-style.styl"
+
+$color-text-secondary = #666
+
+#blog
+    // The margin is too much with the loading text
+    > p:first-child
+        margin-top: 0
+
+    .feeds
+        text-align: right
+
+    .feed
+        display: inline-block
+        margin-right: 0.5em
+
+    .feed ~ .feed
+        margin-left: 0.5em
+
+    .feed a
+        margin-left: 0.25em
+
+    .warning
+        padding: 0.5em
+        border: 1px solid $color-border
+        background-color: #ff0
+
+    .blog-summary p:first-child
+        padding-bottom: 1em
+        border-bottom: 2px solid $color-border
+        margin-top: 0
+
+    .summary-header
+        margin-top: 1em
+        margin-bottom: 1em
+
+    .summary-title
+        padding-bottom: 1em
+
+    .tag-search input
+        padding: 0.5em
+        border: 2px solid $color-border
+
+    .tag-search.disabled
+        color: lighten($color-text, 30%)
+
+        input
+            border-color: lighten($color-border, 30%)
+            background-color: #fefefe
+
+    .blog-entry
+        display: block
+        padding: 1em
+        // Since CSS doesn't have a ::last-line pseudo-element. Keep this as the
+        // difference between this normal padding and the bottom padding of
+        // .post-tag. If only it could be less brittle.
+        padding-bottom: 0.7em
+        border: 2px solid $color-border
+        border-bottom: none
+        text-decoration: none
+        color: $color-text
+        position: relative
+
+        .blog-entry-link
+            position: absolute
+            left: 0
+            top: 0
+            right: 0
+            bottom: 0
+
+        &:visited
+            color: $color-text
+
+        &:hover
+            filter: brightness(150%)
+            border-color: darken($color-border, 1/3 * 100%)
+
+            .post-title
+                color: mix(#ccc, $color-header, 25%)
+
+            .post-tag.post-tag-active, .post-tag:hover
+                background-color: #aaa
+
+        &:last-child
+            border-bottom: 2px solid $color-border
+
+    .post-date
+        font-style: italic
+        color: $color-text-secondary
+
+    .post-stub
+        text-decoration: none
+
+        .post-title
+            font-size: 1.2em
+
+    .post-title
+        color: $color-header
+        padding-top: 0.5em
+        padding-bottom: 0.5em
+
+    .post-preview
+        color: $color-text-secondary
+        font-size: 0.8em
+        font-style: italic
+        padding-bottom: 0.5em
+
+    .post-tags > span
+        padding-right: 0.25em
+
+    .post-tag
+        border: 1px solid $color-border
+        display: inline-block
+        color: $color-text-secondary
+        font-size: 0.7em
+        margin: 0.2em
+        margin-bottom: 0.3em
+        padding: 0.2em 0.25em
+        text-decoration: none
+
+        &:visited
+            color: $color-text-secondary
+
+        &.post-tag-active
+            font-weight: 700
+
+    .blog-post-wrapper::after
+        clear: both
+        content: " "
+        display: table
+
+    .blog-post .post-title
+        margin-top: 0
+        padding-right: 1em
+        font-size: 1.5em
+        border-bottom: 2px solid $color-border
+
+    .post-home
+        float: right
+        font-size: 1em
+        padding: 0.5em
+        color: $color-header-text
+        border: 2px solid $color-button-border
+        text-decoration: none
+        --background-notify: $color-button 50%
+
+    .post-body
+        width: 100%
+        margin-bottom: 1em
+        border-bottom: 2px solid $color-border
+
+        pre
+            @extend $--break-word
+            white-space: pre-wrap
+
+    .post-footer
+        @media screen and (min-width: 600px)
+            overflow: auto
+
+        @media screen and (max-width: 600px)
+            .post-home
+                float: right
+
++phone()
+    #blog
+        .tag-search
+            label
+                padding-bottom: 0.25em
+
+            input
+                display: block
+                margin-top: 0.25em
+                margin-bottom: 0.25em
+                @extend $--input-fix
+
+        .post-title, .post-preview
+            @extend $--break-word
+
+        .blog-post
+            padding-top: 0.5em
+
++tablet()
+    #blog
+        .tag-search
+            display: table
+            width: 100%
+            height: 100%
+
+            label
+                display: table-cell
+                height: 100%
+                vertical-align: middle
+                overflow: hidden
+
+                // Note: this is a very brittle hack. Any time the label text
+                // needs updated, this will also have to change.
+                width: 8em
+
+            input
+                display: table-cell
+                margin-top: 0.25em
+                margin-bottom: 0.25em
+                @extend $--input-fix
+
++desktop()
+    #blog
+        .summary-header
+            overflow: hidden
+            display: block
+
+        .summary-title
+            display: inline-block
+            float: left
+
+        .tag-search
+            display: inline-block
+            float: right
+            width: 38%
+
+            &::before
+                content: ""
+                clear: both
+
+            label
+                padding-right: 0.5em
+
+            input
+                display: inline-block
+                margin-top: 0.25em
+                padding: 0.5em
+                border: 2px solid $color-border
+
+            .warning:not(.hidden)
+                margin-top: 0.5em
+
+        .blog-post
+            .post-title
+                padding-left: 1em
+                text-align: center
+
+            .post-tags
+                text-align: center

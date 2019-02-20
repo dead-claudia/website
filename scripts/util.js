@@ -145,7 +145,7 @@ function run(cmd, args, opts, resolve) {
     resolve(promise.then(noop))
     promise.then(cycle, cycleThrow)
 
-    if (typeof opts.onopen === "function") opts.onopen(child)
+    if (opts && typeof opts.onopen === "function") opts.onopen(child)
 }
 
 exports.exec = (cmd, args, opts) => new Promise(resolve => {
