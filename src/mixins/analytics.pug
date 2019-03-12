@@ -28,5 +28,5 @@
 //-     }
 
 if minified
-    script(async src="https://www.googletagmanager.com/gtag/js?id=UA-38960675-5")
+    script(async defer src="https://www.googletagmanager.com/gtag/js?id=UA-38960675-5")
     script function gtag(){dataLayer.push(arguments)}dataLayer=[["js",new Date],["config","UA-38960675-5",{anonymize_ip:1}]];onerror=function(a,b,c,d){d=(b+" at line: "+c+(d?" column: "+d:"")).trim();c=document.createElement("a");c.href=b;dataLayer.push(["event",a,{event_label:d,event_category:c.hostname!=location.hostname&&c.hostname?"external error":"error",non_interaction:1}],["event","exception",{description:d+": "+a.trim()}])}
