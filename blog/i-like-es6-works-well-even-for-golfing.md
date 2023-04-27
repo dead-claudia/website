@@ -26,7 +26,7 @@ function fact(n) {
 let fact = n => n > 0 ? n * fact(n - 1) : 1;
 ```
 
-But, I find this hack fairly cool: it basically ~~abuses~~takes enormous advantage of precedence and how logic statements work in ECMAScript. The hack assumes integer input.
+But, I find this hack fairly cool: it basically ~~abuses~~ takes enormous advantage of precedence and how logic statements work in ECMAScript. The hack assumes integer input.
 
 ```js
 // Function declaration
